@@ -40,12 +40,13 @@ Không chắc Mac của bạn dùng chip nào? Nhấp vào menu Apple và chọn
 </Frame>
 
 <Warning>
-Khi khởi chạy lần đầu, macOS có thể hiển thị cảnh báo bảo mật vì TablePro không được ký với chứng chỉ Apple Developer. Để mở:
-1. Nhấp chuột phải (hoặc Control-click) vào TablePro trong Applications
-2. Chọn **Open** từ menu ngữ cảnh
-3. Nhấp **Open** trong hộp thoại xuất hiện
+Khi khởi chạy lần đầu, macOS sẽ hiển thị lỗi **"TablePro is damaged and can't be opened"** vì TablePro không được ký với chứng chỉ Apple Developer. Để khắc phục, mở **Terminal** và chạy:
 
-Bạn chỉ cần làm điều này một lần.
+```bash
+xattr -cr /Applications/TablePro.app
+```
+
+Sau đó mở lại TablePro. Bạn chỉ cần làm điều này một lần. Xem [hướng dẫn Cài đặt](/vi/installation#bảo-mật-khởi-chạy-lần-đầu) để biết thêm chi tiết.
 </Warning>
 
 ## Bước 3: Tạo Kết nối Đầu tiên

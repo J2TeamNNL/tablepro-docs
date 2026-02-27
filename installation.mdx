@@ -16,7 +16,7 @@ This guide covers detailed installation instructions, system requirements, and t
 | **macOS Version** | macOS 14.0 (Sonoma) or later |
 | **Processor** | Apple Silicon (M1/M2/M3/M4/M5) or Intel x86_64 |
 | **Memory** | 4 GB RAM minimum |
-| **Storage** | ~50 MB free disk space |
+| **Storage** | ~200 MB free disk space |
 
 ### Recommended
 
@@ -85,34 +85,29 @@ TablePro is built using native Apple frameworks and does not require any additio
 
 ### First Launch Security
 
-Since TablePro is not signed with an Apple Developer certificate, macOS Gatekeeper may prevent it from opening on first launch.
+Since TablePro is not signed with an Apple Developer certificate, macOS will show a **"TablePro is damaged and can't be opened"** error on first launch. This is expected — you need to remove the quarantine attribute that macOS adds to downloaded apps.
 
 <Warning>
-This is expected behavior for unsigned applications. TablePro is safe to use - the source code is fully open source and available for inspection.
+This is normal for unsigned applications downloaded from the internet. TablePro is safe to use — the source code is fully open source and available for inspection.
 </Warning>
 
-#### To open an unsigned application:
+#### Remove the quarantine attribute
 
-<Steps>
-  <Step title="Locate the app">
-    Open **Finder** and navigate to **Applications**
-  </Step>
-  <Step title="Right-click to open">
-    Right-click (or Control-click) on **TablePro**
-  </Step>
-  <Step title="Select Open">
-    Choose **Open** from the context menu
-  </Step>
-  <Step title="Confirm">
-    In the dialog that appears, click **Open**
-  </Step>
-</Steps>
+Open **Terminal** and run:
 
-You only need to do this once. Subsequent launches will work normally.
+```bash
+xattr -cr /Applications/TablePro.app
+```
+
+Then open TablePro normally from Applications.
+
+<Tip>
+You only need to do this once. After removing the quarantine attribute, TablePro will open normally on all future launches.
+</Tip>
 
 #### Alternative: System Settings
 
-If the right-click method doesn't work:
+If you still see a security warning after running the command above:
 
 1. Open **System Settings** > **Privacy & Security**
 2. Scroll down to the **Security** section
@@ -186,13 +181,7 @@ Removing application data will delete all your saved connections and query histo
 
 ### "TablePro is damaged and can't be opened"
 
-This error can occur if macOS quarantine attributes weren't removed properly:
-
-```bash
-xattr -cr /Applications/TablePro.app
-```
-
-Then try opening the application again.
+Follow the [First Launch Security](#first-launch-security) instructions above to remove the macOS quarantine attribute.
 
 ### "TablePro can't be opened because it is from an unidentified developer"
 

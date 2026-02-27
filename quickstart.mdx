@@ -40,12 +40,13 @@ Not sure which chip your Mac has? Click the Apple menu and select **About This M
 </Frame>
 
 <Warning>
-On first launch, macOS may show a security warning since TablePro is not signed with an Apple Developer certificate. To open it:
-1. Right-click (or Control-click) on TablePro in Applications
-2. Select **Open** from the context menu
-3. Click **Open** in the dialog that appears
+On first launch, macOS will show a **"TablePro is damaged and can't be opened"** error because TablePro is not signed with an Apple Developer certificate. To fix this, open **Terminal** and run:
 
-You only need to do this once.
+```bash
+xattr -cr /Applications/TablePro.app
+```
+
+Then open TablePro again. You only need to do this once. See the [Installation guide](/installation#first-launch-security) for more details.
 </Warning>
 
 ## Step 3: Create Your First Connection
