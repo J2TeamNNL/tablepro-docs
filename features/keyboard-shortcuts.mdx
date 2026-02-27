@@ -178,6 +178,68 @@ TablePro supports extensive keyboard shortcuts to help you work faster without r
 | Explain with AI | `Cmd+L` | Send selected SQL (or current query) to AI for explanation |
 | Optimize with AI | `Cmd+Option+L` | Send selected SQL (or current query) to AI for optimization |
 
+## Vim Mode Keybindings
+
+When Vim mode is enabled (**Settings** > **Editor** > **Editing** > **Vim mode**), the SQL editor uses modal keybindings. A mode indicator badge appears in the toolbar.
+
+### Modes
+
+| Key | Action |
+|-----|--------|
+| `Escape` | Return to Normal mode |
+| `i` / `I` | Insert before cursor / at line start |
+| `a` / `A` | Append after cursor / at line end |
+| `o` / `O` | Open line below / above |
+| `v` | Visual mode (character-wise) |
+| `V` | Visual Line mode (line-wise) |
+| `:` | Command-line mode |
+
+### Navigation (Normal Mode)
+
+| Key | Action |
+|-----|--------|
+| `h` / `j` / `k` / `l` | Left / Down / Up / Right |
+| `w` / `b` / `e` | Next word / Previous word / End of word |
+| `0` / `$` | Beginning / End of line |
+| `gg` / `G` | First line / Last line |
+
+### Operators (Normal Mode)
+
+| Key | Action |
+|-----|--------|
+| `dd` | Delete line |
+| `yy` | Yank (copy) line |
+| `cc` | Change line |
+| `x` | Delete character |
+| `p` / `P` | Paste after / before cursor |
+| `d` + motion | Delete with motion |
+| `y` + motion | Yank with motion |
+| `c` + motion | Change with motion |
+
+### Visual Mode
+
+| Key | Action |
+|-----|--------|
+| `d` | Delete selection |
+| `y` | Yank selection |
+| `c` | Change selection |
+
+### Command-Line Mode
+
+| Command | Action |
+|---------|--------|
+| `:w` | Execute query (`Cmd+Enter`) |
+| `:q` | Close tab |
+| `:wq` | Execute query and close tab |
+
+### Count Prefixes
+
+Prefix motions and operators with a number: `3j` (down 3 lines), `2dd` (delete 2 lines), `5x` (delete 5 characters).
+
+<Note>
+Vim mode keybindings are only active in the SQL editor and do not affect the data grid or other panels. Standard shortcuts like `Cmd+Enter` remain available in all modes.
+</Note>
+
 ## Filtering
 
 | Action | Shortcut |
@@ -365,6 +427,16 @@ Cmd+W          Close tab
 Cmd+1-9        Switch to tab N
 Cmd+Shift+[    Previous tab
 Cmd+Shift+]    Next tab
+
+=== Vim Mode (when enabled) ===
+Escape         Normal mode
+i/a/o          Enter Insert mode
+v/V            Visual / Visual Line
+h/j/k/l        Left/Down/Up/Right
+w/b/e          Word motions
+dd/yy/cc       Delete/Yank/Change line
+:w             Execute query
+:q             Close tab
 
 === Application ===
 Cmd+N          New connection

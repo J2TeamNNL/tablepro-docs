@@ -320,6 +320,84 @@ Khi một truy vấn thất bại:
   />
 </Frame>
 
+## Chế độ Vim
+
+TablePro tích hợp tùy chọn phím tắt Vim cho trình soạn thảo SQL, cung cấp chỉnh sửa theo chế độ cho các lập trình viên quen với điều hướng và thao tác văn bản kiểu Vim.
+
+### Bật chế độ Vim
+
+Bật/tắt chế độ Vim trong **Settings** > **Editor** > **Editing** > **Vim mode**. Khi bật, trình soạn thảo chuyển sang chỉnh sửa theo chế độ với huy hiệu chỉ báo chế độ hiển thị trên thanh công cụ editor.
+
+### Các chế độ
+
+| Chế độ | Mô tả |
+|--------|-------|
+| **Normal** | Chế độ mặc định để điều hướng và ra lệnh. Nhấn `Escape` để quay lại đây. |
+| **Insert** | Chế độ nhập văn bản, hoạt động như editor thông thường. |
+| **Visual** | Chế độ chọn theo ký tự. |
+| **Visual Line** | Chế độ chọn theo dòng. |
+| **Command-line** | Lệnh Ex (`:w`, `:q`, v.v.). |
+
+### Di chuyển
+
+| Phím | Hành động |
+|------|-----------|
+| `h` / `j` / `k` / `l` | Trái / Xuống / Lên / Phải |
+| `w` / `b` / `e` | Từ tiếp theo / Từ trước / Cuối từ |
+| `0` / `$` | Đầu dòng / Cuối dòng |
+| `gg` / `G` | Dòng đầu tiên / Dòng cuối cùng |
+
+### Toán tử
+
+| Phím | Hành động |
+|------|-----------|
+| `dd` | Xóa dòng |
+| `yy` | Yank (sao chép) dòng |
+| `cc` | Thay đổi dòng |
+| `x` | Xóa ký tự |
+| `p` / `P` | Dán sau / Dán trước |
+| `d` + di chuyển | Xóa với di chuyển (ví dụ: `dw`, `d$`) |
+| `y` + di chuyển | Yank với di chuyển (ví dụ: `yw`, `y0`) |
+| `c` + di chuyển | Thay đổi với di chuyển (ví dụ: `cw`, `c$`) |
+
+### Vào chế độ Insert
+
+| Phím | Hành động |
+|------|-----------|
+| `i` / `I` | Chèn trước con trỏ / Chèn ở đầu dòng |
+| `a` / `A` | Chèn sau con trỏ / Chèn ở cuối dòng |
+| `o` / `O` | Mở dòng mới bên dưới / Mở dòng mới bên trên |
+
+### Chế độ Visual
+
+Nhấn `v` để chọn theo ký tự hoặc `V` để chọn theo dòng. Sử dụng các phím di chuyển để mở rộng vùng chọn, sau đó áp dụng toán tử:
+
+- `d` — xóa vùng chọn
+- `y` — yank vùng chọn
+- `c` — thay đổi vùng chọn
+
+### Chế độ Command-line
+
+Nhấn `:` trong chế độ Normal để vào chế độ command-line:
+
+| Lệnh | Hành động |
+|-------|-----------|
+| `:w` | Thực thi truy vấn hiện tại (tương đương `Cmd+Enter`) |
+| `:q` | Đóng tab hiện tại |
+| `:wq` | Thực thi truy vấn và đóng tab |
+
+### Tiền tố số đếm
+
+Hầu hết các phím di chuyển và toán tử chấp nhận tiền tố số đếm: `3j` di chuyển xuống 3 dòng, `2dd` xóa 2 dòng, `5x` xóa 5 ký tự.
+
+### Phối hợp phím Escape
+
+Khi chế độ Vim được bật, `Escape` quay lại chế độ Normal. Nếu gợi ý tự động hoàn thành AI đang hiển thị, `Escape` lần đầu đóng gợi ý và lần thứ hai quay lại chế độ Normal.
+
+<Tip>
+Huy hiệu chỉ báo chế độ trên thanh công cụ hiển thị chế độ Vim hiện tại (NORMAL, INSERT, VISUAL) để bạn luôn biết mình đang ở chế độ nào.
+</Tip>
+
 ## Cài đặt Trình soạn thảo
 
 Tùy chỉnh trình soạn thảo trong **Settings** > **Editor**:
@@ -338,6 +416,12 @@ Tùy chỉnh trình soạn thảo trong **Settings** > **Editor**:
 | **Show Line Numbers** | Hiển thị số dòng | Bật |
 | **Highlight Current Line** | Tô sáng nhẹ dòng có con trỏ | Bật |
 | **Word Wrap** | Tự động xuống dòng cho dòng dài | Tắt |
+
+### Cài đặt Chỉnh sửa
+
+| Cài đặt | Mô tả | Mặc định |
+|---------|-------|---------|
+| **Vim Mode** | Bật phím tắt Vim (chế độ Normal/Insert/Visual) | Tắt |
 
 ### Cài đặt Thụt lề
 

@@ -320,6 +320,84 @@ When a query fails:
   />
 </Frame>
 
+## Vim Mode
+
+TablePro includes optional Vim keybindings for the SQL editor, providing modal editing for developers who prefer Vim-style navigation and text manipulation.
+
+### Enabling Vim Mode
+
+Toggle Vim mode in **Settings** > **Editor** > **Editing** > **Vim mode**. When enabled, the editor switches to modal editing with a mode indicator badge displayed in the editor toolbar.
+
+### Modes
+
+| Mode | Description |
+|------|-------------|
+| **Normal** | Default mode for navigation and commands. Press `Escape` to return here. |
+| **Insert** | Text input mode, behaves like a standard editor. |
+| **Visual** | Character-wise selection mode. |
+| **Visual Line** | Line-wise selection mode. |
+| **Command-line** | Ex commands (`:w`, `:q`, etc.). |
+
+### Motions
+
+| Key | Action |
+|-----|--------|
+| `h` / `j` / `k` / `l` | Left / Down / Up / Right |
+| `w` / `b` / `e` | Next word / Previous word / End of word |
+| `0` / `$` | Beginning / End of line |
+| `gg` / `G` | First line / Last line |
+
+### Operators
+
+| Key | Action |
+|-----|--------|
+| `dd` | Delete line |
+| `yy` | Yank (copy) line |
+| `cc` | Change line |
+| `x` | Delete character |
+| `p` / `P` | Paste after / Paste before |
+| `d` + motion | Delete with motion (e.g., `dw`, `d$`) |
+| `y` + motion | Yank with motion (e.g., `yw`, `y0`) |
+| `c` + motion | Change with motion (e.g., `cw`, `c$`) |
+
+### Entering Insert Mode
+
+| Key | Action |
+|-----|--------|
+| `i` / `I` | Insert before cursor / Insert at line start |
+| `a` / `A` | Append after cursor / Append at line end |
+| `o` / `O` | Open line below / Open line above |
+
+### Visual Mode
+
+Press `v` for character-wise or `V` for line-wise visual selection. Use motions to extend the selection, then apply an operator:
+
+- `d` — delete selection
+- `y` — yank selection
+- `c` — change selection
+
+### Command-Line Mode
+
+Press `:` in Normal mode to enter command-line mode:
+
+| Command | Action |
+|---------|--------|
+| `:w` | Execute the current query (equivalent to `Cmd+Enter`) |
+| `:q` | Close the current tab |
+| `:wq` | Execute query and close tab |
+
+### Count Prefixes
+
+Most motions and operators accept a count prefix: `3j` moves down 3 lines, `2dd` deletes 2 lines, `5x` deletes 5 characters.
+
+### Escape Coordination
+
+When Vim mode is enabled, `Escape` returns to Normal mode. If AI autocomplete suggestions are visible, the first `Escape` dismisses the suggestion and the second returns to Normal mode.
+
+<Tip>
+The mode indicator badge in the toolbar shows your current Vim mode (NORMAL, INSERT, VISUAL) so you always know which mode you are in.
+</Tip>
+
 ## Editor Settings
 
 Customize the editor in **Settings** > **Editor**:
@@ -338,6 +416,12 @@ Customize the editor in **Settings** > **Editor**:
 | **Show Line Numbers** | Display line numbers | On |
 | **Highlight Current Line** | Subtle highlight on cursor line | On |
 | **Word Wrap** | Wrap long lines | Off |
+
+### Editing Settings
+
+| Setting | Description | Default |
+|---------|-------------|---------|
+| **Vim Mode** | Enable Vim keybindings (Normal/Insert/Visual modes) | Off |
 
 ### Indentation Settings
 

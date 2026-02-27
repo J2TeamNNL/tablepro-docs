@@ -178,6 +178,68 @@ TablePro hỗ trợ phím tắt phong phú để giúp bạn làm việc nhanh h
 | Giải thích với AI | `Cmd+L` | Gửi SQL đã chọn (hoặc query hiện tại) cho AI giải thích |
 | Tối ưu với AI | `Cmd+Option+L` | Gửi SQL đã chọn (hoặc query hiện tại) cho AI tối ưu |
 
+## Phím Tắt Chế Độ Vim
+
+Khi chế độ Vim được bật (**Settings** > **Editor** > **Editing** > **Vim mode**), trình soạn thảo SQL sử dụng phím tắt theo chế độ. Huy hiệu chỉ báo chế độ xuất hiện trên thanh công cụ.
+
+### Các Chế Độ
+
+| Phím | Hành động |
+|------|-----------|
+| `Escape` | Quay lại chế độ Normal |
+| `i` / `I` | Chèn trước con trỏ / ở đầu dòng |
+| `a` / `A` | Chèn sau con trỏ / ở cuối dòng |
+| `o` / `O` | Mở dòng mới bên dưới / bên trên |
+| `v` | Chế độ Visual (theo ký tự) |
+| `V` | Chế độ Visual Line (theo dòng) |
+| `:` | Chế độ Command-line |
+
+### Điều Hướng (Chế Độ Normal)
+
+| Phím | Hành động |
+|------|-----------|
+| `h` / `j` / `k` / `l` | Trái / Xuống / Lên / Phải |
+| `w` / `b` / `e` | Từ tiếp theo / Từ trước / Cuối từ |
+| `0` / `$` | Đầu dòng / Cuối dòng |
+| `gg` / `G` | Dòng đầu tiên / Dòng cuối cùng |
+
+### Toán Tử (Chế Độ Normal)
+
+| Phím | Hành động |
+|------|-----------|
+| `dd` | Xóa dòng |
+| `yy` | Yank (sao chép) dòng |
+| `cc` | Thay đổi dòng |
+| `x` | Xóa ký tự |
+| `p` / `P` | Dán sau / trước con trỏ |
+| `d` + di chuyển | Xóa với di chuyển |
+| `y` + di chuyển | Yank với di chuyển |
+| `c` + di chuyển | Thay đổi với di chuyển |
+
+### Chế Độ Visual
+
+| Phím | Hành động |
+|------|-----------|
+| `d` | Xóa vùng chọn |
+| `y` | Yank vùng chọn |
+| `c` | Thay đổi vùng chọn |
+
+### Chế Độ Command-line
+
+| Lệnh | Hành động |
+|-------|-----------|
+| `:w` | Thực thi truy vấn (`Cmd+Enter`) |
+| `:q` | Đóng tab |
+| `:wq` | Thực thi truy vấn và đóng tab |
+
+### Tiền Tố Số Đếm
+
+Thêm số trước các phím di chuyển và toán tử: `3j` (xuống 3 dòng), `2dd` (xóa 2 dòng), `5x` (xóa 5 ký tự).
+
+<Note>
+Phím tắt chế độ Vim chỉ hoạt động trong trình soạn thảo SQL và không ảnh hưởng đến bảng dữ liệu hoặc các panel khác. Các phím tắt chuẩn như `Cmd+Enter` vẫn có sẵn trong tất cả các chế độ.
+</Note>
+
 ## Lọc
 
 | Hành động | Phím tắt |
@@ -370,6 +432,16 @@ Cmd+Shift+]    Tab tiếp theo
 Cmd+Shift+L    Bật/tắt AI Chat
 Cmd+L          Giải thích với AI
 Cmd+Opt+L      Tối ưu với AI
+
+=== Chế Độ Vim (khi bật) ===
+Escape         Chế độ Normal
+i/a/o          Vào chế độ Insert
+v/V            Visual / Visual Line
+h/j/k/l        Trái/Xuống/Lên/Phải
+w/b/e          Di chuyển theo từ
+dd/yy/cc       Xóa/Yank/Thay đổi dòng
+:w             Thực thi query
+:q             Đóng tab
 
 === Ứng dụng ===
 Cmd+N          Kết nối mới
