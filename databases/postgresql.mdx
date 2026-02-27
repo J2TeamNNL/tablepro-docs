@@ -157,6 +157,22 @@ PostgreSQL organizes tables into schemas. TablePro displays:
   />
 </Frame>
 
+### Schema Switching
+
+You can switch between PostgreSQL schemas using the database switcher (**⌘K**):
+
+1. Press **⌘K** to open the switcher — it shows schemas instead of databases for PostgreSQL connections
+2. Select the target schema (e.g., `auth`, `extensions`, or a custom schema)
+3. The sidebar, queries, and toolbar update to reflect the selected schema
+
+<Tip>
+The default schema is `public`. System schemas (`pg_catalog`, `information_schema`, `pg_toast`) are filtered from the list. Schemas starting with `pg_` are marked as system schemas.
+</Tip>
+
+<Note>
+Schema switching sets the PostgreSQL `search_path` on your connection. The selected schema persists across reconnections within the same session.
+</Note>
+
 ### Table Information
 
 For each table, TablePro shows:
