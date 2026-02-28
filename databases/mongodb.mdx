@@ -47,6 +47,19 @@ TablePro provides support for MongoDB 5.0 and later versions. MongoDB is a docum
 For local development without authentication enabled, you can leave the username and password fields empty.
 </Tip>
 
+### Advanced Settings
+
+Configure read preference and write concern in the **Advanced** tab of the connection form. These settings are optional and only apply to MongoDB connections.
+
+| Field | Description | Options |
+|-------|-------------|---------|
+| **Read Preference** | Controls which replica set members receive read operations | Default, Primary, Primary Preferred, Secondary, Secondary Preferred, Nearest |
+| **Write Concern** | Controls the acknowledgment level for write operations | Default, Majority, 1, 2, 3 |
+
+<Tip>
+For most use cases, the default settings work well. Use **Secondary Preferred** or **Nearest** read preference to distribute read load across replica set members. Use **Majority** write concern for stronger durability guarantees.
+</Tip>
+
 {/* Screenshot: MongoDB connection form */}
 <Frame caption="MongoDB connection form">
   <img

@@ -47,6 +47,19 @@ TablePro cung cấp hỗ trợ cho MongoDB 5.0 và các phiên bản mới hơn.
 Đối với phát triển local không bật xác thực, bạn có thể để trống các trường username và password.
 </Tip>
 
+### Cài đặt Nâng cao
+
+Cấu hình read preference và write concern trong tab **Advanced** của biểu mẫu kết nối. Các cài đặt này là tùy chọn và chỉ áp dụng cho kết nối MongoDB.
+
+| Trường | Mô tả | Tùy chọn |
+|-------|-------------|---------|
+| **Read Preference** | Kiểm soát thành viên replica set nào nhận các thao tác đọc | Default, Primary, Primary Preferred, Secondary, Secondary Preferred, Nearest |
+| **Write Concern** | Kiểm soát mức xác nhận cho các thao tác ghi | Default, Majority, 1, 2, 3 |
+
+<Tip>
+Đối với hầu hết các trường hợp sử dụng, cài đặt mặc định hoạt động tốt. Sử dụng **Secondary Preferred** hoặc **Nearest** read preference để phân phối tải đọc qua các thành viên replica set. Sử dụng **Majority** write concern để đảm bảo độ bền dữ liệu mạnh hơn.
+</Tip>
+
 {/* Screenshot: Biểu mẫu kết nối MongoDB */}
 <Frame caption="Biểu mẫu kết nối MongoDB">
   <img
