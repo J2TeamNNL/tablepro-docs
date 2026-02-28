@@ -35,6 +35,7 @@
                   "databases/mysql",
                   "databases/postgresql",
                   "databases/sqlite",
+                  "databases/mongodb",
                   "databases/ssh-tunneling"
                 ]
               },
@@ -117,6 +118,7 @@
                   "vi/databases/mysql",
                   "vi/databases/postgresql",
                   "vi/databases/sqlite",
+                  "vi/databases/mongodb",
                   "vi/databases/ssh-tunneling"
                 ]
               },
