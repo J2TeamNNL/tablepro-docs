@@ -191,6 +191,17 @@ Documents are displayed in the data grid with fields as columns:
 The schema is inferred by sampling documents in the collection. Columns reflect the union of all fields found across sampled documents.
 </Tip>
 
+### Collection Duplication
+
+Duplicate an existing collection including all documents and indexes:
+
+1. Open the **Create Table** dialog
+2. Click **Duplicate** in the toolbar
+3. Select the source collection from the list
+4. TablePro copies all documents using `aggregate` with `$out` and recreates non-primary indexes
+
+The duplicated collection is named `originalName_copy` (with numeric suffix if the name already exists).
+
 ### MongoDB Shell Queries
 
 Execute queries using MongoDB Shell (MQL) syntax in the editor:
