@@ -20,6 +20,10 @@ Export data from query results or tables:
 5. Configure format-specific options
 6. Click **Export**
 
+<Note>
+**MongoDB**: SQL export is not available for MongoDB connections. Use CSV, JSON, or XLSX format instead.
+</Note>
+
 {/* Screenshot: Export dialog with format options */}
 <Frame caption="Export dialog">
   <img
@@ -284,6 +288,10 @@ The format is auto-detected based on content: if the data contains more tabs tha
 ## Import Data
 
 TablePro supports importing **SQL files** (`.sql` and `.sql.gz`). SQL import executes statements directly against your database, making it ideal for restoring backups, running migrations, or seeding data.
+
+<Note>
+**MongoDB**: SQL import is not available for MongoDB connections. Use `mongoimport` or the MQL shell for importing data.
+</Note>
 
 ### Import Workflow
 

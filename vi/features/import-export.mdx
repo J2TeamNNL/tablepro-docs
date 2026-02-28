@@ -20,6 +20,10 @@ Export dữ liệu từ kết quả query hoặc bảng:
 5. Cấu hình tùy chọn cho từng định dạng
 6. Click **Export**
 
+<Note>
+**MongoDB**: Export SQL không khả dụng cho kết nối MongoDB. Sử dụng định dạng CSV, JSON hoặc XLSX thay thế.
+</Note>
+
 {/* Screenshot: Export dialog with format options */}
 <Frame caption="Hộp thoại export">
   <img
@@ -286,6 +290,10 @@ TablePro sử dụng trình phân tích CSV tuân thủ RFC 4180, hỗ trợ:
 ## Import Dữ Liệu
 
 TablePro hỗ trợ import file SQL (`.sql` và `.sql.gz`). Đây là cách nhanh nhất để khôi phục database dump, chạy migration script hoặc seeding dữ liệu.
+
+<Note>
+**MongoDB**: Import SQL không khả dụng cho kết nối MongoDB. Sử dụng `mongoimport` hoặc MQL shell để import dữ liệu.
+</Note>
 
 ### Quy Trình Import
 
