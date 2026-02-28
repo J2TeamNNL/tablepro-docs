@@ -57,6 +57,31 @@ You can create a new connection at any time:
 
 - **File** > **New Connection** (`Cmd+N`)
 
+### From a Connection URL
+
+If you have a database connection string (commonly provided by hosting platforms, deployment tools, or documentation), you can paste it directly into the connection form:
+
+1. Open the **New Connection** form
+2. Paste your connection URL into the **Connection URL** field at the top
+3. All fields (type, host, port, database, username, password) are filled in automatically
+4. Review the auto-filled values and click **Create**
+
+**Supported URL formats:**
+
+| Format | Example |
+|--------|---------|
+| PostgreSQL | `postgresql://user:pass@host:5432/dbname` |
+| PostgreSQL (alias) | `postgres://user:pass@host:5432/dbname` |
+| MySQL | `mysql://user:pass@host:3306/dbname` |
+| MariaDB | `mariadb://user:pass@host:3306/dbname` |
+| MongoDB | `mongodb://user:pass@host:27017/dbname` |
+| MongoDB SRV | `mongodb+srv://user:pass@cluster.example.com/dbname` |
+| SQLite | `sqlite:///path/to/database.db` |
+
+<Tip>
+Connection URLs with special characters in the password (like `@`, `#`, or `%`) should use percent-encoding. For example, `p@ssword` becomes `p%40ssword`.
+</Tip>
+
 ### Connection Form Fields
 
 #### General Section

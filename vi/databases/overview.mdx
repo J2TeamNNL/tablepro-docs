@@ -57,6 +57,31 @@ Bạn có thể tạo kết nối mới bất cứ lúc nào:
 
 - **File** > **New Connection** (`Cmd+N`)
 
+### Từ URL Kết nối
+
+Nếu bạn có chuỗi kết nối cơ sở dữ liệu (thường được cung cấp bởi nền tảng hosting, công cụ triển khai hoặc tài liệu), bạn có thể dán trực tiếp vào biểu mẫu kết nối:
+
+1. Mở biểu mẫu **New Connection**
+2. Dán URL kết nối vào trường **Connection URL** ở phía trên
+3. Tất cả các trường (loại, host, port, database, username, password) được điền tự động
+4. Xem lại các giá trị đã điền và nhấp **Create**
+
+**Các định dạng URL được hỗ trợ:**
+
+| Định dạng | Ví dụ |
+|--------|---------|
+| PostgreSQL | `postgresql://user:pass@host:5432/dbname` |
+| PostgreSQL (alias) | `postgres://user:pass@host:5432/dbname` |
+| MySQL | `mysql://user:pass@host:3306/dbname` |
+| MariaDB | `mariadb://user:pass@host:3306/dbname` |
+| MongoDB | `mongodb://user:pass@host:27017/dbname` |
+| MongoDB SRV | `mongodb+srv://user:pass@cluster.example.com/dbname` |
+| SQLite | `sqlite:///path/to/database.db` |
+
+<Tip>
+URL kết nối có ký tự đặc biệt trong mật khẩu (như `@`, `#` hoặc `%`) cần sử dụng percent-encoding. Ví dụ: `p@ssword` trở thành `p%40ssword`.
+</Tip>
+
 ### Các trường Biểu mẫu Kết nối
 
 #### Phần General
