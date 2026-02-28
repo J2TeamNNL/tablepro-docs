@@ -7,7 +7,13 @@ rss: true
 <Update label="28 tháng 2, 2026" description="v0.9.2">
   ### Sửa lỗi
 
-  - Sửa lỗi cập nhật tự động qua Sparkle thất bại với thông báo "improperly signed"
+  - Sửa lỗi app bundle không được ad-hoc signed — bước ký bị bỏ qua khi không có dylib nào được bundle
+</Update>
+
+<Update label="28 tháng 2, 2026" description="v0.9.1">
+  ### Sửa lỗi
+
+  - Sửa lỗi cập nhật tự động qua Sparkle thất bại với thông báo "improperly signed" — file ZIP release giờ giữ nguyên symlink framework và bao gồm ad-hoc code signature đúng
 </Update>
 
 <Update label="28 tháng 2, 2026" description="v0.9.0">
