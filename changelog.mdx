@@ -4,6 +4,36 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="February 28, 2026" description="v0.9.0">
+  ### New Features
+
+  - **Vim Mode for SQL Editor**: Full Vim keybindings with Normal/Insert/Visual modes, motions (`w`, `b`, `e`, `^`, `_`), operators, and `:w`/`:q` commands — toggle in Editor Settings
+  - **PostgreSQL Schema Switching**: Browse and switch between schemas (`public`, `auth`, custom schemas) via ⌘K database switcher
+
+  ### Improvements
+
+  - Query history operations converted to native Swift async/await for faster response
+  - Export and Import services consolidated to reduce UI update overhead
+  - App startup uses structured Task-based retry loops instead of dispatch chains
+
+  ### Bug Fixes
+
+  - Fixed cell edit showing modified background (yellow) but reverting to original value after pressing Enter
+  - Fixed undo on inserted row cell edit not syncing data correctly
+  - Fixed Vim Escape key not working when autocomplete popup is visible
+  - Fixed Copy/Cut (⌘C/⌘X) not working in SQL editor
+  - Fixed Vim yank/delete not syncing to system clipboard
+  - Fixed multiple Vim motion and visual mode selection issues
+  - Fixed event monitor and memory leaks in SQL editor lifecycle
+  - Fixed unbounded memory growth from tab registry, sorted row cache, and schema provider retention
+  - Fixed background tabs retaining full result data indefinitely
+  - Fixed crash on macOS 14.x caused by missing libpq symbol — now uses vendored static libraries
+  - Fixed duplicate tabs when inserting SQL from AI Chat or History with multiple windows open
+  - Fixed various coordinator lifecycle issues (teardown, destroy, cancellation)
+  - Fixed DataGridView unnecessary column reconfiguration on every version bump
+  - Fixed ConnectionHealthMonitor slow failure detection — now supports immediate health checks
+</Update>
+
 <Update label="February 27, 2026" description="v0.8.0">
   ### New Features
 

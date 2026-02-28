@@ -4,6 +4,36 @@ description: "Cập nhật sản phẩm và thông báo cho TablePro"
 rss: true
 ---
 
+<Update label="28 tháng 2, 2026" description="v0.9.0">
+  ### Tính năng mới
+
+  - **Chế độ Vim cho SQL Editor**: Hỗ trợ đầy đủ phím tắt Vim với chế độ Normal/Insert/Visual, các motion (`w`, `b`, `e`, `^`, `_`), toán tử, và lệnh `:w`/`:q` — bật/tắt trong Cài đặt Editor
+  - **Chuyển Schema PostgreSQL**: Duyệt và chuyển giữa các schema (`public`, `auth`, schema tùy chỉnh) qua ⌘K
+
+  ### Cải tiến
+
+  - Các thao tác lịch sử truy vấn chuyển sang Swift async/await gốc để phản hồi nhanh hơn
+  - Dịch vụ Export và Import được hợp nhất để giảm overhead cập nhật UI
+  - Khởi động ứng dụng sử dụng vòng lặp Task có cấu trúc thay vì dispatch chain
+
+  ### Sửa lỗi
+
+  - Sửa lỗi chỉnh sửa ô hiển thị nền đã sửa đổi (vàng) nhưng trở lại giá trị gốc sau khi nhấn Enter
+  - Sửa lỗi hoàn tác chỉnh sửa ô hàng mới chèn không đồng bộ dữ liệu đúng
+  - Sửa lỗi phím Escape Vim không hoạt động khi popup autocomplete đang hiển thị
+  - Sửa lỗi Copy/Cut (⌘C/⌘X) không hoạt động trong SQL editor
+  - Sửa lỗi Vim yank/delete không đồng bộ với clipboard hệ thống
+  - Sửa nhiều lỗi motion và chọn visual mode trong Vim
+  - Sửa lỗi rò rỉ event monitor và bộ nhớ trong vòng đời SQL editor
+  - Sửa lỗi tăng trưởng bộ nhớ không giới hạn từ tab registry, sorted row cache và schema provider
+  - Sửa lỗi các tab nền giữ toàn bộ dữ liệu kết quả vô thời hạn
+  - Sửa lỗi crash trên macOS 14.x do thiếu symbol libpq — giờ sử dụng thư viện tĩnh đi kèm
+  - Sửa lỗi tab trùng lặp khi chèn SQL từ AI Chat hoặc Lịch sử với nhiều cửa sổ đang mở
+  - Sửa các vấn đề vòng đời coordinator (teardown, destroy, cancellation)
+  - Sửa lỗi DataGridView cấu hình lại cột không cần thiết ở mỗi lần cập nhật phiên bản
+  - Sửa lỗi ConnectionHealthMonitor phát hiện lỗi chậm — giờ hỗ trợ kiểm tra sức khỏe ngay lập tức
+</Update>
+
 <Update label="27 tháng 2, 2026" description="v0.8.0">
   ### Tính năng mới
 
