@@ -5,7 +5,7 @@ description: Import dữ liệu từ file SQL và export dữ liệu theo nhiề
 
 # Nhập & Xuất
 
-TablePro hỗ trợ export dữ liệu theo nhiều định dạng (CSV, JSON, SQL và Excel XLSX) để sao lưu, di chuyển hoặc phân tích, cũng như import dữ liệu từ file SQL.
+TablePro hỗ trợ export dữ liệu theo nhiều định dạng (CSV, JSON, SQL, MQL và Excel XLSX) để sao lưu, di chuyển hoặc phân tích, cũng như import dữ liệu từ file SQL.
 
 ## Export Dữ Liệu
 
@@ -21,7 +21,7 @@ Export dữ liệu từ kết quả query hoặc bảng:
 6. Click **Export**
 
 <Note>
-**MongoDB**: Export SQL không khả dụng cho kết nối MongoDB. Sử dụng định dạng CSV, JSON hoặc XLSX thay thế.
+**MongoDB**: Export SQL không khả dụng cho kết nối MongoDB. Sử dụng định dạng CSV, JSON, MQL hoặc XLSX thay thế. Định dạng MQL tạo script `db.collection.insertMany([...])` có thể chạy trực tiếp trong `mongosh`.
 </Note>
 
 {/* Screenshot: Export dialog with format options */}
@@ -178,6 +178,36 @@ Export dữ liệu từ kết quả query hoặc bảng:
         alt="Tùy chọn export SQL: cấu trúc, dữ liệu, batch size"
       />
     </Frame>
+  </Tab>
+  <Tab title="MQL">
+    **MongoDB Query Language Script**
+
+    Tốt nhất cho:
+    - Khôi phục dữ liệu MongoDB qua `mongosh`
+    - Sao lưu và di chuyển MongoDB
+    - Chia sẻ dữ liệu MongoDB dưới dạng script thực thi
+
+    Tùy chọn:
+    | Tùy chọn | Mô tả | Mặc định |
+    |--------|-------------|---------|
+    | Batch size | Số document mỗi câu lệnh `insertMany` | 500 |
+
+    Ví dụ output:
+    ```javascript
+    // TablePro MQL Export
+    // Generated: 2024-01-15T10:30:00Z
+    // Database: mydb
+
+    // Collection: users
+    db.users.insertMany([
+      {"_id": {"$oid": "507f1f77bcf86cd799439011"}, "name": "Alice", "age": 30},
+      {"_id": {"$oid": "507f1f77bcf86cd799439012"}, "name": "Bob", "age": 25}
+    ]);
+    ```
+
+    <Note>
+    Export MQL chỉ khả dụng cho kết nối MongoDB. Output là file `.js` có thể thực thi trực tiếp trong `mongosh`.
+    </Note>
   </Tab>
   <Tab title="XLSX">
     **Bảng tính Excel**
@@ -429,6 +459,7 @@ Nén gzip không khả dụng cho các định dạng CSV, JSON và XLSX.
    - CSV cho công cụ phân tích dữ liệu
    - JSON cho API/web
    - SQL cho di chuyển database
+   - MQL cho sao lưu/khôi phục MongoDB qua `mongosh`
    - XLSX cho chia sẻ với người dùng không kỹ thuật qua Excel
 
 ### Import
