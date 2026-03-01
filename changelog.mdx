@@ -4,6 +4,25 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="March 1, 2026" description="v0.10.0">
+  ### New Features
+
+  - **Multiple Database Connections**: Open separate windows for different database connections, each with independent session isolation
+  - **MongoDB Support**: Connect to MongoDB databases with collection browsing, document viewing, and MQL export
+  - **Import from URL**: Import database connections directly from connection strings (e.g., `postgresql://user:pass@host:5432/db`)
+  - **Custom About Window**: New About window with version info and quick links to Website, GitHub, and Documentation
+
+  ### Improvements
+
+  - Release notes now shown in the Sparkle update window
+
+  ### Bug Fixes
+
+  - Fixed new row (Cmd+I) and duplicated row not appearing in data grid until manual refresh
+  - Fixed PostgreSQL SSH tunnel connections failing with "no encryption" due to SSL config not being preserved
+  - Fixed PostgreSQL SSL `sslrootcert` passed unconditionally, causing certificate verification failure in Required mode
+</Update>
+
 <Update label="February 28, 2026" description="v0.9.2">
   ### Bug Fixes
 

@@ -4,6 +4,25 @@ description: "Cập nhật sản phẩm và thông báo cho TablePro"
 rss: true
 ---
 
+<Update label="1 tháng 3, 2026" description="v0.10.0">
+  ### Tính năng mới
+
+  - **Nhiều kết nối cơ sở dữ liệu**: Mở các cửa sổ riêng biệt cho từng kết nối, mỗi cửa sổ có phiên làm việc độc lập
+  - **Hỗ trợ MongoDB**: Kết nối đến MongoDB với duyệt collection, xem document và xuất MQL
+  - **Nhập từ URL**: Nhập kết nối trực tiếp từ chuỗi kết nối (ví dụ: `postgresql://user:pass@host:5432/db`)
+  - **Cửa sổ Giới thiệu mới**: Cửa sổ About với thông tin phiên bản và liên kết nhanh đến Website, GitHub và Tài liệu
+
+  ### Cải tiến
+
+  - Ghi chú phát hành giờ hiển thị trong cửa sổ cập nhật Sparkle
+
+  ### Sửa lỗi
+
+  - Sửa lỗi hàng mới (Cmd+I) và hàng nhân bản không hiển thị trong data grid cho đến khi làm mới thủ công
+  - Sửa lỗi kết nối SSH tunnel PostgreSQL thất bại với "no encryption" do cấu hình SSL không được bảo toàn
+  - Sửa lỗi PostgreSQL SSL `sslrootcert` được truyền vô điều kiện, gây lỗi xác minh chứng chỉ ở chế độ Required
+</Update>
+
 <Update label="28 tháng 2, 2026" description="v0.9.2">
   ### Sửa lỗi
 
