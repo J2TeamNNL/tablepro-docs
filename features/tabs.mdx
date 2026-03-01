@@ -27,13 +27,12 @@ Tabs are the primary workspace in TablePro. When you connect to a database, you 
 
 ## Tab Types
 
-TablePro supports three types of tabs, each designed for a different workflow:
+TablePro supports two types of tabs, each designed for a different workflow:
 
 | Type | Icon | Purpose |
 |------|------|---------|
 | **Query Tab** | Document icon | Write and execute custom SQL queries |
 | **Table Tab** | Table icon (blue) | Browse table data with pagination and filtering |
-| **Create Table Tab** | Special | Design and create new tables visually |
 
 ### Query Tabs
 
@@ -69,17 +68,17 @@ When you click a table in the sidebar, TablePro uses smart tab management:
 
 Optionally, you can enable **Reuse clean table tab** in **Settings** > **Tabs** to get TablePlus-style behavior: when enabled, clicking a different table replaces the current table tab if it has no unsaved changes, no user interaction (sorting, filtering, etc.), and is not pinned. This keeps the tab bar clean while protecting your work.
 
-{/* Screenshot: Different tab types: Query, Table, and Create Table */}
-<Frame caption="Different tab types: Query, Table, and Create Table">
+{/* Screenshot: Different tab types: Query and Table */}
+<Frame caption="Different tab types: Query and Table">
   <img
     className="block dark:hidden"
     src="/images/tab-types.png"
-    alt="Different tab types: Query, Table, and Create Table"
+    alt="Different tab types: Query and Table"
   />
   <img
     className="hidden dark:block"
     src="/images/tab-types-dark.png"
-    alt="Different tab types: Query, Table, and Create Table"
+    alt="Different tab types: Query and Table"
   />
 </Frame>
 
@@ -187,7 +186,7 @@ The duplicated tab is inserted immediately after the original.
 
 ## Tab State
 
-Each tab stores a comprehensive set of state that is preserved when switching between tabs.
+Each tab stores all of its state, which is preserved when switching between tabs.
 
 ### State Properties
 
@@ -196,7 +195,7 @@ Each tab stores a comprehensive set of state that is preserved when switching be
 | **Tab ID** | Unique identifier (UUID) |
 | **Title** | Display name shown in the tab bar |
 | **SQL Content** | The query text in the SQL editor |
-| **Tab Type** | Query, table, or create table |
+| **Tab Type** | Query or table |
 | **Table Name** | Associated table name (for table tabs) |
 | **Result Columns** | Column names from the last query |
 | **Result Rows** | Row data from the last query (cached) |
@@ -344,7 +343,6 @@ Right-click any tab to access the context menu:
 |--------|----------|
 | New query tab | `Cmd+T` |
 | Close current tab | `Cmd+W` |
-| New table (create) | `Cmd+Shift+N` |
 | Switch to tab 1-9 | `Cmd+1` through `Cmd+9` |
 | Previous tab | `Cmd+Shift+[` or `Cmd+Option+Left` |
 | Next tab | `Cmd+Shift+]` or `Cmd+Option+Right` |
