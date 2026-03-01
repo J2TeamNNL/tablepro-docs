@@ -623,6 +623,34 @@ Configure in **Settings** > **Data Grid** > **Show Alternate Rows**.
   />
 </Frame>
 
+## MongoDB Collections
+
+When viewing MongoDB collections, the data grid has some differences from SQL databases:
+
+### Document Schema
+
+MongoDB collections don't have a fixed schema. TablePro infers column structure by sampling up to 500 documents. If your collection has varied document shapes, some columns may show NULL for documents that don't contain those fields.
+
+### Immutable _id Column
+
+The `_id` column cannot be edited inline or via double-click. MongoDB does not allow modifying the `_id` field of an existing document. To change a document's `_id`, you must delete and re-insert it.
+
+### BSON Type Display
+
+MongoDB BSON types are displayed with appropriate formatting:
+- **ObjectId**: Shown as `ObjectId("...")`
+- **Date**: Formatted as ISO 8601 datetime
+- **Binary**: Shown as `BinData(subtype, "base64...")`
+- **Decimal128**: Displayed as decimal string
+- **DBRef**: Shown as `DBRef("collection", id)`
+
+### MQL Statement Preview
+
+When you make changes (insert, update, delete) in the data grid, the SQL preview shows MongoDB shell commands instead of SQL:
+- Inserts generate `db.collection.insertMany([...])`
+- Updates generate `db.collection.updateOne({filter}, {$set: {...}})`
+- Deletes generate `db.collection.deleteMany({_id: {$in: [...]}})`
+
 ## Working with Large Datasets
 
 ### Performance Tips

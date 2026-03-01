@@ -102,6 +102,23 @@ When TablePro launches, you'll see the Welcome screen. Let's create a new databa
 SQLite databases don't require authentication - just select the `.sqlite` or `.db` file on your Mac.
 </Tip>
 
+### For MongoDB
+
+1. Click **New Connection**
+2. Select **MongoDB** as the database type
+3. Fill in the connection details:
+   - **Name**: A friendly name (e.g., "Local MongoDB")
+   - **Host**: `localhost` (or your server address)
+   - **Port**: `27017` (default)
+   - **Username**: Your database username (if authentication is enabled)
+   - **Password**: Your database password
+   - **Database**: The database name to connect to
+   - **Auth Database**: Authentication database (defaults to `admin`)
+
+<Tip>
+For local MongoDB instances without authentication, you only need the host and port. MongoDB connections use the `mongodb://` URI protocol internally.
+</Tip>
+
 ## Step 4: Test and Connect
 
 1. Click **Test Connection** to verify your settings

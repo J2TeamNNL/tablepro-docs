@@ -637,6 +637,34 @@ Cấu hình trong **Settings** > **Data Grid** > **Show Alternate Rows**.
   />
 </Frame>
 
+## MongoDB Collections
+
+Khi xem các collection MongoDB, lưới dữ liệu có một số khác biệt so với cơ sở dữ liệu SQL:
+
+### Schema Tài liệu
+
+Các collection MongoDB không có schema cố định. TablePro suy luận cấu trúc cột bằng cách lấy mẫu tối đa 500 tài liệu. Nếu collection của bạn có các dạng tài liệu khác nhau, một số cột có thể hiển thị NULL cho các tài liệu không chứa các trường đó.
+
+### Cột _id Không thể Chỉnh sửa
+
+Cột `_id` không thể chỉnh sửa trực tiếp hoặc bằng cách nhấp đúp. MongoDB không cho phép sửa đổi trường `_id` của tài liệu đã tồn tại. Để thay đổi `_id` của tài liệu, bạn phải xóa và chèn lại.
+
+### Hiển thị Kiểu BSON
+
+Các kiểu BSON của MongoDB được hiển thị với định dạng phù hợp:
+- **ObjectId**: Hiển thị dạng `ObjectId("...")`
+- **Date**: Định dạng ISO 8601 datetime
+- **Binary**: Hiển thị dạng `BinData(subtype, "base64...")`
+- **Decimal128**: Hiển thị dạng chuỗi số thập phân
+- **DBRef**: Hiển thị dạng `DBRef("collection", id)`
+
+### Xem trước Câu lệnh MQL
+
+Khi bạn thực hiện thay đổi (chèn, cập nhật, xóa) trong lưới dữ liệu, phần xem trước SQL hiển thị lệnh MongoDB shell thay vì SQL:
+- Chèn tạo `db.collection.insertMany([...])`
+- Cập nhật tạo `db.collection.updateOne({filter}, {$set: {...}})`
+- Xóa tạo `db.collection.deleteMany({_id: {$in: [...]}})`
+
 ## Làm Việc Với Dataset Lớn
 
 ### Mẹo Hiệu Suất

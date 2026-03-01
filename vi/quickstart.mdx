@@ -102,6 +102,23 @@ Khi TablePro khởi chạy, bạn sẽ thấy màn hình Chào mừng. Hãy tạ
 Cơ sở dữ liệu SQLite không yêu cầu xác thực - chỉ cần chọn file `.sqlite` hoặc `.db` trên Mac của bạn.
 </Tip>
 
+### Đối với MongoDB
+
+1. Nhấp **New Connection**
+2. Chọn **MongoDB** làm loại cơ sở dữ liệu
+3. Điền thông tin kết nối:
+   - **Name**: Tên thân thiện (ví dụ: "Local MongoDB")
+   - **Host**: `localhost` (hoặc địa chỉ máy chủ của bạn)
+   - **Port**: `27017` (mặc định)
+   - **Username**: Tên người dùng cơ sở dữ liệu (nếu xác thực được bật)
+   - **Password**: Mật khẩu cơ sở dữ liệu
+   - **Database**: Tên cơ sở dữ liệu để kết nối
+   - **Auth Database**: Cơ sở dữ liệu xác thực (mặc định là `admin`)
+
+<Tip>
+Đối với các instance MongoDB cục bộ không có xác thực, bạn chỉ cần host và port. Kết nối MongoDB sử dụng giao thức URI `mongodb://` bên trong.
+</Tip>
+
 ## Bước 4: Kiểm tra và Kết nối
 
 1. Nhấp **Test Connection** để xác minh cài đặt của bạn
