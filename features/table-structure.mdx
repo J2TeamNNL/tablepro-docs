@@ -496,6 +496,33 @@ After making schema changes:
 3. **Composite indexes**: Order columns by selectivity
 4. **Avoid over-indexing**: Indexes slow down writes
 
+## MongoDB Collections
+
+MongoDB collections have a different structure model compared to SQL tables.
+
+### Schema View
+
+The structure tab for MongoDB collections is **read-only**. Since MongoDB is schema-less, TablePro infers the schema by sampling documents. The structure view shows only three columns:
+
+- **Name**: Field name (including nested paths with dot notation)
+- **Type**: BSON type (ObjectId, String, Int32, Int64, Double, Boolean, Date, Array, Object, etc.)
+- **Nullable**: Whether the field is present in all sampled documents
+
+### Indexes
+
+The Indexes tab displays collection indexes. MongoDB indexes are shown as `createIndex()` commands that can be copied and run in `mongosh`.
+
+### DDL Tab
+
+The DDL tab for MongoDB shows:
+- **Index definitions** as `db.collection.createIndex()` statements
+- **Collection validators** as `db.runCommand({collMod: ...})` statements
+- **Collection options** (capped, size, max) if applicable
+
+<Note>
+Structure modification (adding/removing fields) is not available for MongoDB collections since MongoDB is schema-less. To modify the schema, edit documents directly in the data grid.
+</Note>
+
 ## Troubleshooting
 
 ### Structure Not Loading

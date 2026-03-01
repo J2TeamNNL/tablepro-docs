@@ -496,6 +496,33 @@ Sau khi thực hiện thay đổi schema:
 3. **Index tổng hợp**: Sắp xếp cột theo tính chọn lọc
 4. **Tránh over-indexing**: Index làm chậm ghi
 
+## MongoDB Collections
+
+Các collection MongoDB có mô hình cấu trúc khác so với bảng SQL.
+
+### Xem Schema
+
+Tab cấu trúc cho các collection MongoDB là **chỉ đọc**. Vì MongoDB không có schema cố định, TablePro suy luận schema bằng cách lấy mẫu tài liệu. Chế độ xem cấu trúc chỉ hiển thị ba cột:
+
+- **Name**: Tên trường (bao gồm đường dẫn lồng nhau với ký hiệu dấu chấm)
+- **Type**: Kiểu BSON (ObjectId, String, Int32, Int64, Double, Boolean, Date, Array, Object, v.v.)
+- **Nullable**: Trường có xuất hiện trong tất cả tài liệu được lấy mẫu hay không
+
+### Indexes
+
+Tab Indexes hiển thị các index của collection. Index MongoDB được hiển thị dưới dạng lệnh `createIndex()` có thể sao chép và chạy trong `mongosh`.
+
+### Tab DDL
+
+Tab DDL cho MongoDB hiển thị:
+- **Định nghĩa index** dưới dạng câu lệnh `db.collection.createIndex()`
+- **Validator của collection** dưới dạng câu lệnh `db.runCommand({collMod: ...})`
+- **Tùy chọn collection** (capped, size, max) nếu có
+
+<Note>
+Sửa đổi cấu trúc (thêm/xóa trường) không khả dụng cho các collection MongoDB vì MongoDB không có schema cố định. Để sửa đổi schema, hãy chỉnh sửa tài liệu trực tiếp trong lưới dữ liệu.
+</Note>
+
 ## Khắc Phục Sự Cố
 
 ### Cấu Trúc Không Tải

@@ -5,7 +5,7 @@ description: Import SQL files and export your data in various formats
 
 # Import & Export
 
-TablePro supports importing SQL files into your database and exporting data in multiple formats (CSV, JSON, SQL, and Excel XLSX) for backup, migration, or analysis. You can also paste tabular data from your clipboard directly into the data grid.
+TablePro supports importing SQL files into your database and exporting data in multiple formats (CSV, JSON, SQL, MQL, and Excel XLSX) for backup, migration, or analysis. You can also paste tabular data from your clipboard directly into the data grid.
 
 ## Export Data
 
@@ -19,6 +19,10 @@ Export data from query results or tables:
 4. Select tables to export using the tree view
 5. Configure format-specific options
 6. Click **Export**
+
+<Note>
+**MongoDB**: SQL export is not available for MongoDB connections. Use CSV, JSON, MQL, or XLSX format instead. The MQL format generates `db.collection.insertMany([...])` scripts that can be run directly in `mongosh`.
+</Note>
 
 {/* Screenshot: Export dialog with format options */}
 <Frame caption="Export dialog">
@@ -173,6 +177,36 @@ Export data from query results or tables:
       />
     </Frame>
   </Tab>
+  <Tab title="MQL">
+    **MongoDB Query Language Script**
+
+    Best for:
+    - Restoring MongoDB data via `mongosh`
+    - MongoDB backup and migration
+    - Sharing MongoDB data as executable scripts
+
+    Options:
+    | Option | Description | Default |
+    |--------|-------------|---------|
+    | Batch size | Number of documents per `insertMany` statement | 500 |
+
+    Example output:
+    ```javascript
+    // TablePro MQL Export
+    // Generated: 2024-01-15T10:30:00Z
+    // Database: mydb
+
+    // Collection: users
+    db.users.insertMany([
+      {"_id": {"$oid": "507f1f77bcf86cd799439011"}, "name": "Alice", "age": 30},
+      {"_id": {"$oid": "507f1f77bcf86cd799439012"}, "name": "Bob", "age": 25}
+    ]);
+    ```
+
+    <Note>
+    MQL export is only available for MongoDB connections. The output is a `.js` file that can be executed directly in `mongosh`.
+    </Note>
+  </Tab>
   <Tab title="XLSX">
     **Excel Spreadsheet**
 
@@ -284,6 +318,10 @@ The format is auto-detected based on content: if the data contains more tabs tha
 ## Import Data
 
 TablePro supports importing **SQL files** (`.sql` and `.sql.gz`). SQL import executes statements directly against your database, making it ideal for restoring backups, running migrations, or seeding data.
+
+<Note>
+**MongoDB**: SQL import is not available for MongoDB connections. Use `mongoimport` or the MQL shell for importing data.
+</Note>
 
 ### Import Workflow
 
@@ -417,6 +455,7 @@ Gzip compression is not available for CSV, JSON, or XLSX exports.
    - CSV for data analysis tools
    - JSON for APIs/web
    - SQL for database migration
+   - MQL for MongoDB backup/restore via `mongosh`
    - XLSX for sharing with non-technical users in Excel
 
 4. **Use gzip for large SQL exports**: Enable compression to reduce file size significantly

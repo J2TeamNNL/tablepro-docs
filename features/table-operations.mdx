@@ -692,6 +692,38 @@ The database switcher shows recent databases for quick access and supports refre
   />
 </Frame>
 
+## MongoDB Collection Operations
+
+MongoDB collection operations differ from SQL table operations in several ways.
+
+### Create Collection
+
+MongoDB collections are created implicitly when you first insert a document. To create an empty collection or one with specific options (capped, validator), use the MQL editor:
+
+```javascript
+db.createCollection("myCollection", {
+  capped: true,
+  size: 1048576,
+  max: 1000
+})
+```
+
+### Drop Collection
+
+Right-click a collection in the sidebar and select **Drop Table** to drop it. This executes `db.collection.drop()` and removes all documents and indexes.
+
+### Duplicate Collection
+
+TablePro duplicates MongoDB collections using an aggregation pipeline with `$out` stage, then recreates all indexes on the new collection.
+
+### Show All Collections
+
+Select **Show All Tables** from the sidebar to auto-execute `listCollections` and display all collections in the current database.
+
+<Note>
+**Truncate** is not available for MongoDB collections. To remove all documents while keeping the collection, use `db.collection.deleteMany({})` in the MQL editor.
+</Note>
+
 ## Keyboard Shortcuts
 
 | Action | Shortcut |

@@ -1,0 +1,410 @@
+---
+title: MongoDB
+description: Kết nối với cơ sở dữ liệu MongoDB bằng TablePro
+---
+
+# Kết nối MongoDB
+
+TablePro cung cấp hỗ trợ cho MongoDB 5.0 và các phiên bản mới hơn. MongoDB là cơ sở dữ liệu NoSQL hướng tài liệu lưu trữ dữ liệu trong các tài liệu BSON linh hoạt, giống JSON. Các collection hiển thị như bảng trong sidebar, và các document được hiển thị với các trường là cột.
+
+## Thiết lập Nhanh
+
+<Steps>
+  <Step title="Mở Biểu mẫu Kết nối">
+    Nhấp **New Connection** từ màn hình Chào mừng hoặc **File** > **New Connection**
+  </Step>
+  <Step title="Chọn MongoDB">
+    Chọn **MongoDB** từ trình chọn loại cơ sở dữ liệu
+  </Step>
+  <Step title="Nhập Thông tin Kết nối">
+    Điền host, port, authentication database, username và password
+  </Step>
+  <Step title="Kiểm tra và Kết nối">
+    Nhấp **Test Connection**, sau đó **Create**
+  </Step>
+</Steps>
+
+## Cài đặt Kết nối
+
+### Các trường Bắt buộc
+
+| Trường | Mô tả | Mặc định |
+|-------|-------------|---------|
+| **Name** | Định danh kết nối | - |
+| **Host** | Hostname hoặc IP của máy chủ | `localhost` |
+| **Port** | Cổng máy chủ MongoDB | `27017` |
+| **Database** | Tên cơ sở dữ liệu để kết nối | - |
+
+### Các trường Tùy chọn
+
+| Trường | Mô tả |
+|-------|-------------|
+| **Username** | Người dùng MongoDB để xác thực |
+| **Password** | Mật khẩu người dùng |
+| **Auth Database** | Cơ sở dữ liệu xác thực (mặc định là `admin`) |
+
+<Tip>
+Đối với phát triển local không bật xác thực, bạn có thể để trống các trường username và password.
+</Tip>
+
+### Cài đặt Nâng cao
+
+Cấu hình read preference và write concern trong tab **Advanced** của biểu mẫu kết nối. Các cài đặt này là tùy chọn và chỉ áp dụng cho kết nối MongoDB.
+
+| Trường | Mô tả | Tùy chọn |
+|-------|-------------|---------|
+| **Read Preference** | Kiểm soát thành viên replica set nào nhận các thao tác đọc | Default, Primary, Primary Preferred, Secondary, Secondary Preferred, Nearest |
+| **Write Concern** | Kiểm soát mức xác nhận cho các thao tác ghi | Default, Majority, 1, 2, 3 |
+
+<Tip>
+Đối với hầu hết các trường hợp sử dụng, cài đặt mặc định hoạt động tốt. Sử dụng **Secondary Preferred** hoặc **Nearest** read preference để phân phối tải đọc qua các thành viên replica set. Sử dụng **Majority** write concern để đảm bảo độ bền dữ liệu mạnh hơn.
+</Tip>
+
+{/* Screenshot: Biểu mẫu kết nối MongoDB */}
+<Frame caption="Biểu mẫu kết nối MongoDB">
+  <img
+    className="block dark:hidden"
+    src="/images/mongodb-connection-form.png"
+    alt="Biểu mẫu kết nối MongoDB"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/mongodb-connection-form-dark.png"
+    alt="Biểu mẫu kết nối MongoDB"
+  />
+</Frame>
+
+## Ví dụ Cấu hình
+
+### Máy chủ Phát triển Local
+
+```
+Name:     Local MongoDB
+Host:     localhost
+Port:     27017
+Username: (để trống)
+Password: (để trống)
+Database: myapp
+```
+
+### Docker MongoDB Container
+
+```
+Name:     Docker MongoDB
+Host:     localhost
+Port:     27017 (hoặc cổng được ánh xạ của bạn)
+Username: root
+Password: (mật khẩu từ MONGO_INITDB_ROOT_PASSWORD)
+Database: admin
+```
+
+### MongoDB Atlas
+
+```
+Name:     Atlas Cluster
+Host:     cluster0.abc123.mongodb.net
+Port:     27017
+Username: atlas_user
+Password: (mật khẩu Atlas của bạn)
+Database: myapp
+```
+
+<Note>
+Đối với kết nối MongoDB Atlas, SSL/TLS là bắt buộc. Bật nó trong phần SSL/TLS của biểu mẫu kết nối.
+</Note>
+
+### Máy chủ Từ xa
+
+```
+Name:     Production DB
+Host:     db.example.com
+Port:     27017
+Username: app_user
+Password: (mật khẩu bảo mật)
+Database: production
+```
+
+<Warning>
+Đối với cơ sở dữ liệu production, hãy xem xét sử dụng [SSH tunneling](/vi/databases/ssh-tunneling) để kết nối an toàn.
+</Warning>
+
+## Kết nối SSL/TLS
+
+TablePro hỗ trợ mã hóa SSL/TLS cho kết nối MongoDB. Cấu hình SSL trong phần **SSL/TLS** của biểu mẫu kết nối.
+
+| Chế độ SSL | Mô tả |
+|----------|-------------|
+| **Disabled** | Không mã hóa SSL |
+| **Required** | Bắt buộc mã hóa SSL |
+| **Verify CA** | Bắt buộc SSL và xác minh chứng chỉ server với CA |
+
+Đối với chế độ **Verify CA**, cung cấp đường dẫn đến file chứng chỉ CA. Bạn cũng có thể cung cấp file chứng chỉ client và khóa tùy chọn để xác thực TLS hai chiều.
+
+<Tip>
+MongoDB Atlas luôn yêu cầu SSL/TLS. Sử dụng chế độ **Required** hoặc **Verify CA** khi kết nối đến các cluster Atlas.
+</Tip>
+
+<Note>
+Nếu bạn không muốn cấu hình chứng chỉ SSL, [SSH tunneling](/vi/databases/ssh-tunneling) là phương án thay thế mã hóa toàn bộ traffic qua đường hầm SSH.
+</Note>
+
+{/* Screenshot: Cấu hình SSL/TLS MongoDB */}
+<Frame caption="Cấu hình SSL/TLS MongoDB">
+  <img
+    className="block dark:hidden"
+    src="/images/mongodb-ssl-config.png"
+    alt="Cấu hình SSL/TLS MongoDB"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/mongodb-ssl-config-dark.png"
+    alt="Cấu hình SSL/TLS MongoDB"
+  />
+</Frame>
+
+## Hỗ trợ SSH Tunnel
+
+Bạn có thể kết nối đến MongoDB qua SSH tunnel để truy cập an toàn đến máy chủ từ xa. Xem [SSH Tunneling](/vi/databases/ssh-tunneling) để biết hướng dẫn thiết lập chi tiết.
+
+## Tính năng
+
+### Duyệt Collection
+
+Sau khi kết nối, sidebar hiển thị tất cả các collection trong cơ sở dữ liệu đã chọn. Các collection hiển thị như bảng trong sidebar:
+
+1. Nhấp vào tên kết nối trong sidebar
+2. Mở rộng cơ sở dữ liệu để xem các collection
+3. Nhấp vào một collection để xem các document
+
+{/* Screenshot: Sidebar hiển thị các collection MongoDB */}
+<Frame caption="Trình duyệt collection MongoDB">
+  <img
+    className="block dark:hidden"
+    src="/images/mongodb-collection-browser.png"
+    alt="Trình duyệt collection"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/mongodb-collection-browser-dark.png"
+    alt="Trình duyệt collection"
+  />
+</Frame>
+
+### Xem Document
+
+Các document được hiển thị trong data grid với các trường là cột:
+
+- **Trường cấp cao nhất** xuất hiện như các cột riêng lẻ
+- **Đối tượng lồng nhau** được hiển thị dưới dạng chuỗi JSON đã định dạng
+- **Mảng** được hiển thị dưới dạng mảng JSON
+- **ObjectId** được hiển thị dưới dạng biểu diễn chuỗi
+- **Các kiểu BSON** (Date, Decimal128, Binary, v.v.) được render với định dạng phù hợp
+
+<Tip>
+Schema được suy luận bằng cách lấy mẫu các document trong collection. Các cột phản ánh hợp nhất tất cả các trường tìm thấy trong các document được lấy mẫu.
+</Tip>
+
+### Nhân bản Collection
+
+Nhân bản một collection hiện có bao gồm tất cả document và index:
+
+1. Mở hộp thoại **Create Table**
+2. Nhấp **Duplicate** trên thanh công cụ
+3. Chọn collection nguồn từ danh sách
+4. TablePro sao chép tất cả document bằng `aggregate` với `$out` và tạo lại các index không phải primary
+
+Collection nhân bản được đặt tên `tenGoc_copy` (có hậu tố số nếu tên đã tồn tại).
+
+### Truy vấn MongoDB Shell
+
+Thực thi truy vấn sử dụng cú pháp MongoDB Shell (MQL) trong trình soạn thảo:
+
+```javascript
+// Tìm document với bộ lọc
+db.users.find({ age: { $gte: 18 }, active: true })
+
+// Tìm với projection và sắp xếp
+db.orders.find(
+  { status: "completed" },
+  { customerId: 1, total: 1, date: 1 }
+).sort({ date: -1 }).limit(20)
+
+// Aggregation pipeline
+db.sales.aggregate([
+  { $match: { date: { $gte: ISODate("2025-01-01") } } },
+  { $group: { _id: "$product", totalSales: { $sum: "$amount" } } },
+  { $sort: { totalSales: -1 } },
+  { $limit: 10 }
+])
+
+// Đếm document
+db.users.countDocuments({ role: "admin" })
+
+// Giá trị duy nhất
+db.products.distinct("category")
+```
+
+### Thao tác CRUD
+
+#### Chèn Document
+
+Chèn document mới vào collection:
+
+```javascript
+// Chèn một document
+db.users.insertOne({
+  name: "John Doe",
+  email: "john@example.com",
+  age: 30,
+  tags: ["developer", "admin"]
+})
+
+// Chèn nhiều document
+db.users.insertMany([
+  { name: "Alice", email: "alice@example.com" },
+  { name: "Bob", email: "bob@example.com" }
+])
+```
+
+#### Cập nhật Document
+
+Cập nhật các document hiện có:
+
+```javascript
+// Cập nhật một document
+db.users.updateOne(
+  { email: "john@example.com" },
+  { $set: { age: 31, updatedAt: new Date() } }
+)
+
+// Cập nhật nhiều document
+db.users.updateMany(
+  { active: false },
+  { $set: { status: "inactive" } }
+)
+```
+
+#### Xóa Document
+
+Xóa document khỏi collection:
+
+```javascript
+// Xóa một document
+db.users.deleteOne({ email: "john@example.com" })
+
+// Xóa nhiều document
+db.users.deleteMany({ active: false, lastLogin: { $lt: ISODate("2024-01-01") } })
+```
+
+## Khắc phục sự cố
+
+### Kết nối Bị từ chối
+
+**Triệu chứng**: "Connection refused" hoặc "couldn't connect to server"
+
+**Nguyên nhân và Giải pháp**:
+
+1. **Máy chủ MongoDB không chạy**
+   ```bash
+   # Kiểm tra xem MongoDB có đang chạy không
+   mongosh --eval "db.runCommand({ ping: 1 })"
+
+   # Khởi động MongoDB (macOS với Homebrew)
+   brew services start mongodb-community
+   ```
+
+2. **Cổng sai**
+   - Xác minh cổng trong file cấu hình MongoDB (`mongod.conf`)
+   - Kiểm tra cấu hình của bạn
+
+3. **MongoDB không lắng nghe trên địa chỉ mong đợi**
+   - Kiểm tra `bindIp` trong `mongod.conf`
+   - Đối với kết nối từ xa, thêm IP client hoặc sử dụng `0.0.0.0`
+
+### Xác thực Thất bại
+
+**Triệu chứng**: "Authentication failed" hoặc "command find requires authentication"
+
+**Giải pháp**:
+
+1. Xác minh username, password và authentication database
+2. Kiểm tra roles của người dùng:
+   ```javascript
+   db.getUsers()
+   ```
+3. Tạo hoặc cập nhật thông tin người dùng:
+   ```javascript
+   db.createUser({
+     user: "appuser",
+     pwd: "password",
+     roles: [{ role: "readWrite", db: "myapp" }]
+   })
+   ```
+
+### Hết thời gian Kết nối
+
+**Triệu chứng**: Kết nối bị treo hoặc hết thời gian
+
+**Giải pháp**:
+
+1. Xác minh host và port chính xác
+2. Kiểm tra kết nối mạng và quy tắc firewall
+3. Đối với MongoDB Atlas, đảm bảo IP của bạn được thêm vào danh sách trắng trong cài đặt Network Access
+
+## Hạn chế Đã biết
+
+- **Transaction**: Transaction đa document yêu cầu cấu hình replica set hoặc sharded cluster. Các instance MongoDB standalone không hỗ trợ transaction.
+- **Suy luận schema**: Vì MongoDB không có schema cố định, cấu trúc cột được suy luận bằng cách lấy mẫu document. Các collection có cấu trúc document rất đa dạng có thể không hiển thị tất cả các trường.
+- **Capped collection**: Một số thao tác (cập nhật, xóa) có thể bị giới hạn trên capped collection.
+- **GridFS**: Lưu trữ file GridFS không thể duyệt trực tiếp qua trình duyệt collection.
+- **Change stream**: Change stream thời gian thực không được hỗ trợ trong phiên bản hiện tại.
+
+## Mẹo Hiệu suất
+
+### Collection Lớn
+
+Đối với các collection có hàng triệu document:
+
+1. Luôn sử dụng bộ lọc hoặc `limit()` trong truy vấn
+2. Bật phân trang trong cài đặt data grid
+3. Tạo các index phù hợp cho các mẫu truy vấn phổ biến
+
+### Quản lý Index
+
+Theo dõi và tạo index để cải thiện hiệu suất:
+
+```javascript
+// Liệt kê các index hiện có
+db.users.getIndexes()
+
+// Tạo một index
+db.users.createIndex({ email: 1 }, { unique: true })
+
+// Tạo index kết hợp
+db.orders.createIndex({ customerId: 1, date: -1 })
+```
+
+### Phân tích Truy vấn
+
+Sử dụng `explain()` để hiểu hiệu suất truy vấn:
+
+```javascript
+db.users.find({ age: { $gte: 18 } }).explain("executionStats")
+```
+
+## Các bước tiếp theo
+
+<CardGroup cols={2}>
+  <Card title="SSH Tunneling" icon="lock" href="/vi/databases/ssh-tunneling">
+    Kết nối an toàn đến máy chủ MongoDB từ xa
+  </Card>
+  <Card title="Trình soạn thảo SQL" icon="code" href="/vi/features/sql-editor">
+    Làm chủ các tính năng trình soạn thảo truy vấn
+  </Card>
+  <Card title="Nhập/Xuất" icon="file-import" href="/vi/features/import-export">
+    Nhập và xuất dữ liệu MongoDB
+  </Card>
+  <Card title="Data Grid" icon="table" href="/vi/features/data-grid">
+    Duyệt và chỉnh sửa document trong data grid
+  </Card>
+</CardGroup>

@@ -692,6 +692,38 @@ Database switcher hiển thị các database gần đây để truy cập nhanh 
   />
 </Frame>
 
+## Thao tác Collection MongoDB
+
+Các thao tác collection MongoDB khác với thao tác bảng SQL ở một số điểm.
+
+### Tạo Collection
+
+Các collection MongoDB được tạo ngầm khi bạn chèn tài liệu đầu tiên. Để tạo collection trống hoặc có tùy chọn cụ thể (capped, validator), sử dụng trình soạn MQL:
+
+```javascript
+db.createCollection("myCollection", {
+  capped: true,
+  size: 1048576,
+  max: 1000
+})
+```
+
+### Xóa Collection
+
+Nhấp chuột phải vào collection trong thanh bên và chọn **Drop Table** để xóa. Thao tác này thực thi `db.collection.drop()` và xóa tất cả tài liệu và index.
+
+### Nhân bản Collection
+
+TablePro nhân bản collection MongoDB bằng aggregation pipeline với giai đoạn `$out`, sau đó tạo lại tất cả index trên collection mới.
+
+### Hiển thị Tất cả Collections
+
+Chọn **Show All Tables** từ thanh bên để tự động thực thi `listCollections` và hiển thị tất cả collection trong cơ sở dữ liệu hiện tại.
+
+<Note>
+**Truncate** không khả dụng cho các collection MongoDB. Để xóa tất cả tài liệu mà vẫn giữ collection, sử dụng `db.collection.deleteMany({})` trong trình soạn MQL.
+</Note>
+
 ## Phím Tắt
 
 | Thao tác | Phím tắt |
