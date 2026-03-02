@@ -107,6 +107,7 @@ SSH tunnel URLs use the format `scheme+ssh://ssh_user@ssh_host:ssh_port/db_user:
 |-------|-------------|
 | **Color** | Color-code your connection for easy identification |
 | **Tag** | Organize connections with custom tags |
+| **Group** | Assign connection to a group (folder) for organization |
 | **Read-Only** | Toggle to prevent all write operations on this connection |
 
 <Tip>
@@ -226,6 +227,16 @@ TablePro allows you to assign colors to connections for visual organization:
   />
 </Frame>
 
+### Environment Color Indicator
+
+When a connection has a color assigned, the window toolbar area takes on a subtle tint of that color. This gives you an at-a-glance visual cue of which environment you're working in, similar to how Safari tints its toolbar based on website colors.
+
+- **Red-tinted toolbar** = production database
+- **Green-tinted toolbar** = development/local
+- No tint = no color assigned (default)
+
+The tint is subtle enough to not interfere with readability while still being noticeable at a glance.
+
 ## Connection Tags
 
 Tags help organize connections into logical groups:
@@ -253,6 +264,29 @@ Common tag examples:
     alt="Connection tags"
   />
 </Frame>
+
+## Connection Groups
+
+Groups let you organize connections into collapsible folders on the Welcome screen:
+
+1. Right-click in the connection list and choose **New Group**, or use the folder icon button next to the search bar
+2. Name the group and pick a color
+3. Drag connections into the group, or assign a group in the connection form's **Appearance** section
+
+### Managing Groups
+
+| Action | How |
+|--------|-----|
+| **Create** | Click the folder icon or right-click > New Group |
+| **Rename** | Right-click the group header > Rename |
+| **Change color** | Right-click the group header > Change Color |
+| **Delete** | Right-click the group header > Delete Group (connections are moved to Ungrouped) |
+
+Groups are collapsed/expanded by clicking the chevron. The collapsed state persists between sessions.
+
+<Tip>
+Combine groups with colors for a quick visual overview: put all production connections in a "Production" group with a red header, development in a green "Development" group, and so on.
+</Tip>
 
 ## Quick Connection Switching
 
