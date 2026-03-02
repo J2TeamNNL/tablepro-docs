@@ -1,0 +1,92 @@
+---
+title: Deep Links
+description: Open connections, tables, and queries from external apps using the tablepro:// URL scheme
+---
+
+TablePro registers a `tablepro://` URL scheme so you can open connections, tables, and queries directly from your browser, terminal, Slack messages, or any app that supports links.
+
+## URL Patterns
+
+### Open a Connection
+
+```
+tablepro://connect/{name}
+```
+
+Opens the saved connection matching `{name}`. If no connection matches, an error alert is shown.
+
+```bash
+open "tablepro://connect/Production"
+```
+
+### Open a Table
+
+```
+tablepro://connect/{name}/table/{table}
+tablepro://connect/{name}/database/{db}/table/{table}
+```
+
+Connects and opens the specified table. The second form lets you target a specific database on the connection.
+
+```bash
+open "tablepro://connect/Production/table/users"
+open "tablepro://connect/Production/database/analytics/table/events"
+```
+
+### Open a Query
+
+```
+tablepro://connect/{name}/query?sql={encoded_sql}
+```
+
+Connects and opens a new query tab with the SQL pre-filled. The SQL must be percent-encoded.
+
+```bash
+open "tablepro://connect/Production/query?sql=SELECT%20*%20FROM%20users%20LIMIT%2010"
+```
+
+### Import a Connection
+
+```
+tablepro://import?name={n}&host={h}&port={p}&type={t}&username={u}&database={db}
+```
+
+Creates a new saved connection and opens the connection form so you can review the details and add a password before connecting.
+
+```bash
+open "tablepro://import?name=Staging&host=db.example.com&port=5432&type=postgresql&username=admin&database=mydb"
+```
+
+**Required parameters:** `name`, `host`, `type`
+**Optional parameters:** `port` (defaults to the database type's standard port), `username`, `database`
+
+Supported `type` values: `MySQL`, `MariaDB`, `PostgreSQL`, `SQLite`, `MongoDB` (case-insensitive).
+
+## Behavior Details
+
+- **Connection name matching** is case-insensitive. `Production`, `production`, and `PRODUCTION` all match the same connection.
+- **Spaces and special characters** in names are percent-encoded automatically by browsers and macOS.
+- **Already connected:** if the connection is already active, TablePro skips reconnecting and opens the requested tab directly.
+- **App not running:** macOS launches TablePro first, then delivers the URL.
+
+<Warning>
+Passwords are never included in deep link URLs. For imported connections, the user must enter the password manually in the connection form.
+</Warning>
+
+## Terminal Usage
+
+Use the `open` command to trigger deep links from your terminal:
+
+```bash
+# Connect
+open "tablepro://connect/Production"
+
+# Open a specific table
+open "tablepro://connect/Production/table/users"
+
+# Run a query
+open "tablepro://connect/Production/query?sql=SELECT%20count(*)%20FROM%20orders"
+
+# Import a new connection for review
+open "tablepro://import?name=Dev&host=localhost&port=3306&type=mysql&username=root&database=app"
+```
