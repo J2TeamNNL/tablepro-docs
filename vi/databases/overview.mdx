@@ -107,6 +107,7 @@ URL SSH tunnel sử dụng định dạng `scheme+ssh://ssh_user@ssh_host:ssh_po
 |-------|-------------|
 | **Color** | Mã màu kết nối của bạn để dễ nhận biết |
 | **Tag** | Tổ chức kết nối với các tag tùy chỉnh |
+| **Group** | Chỉ định kết nối vào một nhóm (thư mục) để tổ chức |
 | **Read-Only** | Bật để ngăn chặn tất cả thao tác ghi trên kết nối này |
 
 <Tip>
@@ -226,6 +227,16 @@ TablePro cho phép bạn gán màu cho các kết nối để tổ chức trực
   />
 </Frame>
 
+### Chỉ báo Màu Môi trường
+
+Khi một kết nối được gán màu, vùng thanh công cụ của cửa sổ sẽ có một sắc thái nhẹ của màu đó. Điều này giúp bạn nhận biết nhanh môi trường đang làm việc, tương tự cách Safari tô màu thanh công cụ theo màu website.
+
+- **Thanh công cụ tông đỏ** = cơ sở dữ liệu production
+- **Thanh công cụ tông xanh lá** = development/local
+- Không có tông màu = không gán màu (mặc định)
+
+Sắc thái đủ nhẹ để không ảnh hưởng đến khả năng đọc nhưng vẫn dễ nhận biết ngay lập tức.
+
 ## Tag Kết nối
 
 Tag giúp tổ chức kết nối thành các nhóm logic:
@@ -253,6 +264,29 @@ Ví dụ tag phổ biến:
     alt="Tag kết nối"
   />
 </Frame>
+
+## Nhóm Kết nối
+
+Nhóm cho phép bạn tổ chức các kết nối vào các thư mục có thể thu gọn trên màn hình Chào mừng:
+
+1. Nhấp chuột phải trong danh sách kết nối và chọn **New Group**, hoặc sử dụng nút biểu tượng thư mục bên cạnh thanh tìm kiếm
+2. Đặt tên nhóm và chọn màu
+3. Kéo kết nối vào nhóm, hoặc chỉ định nhóm trong phần **Appearance** của biểu mẫu kết nối
+
+### Quản lý Nhóm
+
+| Thao tác | Cách thực hiện |
+|--------|-----|
+| **Tạo** | Nhấp biểu tượng thư mục hoặc nhấp chuột phải > New Group |
+| **Đổi tên** | Nhấp chuột phải vào tiêu đề nhóm > Rename |
+| **Đổi màu** | Nhấp chuột phải vào tiêu đề nhóm > Change Color |
+| **Xóa** | Nhấp chuột phải vào tiêu đề nhóm > Delete Group (kết nối được chuyển về Ungrouped) |
+
+Nhóm được thu gọn/mở rộng bằng cách nhấp vào mũi tên. Trạng thái thu gọn được giữ lại giữa các phiên.
+
+<Tip>
+Kết hợp nhóm với màu sắc để có cái nhìn tổng quan nhanh: đặt tất cả kết nối production vào nhóm "Production" với tiêu đề đỏ, development vào nhóm "Development" xanh lá, v.v.
+</Tip>
 
 ## Chuyển đổi Kết nối Nhanh
 
