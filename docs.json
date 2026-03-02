@@ -200,6 +200,11 @@
           "anchor": "Community",
           "href": "https://www.facebook.com/groups/tablepro",
           "icon": "facebook"
+        },
+        {
+          "anchor": "Telegram",
+          "href": "https://t.me/tablepro_app",
+          "icon": "telegram"
         }
       ]
     }
