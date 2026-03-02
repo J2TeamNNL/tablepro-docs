@@ -195,6 +195,11 @@
           "anchor": "Releases",
           "href": "https://github.com/datlechin/tablepro/releases",
           "icon": "download"
+        },
+        {
+          "anchor": "Community",
+          "href": "https://www.facebook.com/groups/tablepro",
+          "icon": "facebook"
         }
       ]
     }
@@ -229,7 +234,8 @@
   },
   "footer": {
     "socials": {
-      "github": "https://github.com/datlechin/tablepro"
+      "github": "https://github.com/datlechin/tablepro",
+      "facebook": "https://www.facebook.com/groups/tablepro"
     }
   },
   "integrations": {
