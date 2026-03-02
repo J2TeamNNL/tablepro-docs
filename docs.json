@@ -53,7 +53,8 @@
                   "features/import-export",
                   "features/query-history",
                   "features/ai-chat",
-                  "features/keyboard-shortcuts"
+                  "features/keyboard-shortcuts",
+                  "features/deep-links"
                 ]
               },
               {
@@ -136,7 +137,8 @@
                   "vi/features/import-export",
                   "vi/features/query-history",
                   "vi/features/ai-chat",
-                  "vi/features/keyboard-shortcuts"
+                  "vi/features/keyboard-shortcuts",
+                  "vi/features/deep-links"
                 ]
               },
               {
