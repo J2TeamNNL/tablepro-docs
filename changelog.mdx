@@ -4,6 +4,25 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="March 3, 2026" description="v0.12.0">
+  ### New Features
+
+  - **Amazon Redshift Support**: Connect to Amazon Redshift data warehouses
+  - **Deep Links**: Open connections, tables, queries, and import connections via `tablepro://` URLs
+  - **Copy as URL**: Right-click a connection to copy its details as a connection string (e.g., `mysql://user:pass@host/db`)
+  - **Auto-show Inspector**: Automatically open the right sidebar when selecting a row (Settings > Data Grid)
+  - **Homebrew Cask**: Install via `brew install datlechin/tap/tablepro`
+
+  ### Improvements
+
+  - ENUM and SET columns now open their picker on single click with a chevron indicator, matching boolean column behavior
+
+  ### Bug Fixes
+
+  - Fixed "Table not found" error when switching databases within the same connection (Cmd+K) while a table tab is open
+  - Fixed right sidebar state not persisting across native window-tabs
+</Update>
+
 <Update label="March 2, 2026" description="v0.11.1">
   ### Bug Fixes
 

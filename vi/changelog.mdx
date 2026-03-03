@@ -4,6 +4,25 @@ description: "Cập nhật sản phẩm và thông báo cho TablePro"
 rss: true
 ---
 
+<Update label="3 tháng 3, 2026" description="v0.12.0">
+  ### Tính năng mới
+
+  - **Hỗ trợ Amazon Redshift**: Kết nối đến kho dữ liệu Amazon Redshift
+  - **Deep Link**: Mở kết nối, bảng, truy vấn và nhập kết nối qua URL `tablepro://`
+  - **Sao chép dưới dạng URL**: Nhấp chuột phải vào kết nối để sao chép chi tiết dưới dạng chuỗi kết nối (ví dụ: `mysql://user:pass@host/db`)
+  - **Tự động hiện Inspector**: Tự động mở thanh bên phải khi chọn một hàng (Cài đặt > Data Grid)
+  - **Homebrew Cask**: Cài đặt qua `brew install datlechin/tap/tablepro`
+
+  ### Cải tiến
+
+  - Cột ENUM và SET giờ mở picker khi nhấp chuột một lần với biểu tượng mũi tên, giống hành vi cột boolean
+
+  ### Sửa lỗi
+
+  - Sửa lỗi "Table not found" khi chuyển đổi cơ sở dữ liệu trong cùng kết nối (Cmd+K) khi tab bảng đang mở
+  - Sửa lỗi trạng thái thanh bên phải không lưu lại khi chuyển đổi giữa các tab cửa sổ gốc
+</Update>
+
 <Update label="2 tháng 3, 2026" description="v0.11.1">
   ### Sửa lỗi
 
