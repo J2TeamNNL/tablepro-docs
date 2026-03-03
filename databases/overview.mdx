@@ -9,7 +9,7 @@ TablePro provides a single interface for managing all your database connections.
 
 ## Supported Databases
 
-TablePro supports five database systems:
+TablePro supports six database systems:
 
 <CardGroup cols={2}>
   <Card title="MySQL" icon="database">
@@ -20,6 +20,9 @@ TablePro supports five database systems:
   </Card>
   <Card title="PostgreSQL" icon="database">
     PostgreSQL 12+ with full feature support. Default port: 5432
+  </Card>
+  <Card title="Amazon Redshift" icon="database">
+    Redshift data warehouses via PostgreSQL wire protocol. Default port: 5439
   </Card>
   <Card title="SQLite" icon="file">
     File-based databases, no server required
@@ -507,6 +510,7 @@ TablePro automatically sets the default port when you select a database type:
 | MySQL | 3306 |
 | MariaDB | 3306 |
 | PostgreSQL | 5432 |
+| Amazon Redshift | 5439 |
 | SQLite | N/A (file-based) |
 | MongoDB | 27017 |
 
@@ -524,6 +528,9 @@ TablePro automatically sets the default port when you select a database type:
   </Card>
   <Card title="MongoDB" icon="leaf" href="/databases/mongodb">
     MongoDB connection and MQL queries
+  </Card>
+  <Card title="Amazon Redshift" icon="database" href="/databases/redshift">
+    Redshift data warehouse connections
   </Card>
   <Card title="SSH Tunneling" icon="lock" href="/databases/ssh-tunneling">
     Secure connections through SSH
