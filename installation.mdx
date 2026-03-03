@@ -28,6 +28,36 @@ This guide covers detailed installation instructions, system requirements, and t
 TablePro is built using native Apple frameworks and does not require any additional runtime environments like Java or .NET.
 </Note>
 
+## Install via Homebrew
+
+The fastest way to install TablePro is with [Homebrew](https://brew.sh):
+
+```bash
+brew install datlechin/tap/tablepro
+```
+
+<Tip>
+The cask formula automatically removes the macOS quarantine attribute after installation, so you won't need to run `xattr -cr` on first launch.
+</Tip>
+
+To update:
+
+```bash
+brew upgrade tablepro
+```
+
+To uninstall:
+
+```bash
+brew uninstall tablepro
+```
+
+To also remove application data:
+
+```bash
+brew zap tablepro
+```
+
 ## Download
 
 ### From GitHub Releases

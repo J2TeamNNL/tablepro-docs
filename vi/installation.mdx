@@ -28,6 +28,36 @@ Hướng dẫn này bao gồm hướng dẫn cài đặt chi tiết, yêu cầu 
 TablePro được xây dựng bằng các framework gốc của Apple và không yêu cầu bất kỳ môi trường runtime bổ sung nào như Java hay .NET.
 </Note>
 
+## Cài đặt qua Homebrew
+
+Cách nhanh nhất để cài đặt TablePro là dùng [Homebrew](https://brew.sh):
+
+```bash
+brew install datlechin/tap/tablepro
+```
+
+<Tip>
+Công thức cask tự động xóa thuộc tính quarantine của macOS sau khi cài đặt, nên bạn không cần chạy `xattr -cr` khi khởi chạy lần đầu.
+</Tip>
+
+Để cập nhật:
+
+```bash
+brew upgrade tablepro
+```
+
+Để gỡ cài đặt:
+
+```bash
+brew uninstall tablepro
+```
+
+Để xóa cả dữ liệu ứng dụng:
+
+```bash
+brew zap tablepro
+```
+
 ## Tải xuống
 
 ### Từ GitHub Releases
