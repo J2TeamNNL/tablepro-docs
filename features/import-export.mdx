@@ -24,6 +24,10 @@ Export data from query results or tables:
 **MongoDB**: SQL export is not available for MongoDB connections. Use CSV, JSON, MQL, or XLSX format instead. The MQL format generates `db.collection.insertMany([...])` scripts that can be run directly in `mongosh`.
 </Note>
 
+<Note>
+**Redis**: SQL and MQL exports are not available for Redis connections. Use CSV, JSON, or XLSX format to export key-value data.
+</Note>
+
 {/* Screenshot: Export dialog with format options */}
 <Frame caption="Export dialog">
   <img
