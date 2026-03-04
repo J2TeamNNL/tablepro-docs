@@ -24,6 +24,10 @@ Export dữ liệu từ kết quả query hoặc bảng:
 **MongoDB**: Export SQL không khả dụng cho kết nối MongoDB. Sử dụng định dạng CSV, JSON, MQL hoặc XLSX thay thế. Định dạng MQL tạo script `db.collection.insertMany([...])` có thể chạy trực tiếp trong `mongosh`.
 </Note>
 
+<Note>
+**Redis**: Export SQL và MQL không khả dụng cho kết nối Redis. Sử dụng định dạng CSV, JSON hoặc XLSX để export dữ liệu key-value.
+</Note>
+
 {/* Screenshot: Export dialog with format options */}
 <Frame caption="Hộp thoại export">
   <img

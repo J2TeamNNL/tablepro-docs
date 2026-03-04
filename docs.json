@@ -36,6 +36,7 @@
                   "databases/postgresql",
                   "databases/sqlite",
                   "databases/mongodb",
+                  "databases/redis",
                   "databases/redshift",
                   "databases/ssh-tunneling"
                 ]
@@ -121,6 +122,7 @@
                   "vi/databases/postgresql",
                   "vi/databases/sqlite",
                   "vi/databases/mongodb",
+                  "vi/databases/redis",
                   "vi/databases/redshift",
                   "vi/databases/ssh-tunneling"
                 ]

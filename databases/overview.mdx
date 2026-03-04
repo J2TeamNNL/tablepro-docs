@@ -9,7 +9,7 @@ TablePro provides a single interface for managing all your database connections.
 
 ## Supported Databases
 
-TablePro supports six database systems:
+TablePro supports seven database systems:
 
 <CardGroup cols={2}>
   <Card title="MySQL" icon="database">
@@ -29,6 +29,9 @@ TablePro supports six database systems:
   </Card>
   <Card title="MongoDB" icon="leaf">
     MongoDB 4.4+ with MQL shell queries. Default port: 27017
+  </Card>
+  <Card title="Redis" icon="database">
+    Redis 6.0+ with key-value browsing and CLI. Default port: 6379
   </Card>
 </CardGroup>
 
@@ -83,6 +86,7 @@ If you have a database connection string (commonly provided by hosting platforms
 | MariaDB | `mariadb://user:pass@host:3306/dbname` |
 | SQLite | `sqlite:///path/to/database.db` |
 | MongoDB | `mongodb://user:pass@host:27017/dbname` |
+| Redis | `redis://password@host:6379/0` |
 | MySQL (SSH) | `mysql+ssh://ssh_user@ssh_host:22/db_user:pass@db_host/dbname` |
 | PostgreSQL (SSH) | `postgresql+ssh://ssh_user@ssh_host:22/db_user:pass@db_host/dbname` |
 | MariaDB (SSH) | `mariadb+ssh://ssh_user@ssh_host:22/db_user:pass@db_host/dbname` |
@@ -513,6 +517,7 @@ TablePro automatically sets the default port when you select a database type:
 | Amazon Redshift | 5439 |
 | SQLite | N/A (file-based) |
 | MongoDB | 27017 |
+| Redis | 6379 |
 
 ## Related Guides
 
@@ -528,6 +533,9 @@ TablePro automatically sets the default port when you select a database type:
   </Card>
   <Card title="MongoDB" icon="leaf" href="/databases/mongodb">
     MongoDB connection and MQL queries
+  </Card>
+  <Card title="Redis" icon="database" href="/databases/redis">
+    Redis key-value browsing and CLI
   </Card>
   <Card title="Amazon Redshift" icon="database" href="/databases/redshift">
     Redshift data warehouse connections
