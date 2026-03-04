@@ -4,6 +4,18 @@ description: "Cập nhật sản phẩm và thông báo cho TablePro"
 rss: true
 ---
 
+<Update label="4 tháng 3, 2026" description="v0.13.0">
+  ### Tính năng mới
+
+  - **Hỗ trợ Redis**: Kết nối đến cơ sở dữ liệu Redis với duyệt key-value, thanh bên theo database (db0-db15), quản lý TTL và CLI tương tác
+  - **URL tương thích TablePlus**: Mở cơ sở dữ liệu qua dòng lệnh với `open -a TablePro "postgresql://user@host/db"`, hỗ trợ chuyển schema, mở bảng, bộ lọc, màu sắc và tag môi trường
+
+  ### Sửa lỗi
+
+  - Sửa lỗi màu nền thanh tìm kiếm sidebar và vùng nội dung chính không hòa trộn với vibrancy của macOS
+  - Sửa lỗi cột POINT và geometry hiển thị giá trị trống trong MySQL và nhãn kiểu sai trong thanh bên
+</Update>
+
 <Update label="3 tháng 3, 2026" description="v0.12.0">
   ### Tính năng mới
 
