@@ -32,6 +32,7 @@
                 "group": "Database Connections",
                 "pages": [
                   "databases/overview",
+                  "databases/connection-urls",
                   "databases/mysql",
                   "databases/postgresql",
                   "databases/sqlite",
@@ -118,6 +119,7 @@
                 "group": "Kết nối cơ sở dữ liệu",
                 "pages": [
                   "vi/databases/overview",
+                  "vi/databases/connection-urls",
                   "vi/databases/mysql",
                   "vi/databases/postgresql",
                   "vi/databases/sqlite",
