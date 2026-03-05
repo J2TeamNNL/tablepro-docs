@@ -9,7 +9,7 @@ TablePro provides a single interface for managing all your database connections.
 
 ## Supported Databases
 
-TablePro supports seven database systems:
+TablePro supports eight database systems:
 
 <CardGroup cols={2}>
   <Card title="MySQL" icon="database">
@@ -32,6 +32,9 @@ TablePro supports seven database systems:
   </Card>
   <Card title="Redis" icon="database">
     Redis 6.0+ with key-value browsing and CLI. Default port: 6379
+  </Card>
+  <Card title="Microsoft SQL Server" icon="database">
+    SQL Server 2017+ via FreeTDS. Default port: 1433
   </Card>
 </CardGroup>
 
@@ -531,6 +534,7 @@ TablePro automatically sets the default port when you select a database type:
 | SQLite | N/A (file-based) |
 | MongoDB | 27017 |
 | Redis | 6379 |
+| Microsoft SQL Server | 1433 |
 
 ## Related Guides
 
@@ -549,6 +553,9 @@ TablePro automatically sets the default port when you select a database type:
   </Card>
   <Card title="Redis" icon="database" href="/databases/redis">
     Redis key-value browsing and CLI
+  </Card>
+  <Card title="Microsoft SQL Server" icon="database" href="/databases/mssql">
+    SQL Server connections via FreeTDS
   </Card>
   <Card title="Amazon Redshift" icon="database" href="/databases/redshift">
     Redshift data warehouse connections
