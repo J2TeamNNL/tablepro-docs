@@ -39,6 +39,7 @@
                   "databases/mongodb",
                   "databases/redis",
                   "databases/redshift",
+                  "databases/cockroachdb",
                   "databases/mssql",
                   "databases/ssh-tunneling"
                 ]
@@ -127,6 +128,7 @@
                   "vi/databases/mongodb",
                   "vi/databases/redis",
                   "vi/databases/redshift",
+                  "vi/databases/cockroachdb",
                   "vi/databases/mssql",
                   "vi/databases/ssh-tunneling"
                 ]

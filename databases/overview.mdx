@@ -99,7 +99,7 @@ open "mysql://root:secret@localhost:3306/myapp"
 open "redis://:password@localhost:6379"
 ```
 
-TablePro registers `postgresql`, `postgres`, `mysql`, `mariadb`, `sqlite`, `mongodb`, `redis`, `rediss`, and `redshift` as URL schemes on macOS, so the OS routes these URLs directly to the app.
+TablePro registers `postgresql`, `postgres`, `mysql`, `mariadb`, `sqlite`, `mongodb`, `redis`, `rediss`, `redshift`, and `cockroachdb` as URL schemes on macOS, so the OS routes these URLs directly to the app.
 
 **What happens:**
 
@@ -559,6 +559,9 @@ TablePro automatically sets the default port when you select a database type:
   </Card>
   <Card title="Amazon Redshift" icon="database" href="/databases/redshift">
     Redshift data warehouse connections
+  </Card>
+  <Card title="CockroachDB" icon="database" href="/databases/cockroachdb">
+    CockroachDB distributed SQL connections
   </Card>
   <Card title="SSH Tunneling" icon="lock" href="/databases/ssh-tunneling">
     Secure connections through SSH

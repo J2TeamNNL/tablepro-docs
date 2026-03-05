@@ -1,0 +1,262 @@
+---
+title: CockroachDB
+description: Kết nối đến cơ sở dữ liệu phân tán CockroachDB với TablePro
+---
+
+# Kết nối CockroachDB
+
+TablePro hỗ trợ CockroachDB, cơ sở dữ liệu SQL phân tán sử dụng giao thức PostgreSQL wire. Các kết nối hoạt động qua cùng driver libpq với các truy vấn metadata riêng cho CockroachDB về topology cluster, ranges và các bảng nội bộ.
+
+## Thiết lập nhanh
+
+<Steps>
+  <Step title="Mở Form kết nối">
+    Click **New Connection** từ màn hình Welcome hoặc **File** > **New Connection**
+  </Step>
+  <Step title="Chọn CockroachDB">
+    Chọn **CockroachDB** từ danh sách loại cơ sở dữ liệu
+  </Step>
+  <Step title="Nhập thông tin kết nối">
+    Điền host, port, username, password và tên database
+  </Step>
+  <Step title="Kiểm tra và kết nối">
+    Click **Test Connection**, sau đó **Create**
+  </Step>
+</Steps>
+
+## Cài đặt kết nối
+
+### Các trường bắt buộc
+
+| Trường | Mô tả | Mặc định |
+|-------|-------------|---------|
+| **Name** | Tên định danh kết nối | - |
+| **Host** | Địa chỉ node hoặc load balancer CockroachDB | - |
+| **Port** | Cổng SQL CockroachDB | `26257` |
+| **Username** | Tên người dùng CockroachDB | - |
+| **Password** | Mật khẩu người dùng | - |
+| **Database** | Tên database để kết nối | `defaultdb` |
+
+<Note>
+CockroachDB tạo database `defaultdb` trên mọi cluster mới. Bạn có thể kết nối đến nó ngay lập tức hoặc chỉ định database khác.
+</Note>
+
+## Các cấu hình ví dụ
+
+### CockroachDB cục bộ
+
+```
+Name:     Local CockroachDB
+Host:     localhost
+Port:     26257
+Username: root
+Password: (để trống cho chế độ insecure)
+Database: defaultdb
+```
+
+### CockroachDB Cloud Serverless
+
+```
+Name:     Cloud Serverless
+Host:     free-tier.gcp-us-central1.cockroachlabs.cloud
+Port:     26257
+Username: your_user
+Password: (mật khẩu của bạn)
+Database: defaultdb
+```
+
+<Tip>
+Đối với CockroachDB Cloud Serverless, chuỗi kết nối bao gồm tham số định tuyến cluster. Tìm thông tin kết nối trong CockroachDB Cloud Console tại hộp thoại **Connect** của cluster. Host thường bao gồm mã định danh cluster.
+</Tip>
+
+### CockroachDB Cloud Dedicated
+
+```
+Name:     Cloud Dedicated
+Host:     my-cluster-abc.cockroachlabs.cloud
+Port:     26257
+Username: admin_user
+Password: (mật khẩu của bạn)
+Database: defaultdb
+```
+
+## Tính năng
+
+### Hỗ trợ Schema
+
+CockroachDB tổ chức các bảng thành schemas, giống như PostgreSQL. TablePro hiển thị:
+
+1. Tất cả schemas có thể truy cập bởi người dùng của bạn
+2. Các bảng trong mỗi schema
+3. Thứ tự search path
+
+### Chuyển đổi Schema
+
+Chuyển đổi giữa các schema CockroachDB bằng trình chuyển đổi database (**Cmd+K**):
+
+1. Nhấn **Cmd+K** để mở trình chuyển đổi
+2. Chọn schema đích
+3. Sidebar, truy vấn và toolbar sẽ cập nhật theo schema đã chọn
+
+<Tip>
+Schema mặc định là `public`. Các schema hệ thống như `pg_catalog`, `information_schema` và `crdb_internal` được lọc khỏi danh sách.
+</Tip>
+
+### Duyệt bảng và xem dữ liệu
+
+Duyệt bảng, views và materialized views. Data grid hỗ trợ phân trang cho các bảng lớn. Metadata riêng của CockroachDB có sẵn trong panel thông tin bảng, bao gồm phân phối ranges và cấu hình zone.
+
+### Thực thi truy vấn
+
+Thực thi truy vấn với hỗ trợ cú pháp CockroachDB SQL. SQL editor cung cấp syntax highlighting cho các hàm và từ khóa riêng của CockroachDB.
+
+```sql
+-- Truy vấn du hành thời gian với AS OF SYSTEM TIME
+SELECT * FROM orders AS OF SYSTEM TIME '-5m';
+
+-- Follower reads cho đọc độ trễ thấp từ replica gần nhất
+SET TRANSACTION AS OF SYSTEM TIME follower_read_timestamp();
+SELECT * FROM users WHERE id = 1;
+
+-- Xem phân phối dữ liệu bảng qua các ranges
+SHOW RANGES FROM TABLE orders;
+
+-- Import dữ liệu từ bộ nhớ node cục bộ
+IMPORT INTO users CSV DATA ('nodelocal://1/users.csv');
+
+-- Cài đặt cluster
+SHOW CLUSTER SETTING server.time_until_store_dead;
+```
+
+### Xuất dữ liệu
+
+Xuất kết quả truy vấn hoặc dữ liệu bảng ở nhiều định dạng:
+
+- CSV
+- JSON
+- SQL (câu lệnh INSERT)
+- XLSX
+
+### Nhập dữ liệu
+
+Nhập dữ liệu từ file CSV, JSON, SQL và XLSX vào các bảng CockroachDB.
+
+### Tạo DDL
+
+Xem DDL (câu lệnh CREATE TABLE) cho bất kỳ bảng nào, bao gồm các mệnh đề riêng của CockroachDB như column families, interleaved tables và định nghĩa hash-sharded index.
+
+### Duyệt Index
+
+CockroachDB hỗ trợ index thực sự, khác với các kho dữ liệu dạng cột. TablePro hiển thị tất cả loại index trong tab Structure:
+
+- **B-tree indexes** (mặc định)
+- **Inverted indexes** (cho cột JSONB, ARRAY và full-text search)
+- **Hash-sharded indexes** (để phân phối ghi đều cho sequential keys)
+
+### Điều hướng Foreign Key
+
+CockroachDB thực thi các ràng buộc foreign key. TablePro hiển thị các mối quan hệ này và cho phép điều hướng giữa các bảng liên quan bằng cách nhấp vào giá trị foreign key.
+
+## SSL/TLS
+
+Kết nối CockroachDB hỗ trợ mã hóa SSL/TLS, sử dụng cùng cấu hình như PostgreSQL:
+
+| Chế độ SSL | Mô tả |
+|----------|-------------|
+| **Disabled** | Không mã hóa SSL |
+| **Preferred** | Sử dụng SSL nếu có sẵn, quay lại không mã hóa nếu không |
+| **Required** | Yêu cầu SSL, nhưng không xác minh chứng chỉ |
+| **Verify CA** | Yêu cầu SSL và xác minh chứng chỉ server với CA |
+| **Verify Identity** | Yêu cầu SSL, xác minh CA và xác minh hostname server |
+
+<Warning>
+CockroachDB Cloud yêu cầu SSL cho tất cả kết nối. Sử dụng chế độ **Verify CA** hoặc **Verify Identity** và cung cấp chứng chỉ CA tải xuống từ Cloud Console.
+</Warning>
+
+<Tip>
+Đối với cluster phát triển cục bộ khởi động với `cockroach start --insecure`, SSL không bắt buộc. Đối với triển khai production, luôn sử dụng **Verify CA** hoặc cao hơn.
+</Tip>
+
+## Hỗ trợ SSH Tunnel
+
+Bạn có thể kết nối đến CockroachDB qua SSH tunnel nếu cluster của bạn nằm trong mạng private. Cấu hình SSH tunnel trong tab SSH của form kết nối, sau đó TablePro định tuyến kết nối CockroachDB qua tunnel.
+
+## Khác biệt với PostgreSQL
+
+CockroachDB tương thích giao thức PostgreSQL wire nhưng không phải bản thay thế hoàn toàn. Các khác biệt chính:
+
+| Tính năng | CockroachDB | PostgreSQL |
+|---------|-------------|------------|
+| Cổng mặc định | `26257` | `5432` |
+| Database mặc định | `defaultdb` | `postgres` |
+| Mô hình lưu trữ | Key-value phân tán (RocksDB/Pebble) | Lưu trữ theo dòng đơn node |
+| Transaction | Serializable theo mặc định | Read committed theo mặc định |
+| Kiểu `ENUM` | Hỗ trợ | Hỗ trợ |
+| `SERIAL` | Ánh xạ sang `unique_rowid()`, không phải sequence | Số tự tăng qua sequence |
+| Sequences | Hỗ trợ (nhưng không liên tục do phân tán) | Liên tục trong một phiên |
+| Triggers | Hỗ trợ hạn chế (v23.1+) | Hỗ trợ đầy đủ |
+| Stored procedures | Không hỗ trợ (dùng UDFs thay thế) | Hỗ trợ đầy đủ PL/pgSQL |
+| Extensions | Không hỗ trợ (`pg_trgm`, `PostGIS`, v.v.) | Hệ sinh thái extension phong phú |
+| System catalog | Bảng `crdb_internal.*` | Views `pg_stat_*` |
+| Kết quả `EXPLAIN` | Kế hoạch thực thi phân tán với thông tin node | Kế hoạch đơn node |
+| Bảng tạm | Hỗ trợ (phạm vi phiên) | Hỗ trợ |
+| `COPY` | Hỗ trợ cho import/export | Hỗ trợ |
+
+## Khắc phục sự cố
+
+### Connection Refused
+
+**Triệu chứng**: "Connection refused" hoặc timeout
+
+**Nguyên nhân phổ biến**:
+
+1. **Node không chạy**: Xác minh tiến trình CockroachDB đang chạy với `cockroach node status`.
+2. **Sai port**: Cổng SQL mặc định là 26257, không phải 5432. Admin UI chạy trên cổng 8080.
+3. **Quy tắc tường lửa**: Đảm bảo cổng 26257 được mở trong security group hoặc tường lửa mạng.
+4. **Load balancer**: Nếu kết nối qua load balancer, xác minh nó được cấu hình chuyển tiếp đến cổng 26257.
+
+### Authentication Failed
+
+**Triệu chứng**: "password authentication failed"
+
+**Giải pháp**:
+
+1. Xác minh username và password. Đối với cluster insecure cục bộ, người dùng `root` không có mật khẩu.
+2. Kiểm tra người dùng tồn tại: `SHOW USERS` trong SQL shell.
+3. Đối với CockroachDB Cloud, đảm bảo bạn sử dụng thông tin đăng nhập từ Cloud Console, không phải mật khẩu tài khoản.
+
+### Lỗi chứng chỉ SSL
+
+**Triệu chứng**: "certificate verify failed" hoặc "SSL error"
+
+**Giải pháp**:
+
+1. Đối với CockroachDB Cloud, tải chứng chỉ CA từ Cloud Console và đặt trong phần SSL của form kết nối.
+2. Đối với cluster tự host, trỏ đến file `ca.crt` từ thư mục chứng chỉ CockroachDB (thường là `~/.cockroach-certs/`).
+3. Nếu thử nghiệm cục bộ với chế độ `--insecure`, đặt SSL thành **Disabled**.
+
+### Hiệu năng truy vấn
+
+CockroachDB phân phối dữ liệu qua các node. Nếu truy vấn chậm:
+
+1. Chạy `EXPLAIN ANALYZE` để xem kế hoạch thực thi phân tán và xác định các node liên quan
+2. Kiểm tra quét toàn bảng trên bảng lớn với `SHOW STATISTICS FOR TABLE your_table`
+3. Xem xét sử dụng index: `SELECT * FROM crdb_internal.index_usage_statistics WHERE table_name = 'your_table'`
+4. Đảm bảo lựa chọn primary key phân phối ghi đều. UUID hoặc hash-sharded keys ngăn hotspots trên một range.
+
+## Bước tiếp theo
+
+<CardGroup cols={2}>
+  <Card title="SSH Tunnel" icon="lock" href="/vi/databases/ssh-tunneling">
+    Kết nối đến cluster CockroachDB trong mạng private
+  </Card>
+  <Card title="Trình soạn thảo SQL" icon="code" href="/vi/features/sql-editor">
+    Viết và thực thi truy vấn CockroachDB
+  </Card>
+  <Card title="Nhập/Xuất" icon="file-import" href="/vi/features/import-export">
+    Import và export dữ liệu CockroachDB
+  </Card>
+  <Card title="Cấu trúc Bảng" icon="table" href="/vi/features/table-structure">
+    Xem indexes, foreign keys và định nghĩa cột
+  </Card>
+</CardGroup>
