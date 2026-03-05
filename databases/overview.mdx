@@ -9,7 +9,7 @@ TablePro provides a single interface for managing all your database connections.
 
 ## Supported Databases
 
-TablePro supports eight database systems:
+TablePro supports nine database systems:
 
 <CardGroup cols={2}>
   <Card title="MySQL" icon="database">
@@ -35,6 +35,9 @@ TablePro supports eight database systems:
   </Card>
   <Card title="Microsoft SQL Server" icon="database">
     SQL Server 2017+ via FreeTDS. Default port: 1433
+  </Card>
+  <Card title="Oracle Database" icon="database">
+    Oracle 12c+ via Oracle Call Interface. Default port: 1521
   </Card>
 </CardGroup>
 
@@ -99,7 +102,7 @@ open "mysql://root:secret@localhost:3306/myapp"
 open "redis://:password@localhost:6379"
 ```
 
-TablePro registers `postgresql`, `postgres`, `mysql`, `mariadb`, `sqlite`, `mongodb`, `redis`, `rediss`, and `redshift` as URL schemes on macOS, so the OS routes these URLs directly to the app.
+TablePro registers `postgresql`, `postgres`, `mysql`, `mariadb`, `sqlite`, `mongodb`, `redis`, `rediss`, `redshift`, `cockroachdb`, and `oracle` as URL schemes on macOS, so the OS routes these URLs directly to the app.
 
 **What happens:**
 
@@ -122,7 +125,7 @@ This is different from **Import from URL**, which fills in the connection form s
 | Field | Description |
 |-------|-------------|
 | **Name** | A friendly name to identify this connection |
-| **Type** | Database type: MySQL, MariaDB, PostgreSQL, or SQLite |
+| **Type** | Database type: MySQL, MariaDB, PostgreSQL, SQLite, MongoDB, Redis, Redshift, SQL Server, or Oracle |
 
 #### Appearance Section
 
@@ -535,6 +538,7 @@ TablePro automatically sets the default port when you select a database type:
 | MongoDB | 27017 |
 | Redis | 6379 |
 | Microsoft SQL Server | 1433 |
+| Oracle Database | 1521 |
 
 ## Related Guides
 
@@ -557,8 +561,14 @@ TablePro automatically sets the default port when you select a database type:
   <Card title="Microsoft SQL Server" icon="database" href="/databases/mssql">
     SQL Server connections via FreeTDS
   </Card>
+  <Card title="Oracle Database" icon="database" href="/databases/oracle">
+    Oracle Database connections via OCI
+  </Card>
   <Card title="Amazon Redshift" icon="database" href="/databases/redshift">
     Redshift data warehouse connections
+  </Card>
+  <Card title="CockroachDB" icon="database" href="/databases/cockroachdb">
+    CockroachDB distributed SQL connections
   </Card>
   <Card title="SSH Tunneling" icon="lock" href="/databases/ssh-tunneling">
     Secure connections through SSH
