@@ -4,6 +4,24 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="March 5, 2026" description="v0.14.0">
+  ### New Features
+
+  - **Microsoft SQL Server Support**: Connect to SQL Server 2017+ databases via FreeTDS with schema browsing, table structure, indexes, foreign keys, and paginated queries
+  - **Edit and Delete Without Primary Key**: Edit and delete rows in tables that don't have a primary key
+
+  ### Bug Fixes
+
+  - Fixed MSSQL connection losing selected database after disconnect and reconnect when no default database is configured
+  - Fixed DELETE operations on tables without a primary key being silently dropped when row data is missing
+  - Fixed high CPU and RAM usage on app launch from blocking storage init, unsynchronized health monitors, and excessive retry loops
+  - Fixed slow database switcher loading by replacing N+1 metadata queries with single batched queries
+  - Fixed slow Redis key browsing by pipelining TYPE and TTL commands in a single round trip
+  - Fixed slow SQL export startup by batching COUNT(*) queries and dependent lookups
+  - Fixed slow AI Chat schema loading by fetching all foreign keys in a single bulk query
+  - Fixed O(n) string operations causing high CPU in geometry parsing, Redis driver, and autocomplete scoring
+</Update>
+
 <Update label="March 4, 2026" description="v0.13.0">
   ### New Features
 
