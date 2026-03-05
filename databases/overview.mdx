@@ -76,28 +76,11 @@ If you have a database connection string (commonly provided by hosting platforms
 4. All fields (type, host, port, database, username, password) are filled in automatically
 5. Review the auto-filled values and click **Create**
 
-**Supported URL formats:**
-
-| Format | Example |
-|--------|---------|
-| PostgreSQL | `postgresql://user:pass@host:5432/dbname` |
-| PostgreSQL (alias) | `postgres://user:pass@host:5432/dbname` |
-| MySQL | `mysql://user:pass@host:3306/dbname` |
-| MariaDB | `mariadb://user:pass@host:3306/dbname` |
-| SQLite | `sqlite:///path/to/database.db` |
-| MongoDB | `mongodb://user:pass@host:27017/dbname` |
-| Redis | `redis://password@host:6379/0` |
-| MySQL (SSH) | `mysql+ssh://ssh_user@ssh_host:22/db_user:pass@db_host/dbname` |
-| PostgreSQL (SSH) | `postgresql+ssh://ssh_user@ssh_host:22/db_user:pass@db_host/dbname` |
-| MariaDB (SSH) | `mariadb+ssh://ssh_user@ssh_host:22/db_user:pass@db_host/dbname` |
+See [Connection URL Reference](/databases/connection-urls) for all supported schemes and formats.
 
 <Tip>
 Connection URLs with special characters in the password (like `@`, `#`, or `%`) should use percent-encoding. For example, `p@ssword` becomes `p%40ssword`.
 </Tip>
-
-<Note>
-SSH tunnel URLs use the format `scheme+ssh://ssh_user@ssh_host:ssh_port/db_user:db_password@db_host/db_name`. Query parameters `name` (connection name) and `usePrivateKey=true` (use key-based auth) are also supported.
-</Note>
 
 ### Connect Directly from a URL
 
@@ -121,18 +104,9 @@ TablePro registers `postgresql`, `postgres`, `mysql`, `mariadb`, `sqlite`, `mong
 - Otherwise, a temporary session is created — nothing is saved to your connection list
 - The password from the URL is stored in Keychain for the duration of the session
 
-You can also target a specific table, schema, or apply a filter via query parameters:
+You can also target a specific table, schema, or apply a filter via query parameters.
 
-```bash
-# Open a specific table
-open "postgresql://user:pass@host/mydb?table=users"
-
-# Open a specific schema and table
-open "postgresql://user:pass@host/mydb?schema=public&table=orders"
-
-# Connect with SSL
-open "postgresql://user:pass@host/mydb?sslmode=require"
-```
+See [Connection URL Reference](/databases/connection-urls) for all supported query parameters.
 
 <Note>
 This is different from **Import from URL**, which fills in the connection form so you can review and save. Direct URL opening skips the form entirely and connects right away.

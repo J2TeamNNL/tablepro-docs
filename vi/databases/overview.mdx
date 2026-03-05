@@ -76,28 +76,11 @@ Nếu bạn có chuỗi kết nối cơ sở dữ liệu (thường được cun
 4. Tất cả các trường (loại, host, port, database, username, password) được điền tự động
 5. Xem lại các giá trị đã điền và nhấp **Create**
 
-**Các định dạng URL được hỗ trợ:**
-
-| Định dạng | Ví dụ |
-|--------|---------|
-| PostgreSQL | `postgresql://user:pass@host:5432/dbname` |
-| PostgreSQL (alias) | `postgres://user:pass@host:5432/dbname` |
-| MySQL | `mysql://user:pass@host:3306/dbname` |
-| MariaDB | `mariadb://user:pass@host:3306/dbname` |
-| SQLite | `sqlite:///path/to/database.db` |
-| MongoDB | `mongodb://user:pass@host:27017/dbname` |
-| Redis | `redis://password@host:6379/0` |
-| MySQL (SSH) | `mysql+ssh://ssh_user@ssh_host:22/db_user:pass@db_host/dbname` |
-| PostgreSQL (SSH) | `postgresql+ssh://ssh_user@ssh_host:22/db_user:pass@db_host/dbname` |
-| MariaDB (SSH) | `mariadb+ssh://ssh_user@ssh_host:22/db_user:pass@db_host/dbname` |
+Xem [Tham chiếu URL kết nối](/databases/connection-urls) để biết tất cả các scheme và định dạng được hỗ trợ.
 
 <Tip>
 URL kết nối có ký tự đặc biệt trong mật khẩu (như `@`, `#` hoặc `%`) cần sử dụng percent-encoding. Ví dụ: `p@ssword` trở thành `p%40ssword`.
 </Tip>
-
-<Note>
-URL SSH tunnel sử dụng định dạng `scheme+ssh://ssh_user@ssh_host:ssh_port/db_user:db_password@db_host/db_name`. Tham số query `name` (tên kết nối) và `usePrivateKey=true` (sử dụng xác thực key) cũng được hỗ trợ.
-</Note>
 
 ### Kết nối Trực tiếp từ URL
 
@@ -121,18 +104,9 @@ TablePro đăng ký `postgresql`, `postgres`, `mysql`, `mariadb`, `sqlite`, `mon
 - Nếu không, một phiên tạm thời được tạo ra — không có gì được lưu vào danh sách kết nối của bạn
 - Mật khẩu từ URL được lưu trữ trong Keychain trong suốt phiên làm việc
 
-Bạn cũng có thể chỉ định một bảng, schema cụ thể hoặc áp dụng bộ lọc qua query parameter:
+Bạn cũng có thể chỉ định một bảng, schema cụ thể hoặc áp dụng bộ lọc qua query parameter.
 
-```bash
-# Mở một bảng cụ thể
-open "postgresql://user:pass@host/mydb?table=users"
-
-# Mở schema và bảng cụ thể
-open "postgresql://user:pass@host/mydb?schema=public&table=orders"
-
-# Kết nối với SSL
-open "postgresql://user:pass@host/mydb?sslmode=require"
-```
+Xem [Tham chiếu URL kết nối](/databases/connection-urls) để biết tất cả các tham số truy vấn được hỗ trợ.
 
 <Note>
 Điều này khác với **Import from URL**, vốn điền vào biểu mẫu kết nối để bạn xem xét và lưu. Mở URL trực tiếp bỏ qua biểu mẫu hoàn toàn và kết nối ngay lập tức.
