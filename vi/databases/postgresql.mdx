@@ -165,20 +165,20 @@ PostgreSQL tổ chức các bảng thành schemas. TablePro hiển thị:
   />
 </Frame>
 
-### Chuyển đổi Schema
+### Chuyển đổi database
 
-Bạn có thể chuyển đổi giữa các schema PostgreSQL bằng trình chuyển đổi database (**⌘K**):
+Bạn có thể chuyển đổi giữa các database PostgreSQL bằng trình chuyển đổi database (**⌘K**):
 
-1. Nhấn **⌘K** để mở trình chuyển đổi — hiển thị schemas thay vì databases cho kết nối PostgreSQL
-2. Chọn schema đích (ví dụ: `auth`, `extensions`, hoặc schema tùy chỉnh)
-3. Sidebar, truy vấn và toolbar sẽ cập nhật theo schema đã chọn
+1. Nhấn **⌘K** để mở trình chuyển đổi — hiển thị danh sách database cho kết nối PostgreSQL
+2. Chọn database đích (ví dụ: `app`, `analytics`, hoặc `postgres`)
+3. Sidebar, truy vấn và toolbar sẽ cập nhật sau khi kết nối lại
 
 <Tip>
-Schema mặc định là `public`. Các schema hệ thống (`pg_catalog`, `information_schema`, `pg_toast`) được lọc khỏi danh sách. Các schema bắt đầu bằng `pg_` được đánh dấu là schema hệ thống.
+Các database hệ thống (`postgres`, `template0`, `template1`) được đánh dấu là hệ thống.
 </Tip>
 
 <Note>
-Chuyển đổi schema thiết lập `search_path` của PostgreSQL trên kết nối. Schema đã chọn được duy trì qua các lần kết nối lại trong cùng phiên.
+Chuyển đổi database sẽ kết nối lại phiên PostgreSQL tới database đã chọn.
 </Note>
 
 ### Thông tin bảng
