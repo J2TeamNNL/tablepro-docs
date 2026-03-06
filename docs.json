@@ -41,6 +41,7 @@
                   "databases/redshift",
                   "databases/cockroachdb",
                   "databases/oracle",
+                  "databases/clickhouse",
                   "databases/mssql",
                   "databases/ssh-tunneling"
                 ]
@@ -131,6 +132,7 @@
                   "vi/databases/redshift",
                   "vi/databases/cockroachdb",
                   "vi/databases/oracle",
+                  "vi/databases/clickhouse",
                   "vi/databases/mssql",
                   "vi/databases/ssh-tunneling"
                 ]

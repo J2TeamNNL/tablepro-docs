@@ -9,7 +9,7 @@ TablePro provides a single interface for managing all your database connections.
 
 ## Supported Databases
 
-TablePro supports eight database systems:
+TablePro supports nine database systems:
 
 <CardGroup cols={2}>
   <Card title="MySQL" icon="database">
@@ -35,6 +35,9 @@ TablePro supports eight database systems:
   </Card>
   <Card title="Microsoft SQL Server" icon="database">
     SQL Server 2017+ via FreeTDS. Default port: 1433
+  </Card>
+  <Card title="ClickHouse" icon="database">
+    ClickHouse OLAP database via HTTP API. Default port: 8123
   </Card>
 </CardGroup>
 
@@ -535,6 +538,7 @@ TablePro automatically sets the default port when you select a database type:
 | MongoDB | 27017 |
 | Redis | 6379 |
 | Microsoft SQL Server | 1433 |
+| ClickHouse | 8123 |
 
 ## Related Guides
 
@@ -562,6 +566,9 @@ TablePro automatically sets the default port when you select a database type:
   </Card>
   <Card title="CockroachDB" icon="database" href="/databases/cockroachdb">
     CockroachDB distributed SQL connections
+  </Card>
+  <Card title="ClickHouse" icon="database" href="/databases/clickhouse">
+    ClickHouse OLAP database connections
   </Card>
   <Card title="SSH Tunneling" icon="lock" href="/databases/ssh-tunneling">
     Secure connections through SSH
