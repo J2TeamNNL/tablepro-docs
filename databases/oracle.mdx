@@ -1,0 +1,261 @@
+---
+title: Oracle Database
+description: Connect to Oracle Database with TablePro
+---
+
+# Oracle Database Connections
+
+TablePro connects to Oracle Database 12c+ using the OCI (Oracle Call Interface) driver. You need Oracle Instant Client installed on your Mac for the connection to work.
+
+## Prerequisites
+
+Install Oracle Instant Client before connecting:
+
+1. Download [Oracle Instant Client](https://www.oracle.com/database/technologies/instant-client/macos-arm64-downloads.html) for macOS (Basic or Basic Light package)
+2. Extract to a directory like `~/instantclient`
+3. Set the `ORACLE_HOME` environment variable or place the libraries where the system can find them
+
+<Warning>
+Without Oracle Instant Client installed, TablePro cannot establish Oracle connections. The OCI driver depends on the Instant Client shared libraries.
+</Warning>
+
+## Quick Setup
+
+<Steps>
+  <Step title="Open Connection Form">
+    Click **New Connection** from the Welcome screen or **File** > **New Connection**
+  </Step>
+  <Step title="Select Oracle">
+    Choose **Oracle** from the database type selector
+  </Step>
+  <Step title="Enter Connection Details">
+    Fill in your host, port, service name, username, and password
+  </Step>
+  <Step title="Test and Connect">
+    Click **Test Connection**, then **Create**
+  </Step>
+</Steps>
+
+## Connection Settings
+
+### Required Fields
+
+| Field | Description | Default |
+|-------|-------------|---------|
+| **Name** | Connection identifier | - |
+| **Host** | Oracle server hostname or IP | - |
+| **Port** | Oracle listener port | `1521` |
+| **Username** | Oracle user | - |
+| **Password** | User password | - |
+| **Service Name** | Oracle service name (not SID) | - |
+
+The connection string format is `//host:port/service_name`.
+
+<Note>
+TablePro uses service names, not SIDs. If you only have a SID, check your `tnsnames.ora` for the corresponding service name, or ask your DBA. Most modern Oracle installations use service names by default.
+</Note>
+
+<Tip>
+You can also connect directly by opening an `oracle://` URL from a browser or terminal. See [Connection URLs Reference](/databases/connection-urls) for details.
+</Tip>
+
+## Example Configurations
+
+### Local Oracle XE
+
+```
+Name:         Local Oracle XE
+Host:         localhost
+Port:         1521
+Username:     system
+Password:     (your password)
+Service Name: XEPDB1
+```
+
+### Oracle Cloud (Autonomous Database)
+
+```
+Name:         Oracle Cloud ADB
+Host:         adb.us-ashburn-1.oraclecloud.com
+Port:         1522
+Username:     ADMIN
+Password:     (your password)
+Service Name: abc123_mydb_high.adb.oraclecloud.com
+```
+
+<Tip>
+Oracle Cloud Autonomous Database uses port 1522 and requires a wallet for mTLS connections. Download the wallet from the OCI Console and configure the connection accordingly.
+</Tip>
+
+### Remote Oracle Database
+
+```
+Name:         Production Oracle
+Host:         oracle.example.com
+Port:         1521
+Username:     app_user
+Password:     (your password)
+Service Name: ORCL
+```
+
+## Features
+
+### Schema Support
+
+Oracle schemas map directly to Oracle users. Each user owns a schema with the same name. TablePro displays:
+
+1. All schemas accessible to your user
+2. Tables, views, and other objects within each schema
+3. The current schema context
+
+### Schema Switching
+
+Switch between Oracle schemas using the database switcher (**Cmd+K**):
+
+1. Press **Cmd+K** to open the switcher
+2. Select the target schema
+3. The sidebar, queries, and toolbar update to reflect the selected schema
+
+<Tip>
+System schemas like SYS, SYSTEM, OUTLN, DBSNMP, APPQOSSYS, WMSYS, and XDB are filtered from the schema list by default.
+</Tip>
+
+### Table and View Browsing
+
+Browse tables, views, materialized views, and synonyms. The data grid supports pagination using Oracle's `OFFSET`/`FETCH` syntax for large tables.
+
+### Query Execution
+
+Execute queries with Oracle SQL and PL/SQL support. The SQL editor provides syntax highlighting for Oracle-specific functions and keywords.
+
+```sql
+-- Basic pagination with OFFSET/FETCH (12c+)
+SELECT * FROM employees
+ORDER BY employee_id
+OFFSET 20 ROWS FETCH NEXT 10 ROWS ONLY;
+
+-- Oracle's DUAL table for expressions
+SELECT SYSDATE, USER, SYS_CONTEXT('USERENV', 'DB_NAME') FROM DUAL;
+
+-- PL/SQL anonymous block
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Current schema: ' || SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA'));
+END;
+/
+
+-- Hierarchical queries with CONNECT BY
+SELECT employee_id, manager_id, LEVEL
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id;
+
+-- Flashback query
+SELECT * FROM orders AS OF TIMESTAMP (SYSTIMESTAMP - INTERVAL '1' HOUR);
+```
+
+### DDL Generation
+
+View the DDL for any table using Oracle's `DBMS_METADATA` package. This generates the complete CREATE TABLE statement including storage clauses, tablespace assignments, constraints, and index definitions.
+
+### Data Export
+
+Export query results or table data in multiple formats:
+
+- CSV
+- JSON
+- SQL (INSERT statements)
+- XLSX
+
+### Data Import
+
+Import data from CSV, JSON, SQL, and XLSX files into Oracle tables.
+
+### Index Browsing
+
+TablePro displays all index types in the Structure tab:
+
+- **B-tree indexes** (default)
+- **Bitmap indexes**
+- **Function-based indexes**
+- **Composite indexes**
+- **Unique indexes**
+
+### Foreign Key Navigation
+
+Oracle enforces foreign key constraints with full referential integrity. TablePro displays these relationships and allows navigation between related tables by clicking on foreign key values.
+
+## SSL/TLS
+
+Oracle connections support SSL/TLS encryption through Oracle Net Services:
+
+| SSL Mode | Description |
+|----------|-------------|
+| **Disabled** | No SSL encryption |
+| **Required** | Require SSL, but don't verify certificates |
+| **Verify CA** | Require SSL and verify the server certificate against a CA |
+
+<Tip>
+For Oracle Cloud Autonomous Database, download the connection wallet from the OCI Console. The wallet contains the certificates and connection descriptors needed for mTLS authentication.
+</Tip>
+
+## SSH Tunnel Support
+
+You can connect to Oracle through an SSH tunnel if your database server is in a private network. Configure the SSH tunnel in the connection form's SSH tab, then TablePro routes the Oracle connection through the tunnel.
+
+## Troubleshooting
+
+### OCI Driver Not Found
+
+**Symptoms**: "OCI library not found" or "Cannot load OCI shared library"
+
+**Solutions**:
+
+1. Verify Oracle Instant Client is installed and the shared libraries are accessible.
+2. Check that `ORACLE_HOME` or `DYLD_LIBRARY_PATH` points to the Instant Client directory.
+3. On Apple Silicon Macs, make sure you downloaded the arm64 version of Instant Client.
+
+### Connection Refused
+
+**Symptoms**: "ORA-12541: TNS:no listener" or connection timeout
+
+**Common causes**:
+
+1. **Listener not running**: Verify the Oracle listener is running with `lsnrctl status` on the server.
+2. **Wrong port**: The default listener port is 1521. Check `listener.ora` for custom ports.
+3. **Firewall rules**: Ensure port 1521 is open in your network security group or firewall.
+4. **Service name mismatch**: Verify the service name with `lsnrctl services` on the server.
+
+### Authentication Failed
+
+**Symptoms**: "ORA-01017: invalid username/password; logon denied"
+
+**Solutions**:
+
+1. Oracle passwords are case-sensitive (12c+ with `SEC_CASE_SENSITIVE_LOGON=TRUE`).
+2. Check if the account is locked: `SELECT account_status FROM dba_users WHERE username = 'YOUR_USER'`.
+3. Verify the user exists and has CREATE SESSION privilege.
+
+### ORA-12514: TNS:listener does not currently know of service
+
+**Solutions**:
+
+1. Confirm the service name is correct. List registered services with `lsnrctl services`.
+2. The database instance may not be registered with the listener yet. Wait for auto-registration or run `ALTER SYSTEM REGISTER`.
+3. Check if you're using a SID instead of a service name. TablePro uses service names.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="SSH Tunneling" icon="lock" href="/databases/ssh-tunneling">
+    Connect to Oracle databases in private networks
+  </Card>
+  <Card title="SQL Editor" icon="code" href="/features/sql-editor">
+    Write and execute Oracle queries and PL/SQL blocks
+  </Card>
+  <Card title="Import/Export" icon="file-import" href="/features/import-export">
+    Import and export Oracle data
+  </Card>
+  <Card title="Table Structure" icon="table" href="/features/table-structure">
+    View indexes, foreign keys, and column definitions
+  </Card>
+</CardGroup>

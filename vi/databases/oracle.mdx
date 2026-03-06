@@ -1,0 +1,261 @@
+---
+title: Oracle Database
+description: Kết nối đến Oracle Database với TablePro
+---
+
+# Kết nối Oracle Database
+
+TablePro kết nối đến Oracle Database 12c+ sử dụng driver OCI (Oracle Call Interface). Bạn cần cài đặt Oracle Instant Client trên Mac để kết nối hoạt động.
+
+## Yêu cầu trước
+
+Cài đặt Oracle Instant Client trước khi kết nối:
+
+1. Tải [Oracle Instant Client](https://www.oracle.com/database/technologies/instant-client/macos-arm64-downloads.html) cho macOS (gói Basic hoặc Basic Light)
+2. Giải nén vào thư mục như `~/instantclient`
+3. Đặt biến môi trường `ORACLE_HOME` hoặc đặt thư viện ở nơi hệ thống có thể tìm thấy
+
+<Warning>
+Nếu không cài đặt Oracle Instant Client, TablePro không thể thiết lập kết nối Oracle. Driver OCI phụ thuộc vào các thư viện chia sẻ của Instant Client.
+</Warning>
+
+## Thiết lập nhanh
+
+<Steps>
+  <Step title="Mở Form kết nối">
+    Click **New Connection** từ màn hình Welcome hoặc **File** > **New Connection**
+  </Step>
+  <Step title="Chọn Oracle">
+    Chọn **Oracle** từ danh sách loại cơ sở dữ liệu
+  </Step>
+  <Step title="Nhập thông tin kết nối">
+    Điền host, port, service name, username và password
+  </Step>
+  <Step title="Kiểm tra và kết nối">
+    Click **Test Connection**, sau đó **Create**
+  </Step>
+</Steps>
+
+## Cài đặt kết nối
+
+### Các trường bắt buộc
+
+| Trường | Mô tả | Mặc định |
+|-------|-------------|---------|
+| **Name** | Tên định danh kết nối | - |
+| **Host** | Hostname hoặc IP máy chủ Oracle | - |
+| **Port** | Cổng listener Oracle | `1521` |
+| **Username** | Tên người dùng Oracle | - |
+| **Password** | Mật khẩu người dùng | - |
+| **Service Name** | Tên service Oracle (không phải SID) | - |
+
+Định dạng chuỗi kết nối là `//host:port/service_name`.
+
+<Note>
+TablePro sử dụng service name, không phải SID. Nếu bạn chỉ có SID, kiểm tra file `tnsnames.ora` để tìm service name tương ứng, hoặc hỏi DBA. Hầu hết các bản cài đặt Oracle hiện đại sử dụng service name theo mặc định.
+</Note>
+
+<Tip>
+Bạn cũng có thể kết nối trực tiếp bằng cách mở URL `oracle://` từ trình duyệt hoặc terminal. Xem [Tham chiếu URL kết nối](/vi/databases/connection-urls) để biết chi tiết.
+</Tip>
+
+## Các cấu hình ví dụ
+
+### Oracle XE cục bộ
+
+```
+Name:         Local Oracle XE
+Host:         localhost
+Port:         1521
+Username:     system
+Password:     (mật khẩu của bạn)
+Service Name: XEPDB1
+```
+
+### Oracle Cloud (Autonomous Database)
+
+```
+Name:         Oracle Cloud ADB
+Host:         adb.us-ashburn-1.oraclecloud.com
+Port:         1522
+Username:     ADMIN
+Password:     (mật khẩu của bạn)
+Service Name: abc123_mydb_high.adb.oraclecloud.com
+```
+
+<Tip>
+Oracle Cloud Autonomous Database sử dụng cổng 1522 và yêu cầu wallet cho kết nối mTLS. Tải wallet từ OCI Console và cấu hình kết nối tương ứng.
+</Tip>
+
+### Oracle Database từ xa
+
+```
+Name:         Production Oracle
+Host:         oracle.example.com
+Port:         1521
+Username:     app_user
+Password:     (mật khẩu của bạn)
+Service Name: ORCL
+```
+
+## Tính năng
+
+### Hỗ trợ Schema
+
+Schema Oracle ánh xạ trực tiếp với người dùng Oracle. Mỗi user sở hữu một schema cùng tên. TablePro hiển thị:
+
+1. Tất cả schema có thể truy cập bởi người dùng của bạn
+2. Bảng, view và các đối tượng khác trong mỗi schema
+3. Schema context hiện tại
+
+### Chuyển đổi Schema
+
+Chuyển đổi giữa các schema Oracle bằng trình chuyển đổi database (**Cmd+K**):
+
+1. Nhấn **Cmd+K** để mở trình chuyển đổi
+2. Chọn schema đích
+3. Sidebar, truy vấn và toolbar sẽ cập nhật theo schema đã chọn
+
+<Tip>
+Các schema hệ thống như SYS, SYSTEM, OUTLN, DBSNMP, APPQOSSYS, WMSYS và XDB được lọc khỏi danh sách schema theo mặc định.
+</Tip>
+
+### Duyệt bảng và View
+
+Duyệt bảng, view, materialized view và synonym. Data grid hỗ trợ phân trang sử dụng cú pháp `OFFSET`/`FETCH` của Oracle cho các bảng lớn.
+
+### Thực thi truy vấn
+
+Thực thi truy vấn với hỗ trợ Oracle SQL và PL/SQL. SQL editor cung cấp syntax highlighting cho các hàm và từ khóa riêng của Oracle.
+
+```sql
+-- Phân trang với OFFSET/FETCH (12c+)
+SELECT * FROM employees
+ORDER BY employee_id
+OFFSET 20 ROWS FETCH NEXT 10 ROWS ONLY;
+
+-- Bảng DUAL cho biểu thức
+SELECT SYSDATE, USER, SYS_CONTEXT('USERENV', 'DB_NAME') FROM DUAL;
+
+-- Khối PL/SQL ẩn danh
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Schema hiện tại: ' || SYS_CONTEXT('USERENV', 'CURRENT_SCHEMA'));
+END;
+/
+
+-- Truy vấn phân cấp với CONNECT BY
+SELECT employee_id, manager_id, LEVEL
+FROM employees
+START WITH manager_id IS NULL
+CONNECT BY PRIOR employee_id = manager_id;
+
+-- Truy vấn flashback
+SELECT * FROM orders AS OF TIMESTAMP (SYSTIMESTAMP - INTERVAL '1' HOUR);
+```
+
+### Tạo DDL
+
+Xem DDL cho bất kỳ bảng nào sử dụng package `DBMS_METADATA` của Oracle. Tạo câu lệnh CREATE TABLE hoàn chỉnh bao gồm mệnh đề storage, gán tablespace, ràng buộc và định nghĩa index.
+
+### Xuất dữ liệu
+
+Xuất kết quả truy vấn hoặc dữ liệu bảng ở nhiều định dạng:
+
+- CSV
+- JSON
+- SQL (câu lệnh INSERT)
+- XLSX
+
+### Nhập dữ liệu
+
+Nhập dữ liệu từ file CSV, JSON, SQL và XLSX vào các bảng Oracle.
+
+### Duyệt Index
+
+TablePro hiển thị tất cả loại index trong tab Structure:
+
+- **B-tree indexes** (mặc định)
+- **Bitmap indexes**
+- **Function-based indexes**
+- **Composite indexes**
+- **Unique indexes**
+
+### Điều hướng Foreign Key
+
+Oracle thực thi ràng buộc foreign key với tính toàn vẹn tham chiếu đầy đủ. TablePro hiển thị các mối quan hệ này và cho phép điều hướng giữa các bảng liên quan bằng cách nhấp vào giá trị foreign key.
+
+## SSL/TLS
+
+Kết nối Oracle hỗ trợ mã hóa SSL/TLS qua Oracle Net Services:
+
+| Chế độ SSL | Mô tả |
+|----------|-------------|
+| **Disabled** | Không mã hóa SSL |
+| **Required** | Yêu cầu SSL, nhưng không xác minh chứng chỉ |
+| **Verify CA** | Yêu cầu SSL và xác minh chứng chỉ server với CA |
+
+<Tip>
+Đối với Oracle Cloud Autonomous Database, tải connection wallet từ OCI Console. Wallet chứa các chứng chỉ và mô tả kết nối cần thiết cho xác thực mTLS.
+</Tip>
+
+## Hỗ trợ SSH Tunnel
+
+Bạn có thể kết nối đến Oracle qua SSH tunnel nếu máy chủ database nằm trong mạng private. Cấu hình SSH tunnel trong tab SSH của form kết nối, sau đó TablePro định tuyến kết nối Oracle qua tunnel.
+
+## Khắc phục sự cố
+
+### Không tìm thấy Driver OCI
+
+**Triệu chứng**: "OCI library not found" hoặc "Cannot load OCI shared library"
+
+**Giải pháp**:
+
+1. Xác minh Oracle Instant Client đã cài đặt và các thư viện chia sẻ có thể truy cập.
+2. Kiểm tra `ORACLE_HOME` hoặc `DYLD_LIBRARY_PATH` trỏ đến thư mục Instant Client.
+3. Trên Mac Apple Silicon, đảm bảo bạn tải phiên bản arm64 của Instant Client.
+
+### Connection Refused
+
+**Triệu chứng**: "ORA-12541: TNS:no listener" hoặc timeout kết nối
+
+**Nguyên nhân phổ biến**:
+
+1. **Listener không chạy**: Xác minh Oracle listener đang chạy với `lsnrctl status` trên server.
+2. **Sai port**: Cổng listener mặc định là 1521. Kiểm tra `listener.ora` cho cổng tùy chỉnh.
+3. **Quy tắc tường lửa**: Đảm bảo cổng 1521 được mở trong security group hoặc tường lửa mạng.
+4. **Sai service name**: Xác minh service name với `lsnrctl services` trên server.
+
+### Authentication Failed
+
+**Triệu chứng**: "ORA-01017: invalid username/password; logon denied"
+
+**Giải pháp**:
+
+1. Mật khẩu Oracle phân biệt hoa thường (12c+ với `SEC_CASE_SENSITIVE_LOGON=TRUE`).
+2. Kiểm tra tài khoản có bị khóa không: `SELECT account_status FROM dba_users WHERE username = 'YOUR_USER'`.
+3. Xác minh user tồn tại và có quyền CREATE SESSION.
+
+### ORA-12514: TNS:listener does not currently know of service
+
+**Giải pháp**:
+
+1. Xác nhận service name chính xác. Liệt kê các service đã đăng ký với `lsnrctl services`.
+2. Instance database có thể chưa đăng ký với listener. Đợi tự động đăng ký hoặc chạy `ALTER SYSTEM REGISTER`.
+3. Kiểm tra xem bạn có đang dùng SID thay vì service name không. TablePro sử dụng service name.
+
+## Bước tiếp theo
+
+<CardGroup cols={2}>
+  <Card title="SSH Tunnel" icon="lock" href="/vi/databases/ssh-tunneling">
+    Kết nối đến Oracle database trong mạng private
+  </Card>
+  <Card title="Trình soạn thảo SQL" icon="code" href="/vi/features/sql-editor">
+    Viết và thực thi truy vấn Oracle và khối PL/SQL
+  </Card>
+  <Card title="Nhập/Xuất" icon="file-import" href="/vi/features/import-export">
+    Import và export dữ liệu Oracle
+  </Card>
+  <Card title="Cấu trúc Bảng" icon="table" href="/vi/features/table-structure">
+    Xem indexes, foreign keys và định nghĩa cột
+  </Card>
+</CardGroup>
