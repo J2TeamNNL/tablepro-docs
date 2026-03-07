@@ -40,6 +40,7 @@
                   "databases/redis",
                   "databases/redshift",
                   "databases/mssql",
+                  "databases/oracle",
                   "databases/ssh-tunneling"
                 ]
               },
@@ -128,6 +129,7 @@
                   "vi/databases/redis",
                   "vi/databases/redshift",
                   "vi/databases/mssql",
+                  "vi/databases/oracle",
                   "vi/databases/ssh-tunneling"
                 ]
               },
