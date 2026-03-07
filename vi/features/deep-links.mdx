@@ -1,9 +1,85 @@
 ---
 title: Deep Links
-description: Mở kết nối, bảng và truy vấn từ ứng dụng bên ngoài bằng URL scheme tablepro://
+description: Mở kết nối, bảng và truy vấn từ ứng dụng bên ngoài bằng URL cơ sở dữ liệu hoặc URL scheme tablepro://
 ---
 
-TablePro đăng ký URL scheme `tablepro://` để bạn có thể mở kết nối, bảng và truy vấn trực tiếp từ trình duyệt, terminal, tin nhắn Slack hoặc bất kỳ ứng dụng nào hỗ trợ liên kết.
+TablePro hỗ trợ hai cách mở kết nối từ ứng dụng bên ngoài: URL cơ sở dữ liệu tiêu chuẩn (như `mysql://...`) và URL scheme tùy chỉnh `tablepro://`.
+
+## URL cơ sở dữ liệu
+
+Mở bất kỳ kết nối cơ sở dữ liệu nào trực tiếp bằng URL tiêu chuẩn. Hoạt động từ terminal, script, Alfred, Raycast hoặc bất kỳ ứng dụng nào có thể mở URL.
+
+### Các scheme được hỗ trợ
+
+| Scheme | Cơ sở dữ liệu |
+|--------|----------------|
+| `mysql://` | MySQL / MariaDB |
+| `postgresql://`, `postgres://` | PostgreSQL |
+| `mongodb://`, `mongodb+srv://` | MongoDB |
+| `redis://`, `rediss://` | Redis |
+| `mssql://`, `sqlserver://` | SQL Server |
+| `sqlite://` | SQLite (đường dẫn tệp cục bộ) |
+
+### Định dạng URL
+
+```
+scheme://[username[:password]@]host[:port][/database][?param=value]
+```
+
+### Ví dụ
+
+```bash
+# MySQL
+open "mysql://root@localhost/mydb" -a TablePro
+
+# PostgreSQL với cổng và cơ sở dữ liệu
+open "postgresql://admin@db.example.com:5432/analytics" -a TablePro
+
+# MongoDB
+open "mongodb://localhost:27017/mydb" -a TablePro
+
+# Redis
+open "redis://localhost:6379" -a TablePro
+
+# SQLite (tệp cục bộ)
+open "sqlite:///Users/me/data/app.db" -a TablePro
+```
+
+### Cách hoạt động
+
+1. **Khớp kết nối đã lưu:** TablePro kiểm tra xem có kết nối đã lưu nào khớp với host, port, database và username của URL không. Nếu tìm thấy, nó sử dụng lại kết nối đó (bao gồm mật khẩu đã lưu).
+2. **Khớp phiên đang hoạt động:** Nếu kết nối đang mở, TablePro đưa cửa sổ hiện có lên phía trước thay vì tạo bản sao.
+3. **Kết nối tạm thời mới:** Nếu không tìm thấy kết nối khớp, TablePro tạo kết nối tạm thời và kết nối ngay lập tức. Mật khẩu trong URL được sử dụng cho lần kết nối đầu tiên nhưng không được lưu.
+
+### Tham số truy vấn
+
+Bạn có thể truyền thêm tùy chọn qua tham số truy vấn:
+
+| Tham số | Mô tả |
+|---------|-------|
+| `table` | Mở bảng cụ thể sau khi kết nối |
+| `filter_column`, `filter_operation`, `filter_value` | Áp dụng bộ lọc trên bảng đã mở |
+| `condition` | Áp dụng điều kiện WHERE SQL thô |
+| `schema` | Chuyển sang schema cụ thể (PostgreSQL) hoặc database (MySQL) sau khi kết nối |
+
+```bash
+# Mở bảng với bộ lọc
+open "mysql://root@localhost/mydb?table=users&filter_column=status&filter_operation=equal&filter_value=active" -a TablePro
+
+# Mở với điều kiện SQL thô
+open "postgresql://admin@localhost/mydb?table=orders&condition=total%20%3E%20100" -a TablePro
+
+# Chuyển schema khi kết nối
+open "postgresql://admin@localhost/mydb?schema=reporting" -a TablePro
+```
+
+<Warning>
+Mặc dù mật khẩu có thể được bao gồm trong URL (`mysql://user:pass@host/db`), hãy tránh chia sẻ URL chứa mật khẩu. Ưu tiên sử dụng kết nối đã lưu với mật khẩu được lưu trữ trong Keychain.
+</Warning>
+
+## Deep Links tùy chỉnh (tablepro://)
+
+TablePro cũng đăng ký URL scheme `tablepro://` để bạn có thể mở kết nối, bảng và truy vấn trực tiếp từ trình duyệt, terminal, tin nhắn Slack hoặc bất kỳ ứng dụng nào hỗ trợ liên kết.
 
 ## Các mẫu URL
 
