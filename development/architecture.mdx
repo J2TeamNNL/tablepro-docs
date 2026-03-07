@@ -1,20 +1,16 @@
 ---
 title: Architecture
-description: Understand TablePro's codebase structure and design patterns
+description: MVVM structure, database driver protocol, actor-based SSH tunnels, and autocomplete engine internals
 ---
 
 # Architecture
 
-This guide explains TablePro's architecture, design patterns, and how different components work together.
-
-## Overview
-
 TablePro is built with:
 
-- **SwiftUI** for the user interface
+- **SwiftUI** for the UI
 - **AppKit** for low-level macOS integration
 - **Swift Concurrency** (async/await, actors) for concurrent operations
-- **Native database libraries** for database connectivity
+- **Native C libraries** for database connectivity
 
 ```mermaid
 block-beta
@@ -47,15 +43,15 @@ block-beta
 
 ## Dependencies
 
-TablePro uses Swift Package Manager (SPM) for third-party dependencies:
+SPM dependencies:
 
 | Package | Version | Purpose |
 |---------|---------|---------|
-| **CodeEditSourceEditor** | 0.15.2+ | Tree-sitter-powered code editor component for the SQL editor |
+| **CodeEditSourceEditor** | 0.15.2+ | Tree-sitter-powered code editor for the SQL editor |
 | **Sparkle** | 2.x | Auto-update framework with EdDSA signing |
 
 <Note>
-CodeEditSourceEditor bundles a SwiftLint plugin that requires `-skipPackagePluginValidation` for CLI builds. See the [Building](/development/building) guide for details.
+CodeEditSourceEditor bundles a SwiftLint plugin that requires `-skipPackagePluginValidation` for CLI builds. See [Building](/development/building).
 </Note>
 
 ## Directory Structure
@@ -108,8 +104,6 @@ CodeEditSourceEditor bundles a SwiftLint plugin that requires `-skipPackagePlugi
 
 ### MVVM Architecture
 
-TablePro uses Model-View-ViewModel (MVVM):
-
 ```mermaid
 flowchart LR
     Model["Model<br>(Struct)"] <--> ViewModel["ViewModel<br>(Observable)"] <--> View["View<br>(SwiftUI)"]
@@ -139,7 +133,7 @@ class DatabaseManager: ObservableObject {
 }
 ```
 
-**Views**: SwiftUI declarative UI
+**Views**: Declarative SwiftUI
 ```swift
 struct ConnectionFormView: View {
     @StateObject private var dbManager = DatabaseManager.shared
@@ -154,7 +148,7 @@ struct ConnectionFormView: View {
 
 ### Protocol-Oriented Design
 
-Database drivers follow a protocol:
+All database drivers conform to a single protocol:
 
 ```swift
 protocol DatabaseDriver: AnyObject {
@@ -220,7 +214,7 @@ enum DatabaseDriverFactory {
 
 ### DatabaseManager
 
-Central manager for database operations:
+Central manager for all database operations:
 
 - Manages active sessions
 - Coordinates connections/disconnections
@@ -243,7 +237,7 @@ class DatabaseManager: ObservableObject {
 
 ### Database Drivers
 
-Each driver encapsulates database-specific logic:
+Each driver wraps database-specific logic:
 
 | Driver | Library | Protocol |
 |--------|---------|----------|
@@ -252,8 +246,6 @@ Each driver encapsulates database-specific logic:
 | SQLiteDriver | Built-in SQLite3 | File-based |
 
 ### Autocomplete Engine
-
-The autocomplete system:
 
 ```mermaid
 flowchart TB
@@ -272,7 +264,7 @@ flowchart TB
 
 ### SSH Tunnel Manager
 
-Manages SSH tunnels as an actor:
+Actor-based SSH tunnel management:
 
 ```swift
 actor SSHTunnelManager {
@@ -328,7 +320,7 @@ flowchart TB
 
 ### Published Properties
 
-UI state is managed with `@Published`:
+UI state uses `@Published`:
 
 ```swift
 @MainActor
@@ -341,7 +333,7 @@ class DatabaseManager: ObservableObject {
 
 ### App Storage
 
-Settings use `@AppStorage` for persistence:
+Settings persist via `@AppStorage`:
 
 ```swift
 @AppStorage("appearance.theme") var theme: AppTheme = .system
@@ -390,7 +382,7 @@ enum MySQLError: Error, LocalizedError {
 
 ### Error Propagation
 
-Errors propagate up through async/await:
+Errors propagate through async/await:
 
 ```swift
 func executeQuery(_ query: String) async throws -> QueryResult {
@@ -405,7 +397,7 @@ func executeQuery(_ query: String) async throws -> QueryResult {
 
 ### Unit Tests
 
-Tests are in `TableProTests/`:
+Tests live in `TableProTests/`:
 
 ```swift
 final class MySQLDriverTests: XCTestCase {
@@ -418,8 +410,6 @@ final class MySQLDriverTests: XCTestCase {
 ```
 
 ### Integration Tests
-
-For database tests:
 
 ```swift
 func testExecuteQuery() async throws {

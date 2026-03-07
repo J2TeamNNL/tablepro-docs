@@ -1,13 +1,13 @@
 ---
 title: SSH Tunneling
-description: Kết nối an toàn đến database từ xa thông qua SSH tunnel
+description: Định tuyến kết nối database qua tunnel SSH mã hóa để truy cập server trong mạng nội bộ
 ---
 
-# SSH Tunnel
+# SSH Tunneling
 
-SSH tunneling cho phép bạn kết nối an toàn đến các database trên server từ xa không thể truy cập trực tiếp từ Mac của bạn. TablePro tạo một tunnel được mã hóa thông qua SSH server để kết nối đến database.
+SSH tunneling định tuyến kết nối database qua tunnel mã hóa để truy cập server không truy cập trực tiếp từ Mac. TablePro quản lý vòng đời tunnel, bao gồm keep-alive và tự kết nối lại.
 
-## Cách SSH Tunneling Hoạt Động
+## Cách SSH Tunneling Hoạt động
 
 ```mermaid
 flowchart LR
@@ -26,31 +26,31 @@ flowchart LR
     TablePro -->|"Encrypted<br>Tunnel"| Jump -->|"Internal<br>Network"| Database
 ```
 
-1. TablePro tạo kết nối SSH đến jump server của bạn
-2. Một cổng cục bộ (ví dụ: 60000) được chuyển tiếp qua tunnel
-3. Lưu lượng được mã hóa giữa Mac của bạn và SSH server
-4. SSH server kết nối đến database thay mặt bạn
+1. TablePro mở kết nối SSH đến jump server
+2. Cổng local (ví dụ: 60000) chuyển tiếp qua tunnel
+3. Mọi traffic giữa Mac và SSH server đều mã hóa
+4. SSH server kết nối đến database thay bạn
 
-## Khi Nào Sử Dụng SSH Tunneling
+## Khi Nào Dùng SSH Tunneling
 
 - Database server nằm trong mạng nội bộ
-- Database server chỉ chấp nhận kết nối cục bộ
-- Bạn cần mã hóa kết nối đến database
-- Bạn muốn truy cập database thông qua bastion/jump host
+- Database server chỉ chấp nhận kết nối local
+- Cần mã hóa kết nối database
+- Truy cập database qua bastion/jump host
 
-## Thiết Lập SSH Tunneling
+## Thiết lập SSH Tunneling
 
 <Steps>
-  <Step title="Tạo hoặc Chỉnh Sửa Kết Nối">
-    Mở form kết nối cho database của bạn
+  <Step title="Tạo hoặc Sửa Kết nối">
+    Mở form kết nối cho database
   </Step>
   <Step title="Bật SSH Tunnel">
     Bật công tắc **SSH Tunnel**
   </Step>
-  <Step title="Cấu Hình SSH Settings">
-    Nhập chi tiết SSH server và xác thực
+  <Step title="Cấu hình SSH">
+    Nhập thông tin SSH server và xác thực
   </Step>
-  <Step title="Kiểm Tra và Kết Nối">
+  <Step title="Kiểm tra và Kết nối">
     Nhấp **Test Connection** để xác minh tunnel hoạt động
   </Step>
 </Steps>
@@ -69,48 +69,48 @@ flowchart LR
   />
 </Frame>
 
-## Tùy Chọn Cấu Hình SSH
+## Tùy chọn Cấu hình SSH
 
-### Thiết Lập SSH Server
+### SSH Server
 
-| Field | Mô tả | Mặc định |
+| Trường | Mô tả | Mặc định |
 |-------|-------------|---------|
 | **SSH Host** | Hostname hoặc IP của SSH server | - |
 | **SSH Port** | Cổng SSH server | `22` |
 | **SSH User** | Tên người dùng SSH | - |
 
-### Phương Thức Xác Thực
+### Phương thức Xác thực
 
-TablePro hỗ trợ hai phương thức xác thực SSH:
+TablePro hỗ trợ hai phương thức:
 
 <Tabs>
   <Tab title="Password">
-    Xác thực mật khẩu đơn giản:
+    Xác thực mật khẩu:
 
-    | Field | Mô tả |
+    | Trường | Mô tả |
     |-------|-------------|
-    | **SSH Pass** | Mật khẩu SSH của bạn |
+    | **SSH Pass** | Mật khẩu SSH |
 
     <Warning>
-    Xác thực bằng mật khẩu kém an toàn hơn xác thực bằng key. Hãy cân nhắc sử dụng SSH key cho server production.
+    Xác thực mật khẩu kém an toàn hơn key. Dùng SSH key cho server production.
     </Warning>
   </Tab>
   <Tab title="Private Key">
-    Xác thực bằng key an toàn hơn:
+    Xác thực bằng key (an toàn hơn):
 
-    | Field | Mô tả |
+    | Trường | Mô tả |
     |-------|-------------|
-    | **Key File** | Đường dẫn đến private key của bạn (ví dụ: `~/.ssh/id_rsa`) |
-    | **Passphrase** | Passphrase của key (nếu được mã hóa) |
+    | **Key File** | Đường dẫn private key (ví dụ: `~/.ssh/id_rsa`) |
+    | **Passphrase** | Passphrase của key (nếu mã hóa) |
 
     <Tip>
-    Nhấp **Browse** để chọn file private key. TablePro tìm trong `~/.ssh/` theo mặc định.
+    Nhấp **Browse** để chọn file private key. TablePro tìm trong `~/.ssh/` mặc định.
     </Tip>
   </Tab>
 </Tabs>
 
 {/* Screenshot: Phương thức xác thực SSH */}
-<Frame caption="Xác thực SSH: Tùy chọn Mật khẩu và Private Key">
+<Frame caption="Xác thực SSH: Password và Private Key">
   <img
     className="block dark:hidden"
     src="/images/ssh-auth-methods.png"
@@ -123,15 +123,15 @@ TablePro hỗ trợ hai phương thức xác thực SSH:
   />
 </Frame>
 
-### Sử Dụng SSH Config
+### Dùng SSH Config
 
-Nếu bạn có các entry trong file `~/.ssh/config`, TablePro có thể sử dụng chúng:
+Nếu có entry trong `~/.ssh/config`, TablePro đọc tự động:
 
-1. TablePro đọc SSH config của bạn tự động
-2. Chọn một host từ dropdown **SSH Host**
-3. Các thiết lập được tự động điền từ config của bạn
+1. TablePro đọc SSH config khi khởi động
+2. Chọn host từ dropdown **SSH Host**
+3. Các thiết lập tự động điền từ config
 
-Ví dụ SSH config entry:
+Ví dụ SSH config:
 
 ```
 # ~/.ssh/config
@@ -142,41 +142,41 @@ Host production-jump
     IdentityFile ~/.ssh/production_key
 ```
 
-Entry này xuất hiện như "production-jump" trong dropdown SSH Host.
+Hiển thị "production-jump" trong dropdown SSH Host.
 
 {/* Screenshot: SSH host từ config */}
-<Frame caption="Các host SSH được nhập từ ~/.ssh/config">
+<Frame caption="SSH hosts từ ~/.ssh/config">
   <img
     className="block dark:hidden"
     src="/images/ssh-config-hosts.png"
-    alt="Các host SSH từ config"
+    alt="SSH hosts từ config"
   />
   <img
     className="hidden dark:block"
     src="/images/ssh-config-hosts-dark.png"
-    alt="Các host SSH từ config"
+    alt="SSH hosts từ config"
   />
 </Frame>
 
-## Thiết Lập Kết Nối Database
+## Cài đặt Kết nối Database
 
-Khi sử dụng SSH tunneling, database host là tương đối với SSH server:
+Khi dùng SSH tunneling, database host tính tương đối so với SSH server:
 
-| Field | Giá trị | Mô tả |
+| Trường | Giá trị | Mô tả |
 |-------|-------|-------------|
-| **Host** | `localhost` hoặc `127.0.0.1` | Database nằm trên chính SSH server |
-| **Host** | `db.internal` | Database nằm trên mạng nội bộ |
+| **Host** | `localhost` hoặc `127.0.0.1` | Database trên SSH server |
+| **Host** | `db.internal` | Database trên mạng nội bộ |
 | **Port** | `3306`, `5432`, v.v. | Cổng database (không đổi) |
 
 <Note>
-Database host nên là giá trị mà SSH server sử dụng để kết nối đến database, không phải giá trị mà Mac của bạn sử dụng.
+Database host là giá trị SSH server dùng để đến database, không phải giá trị Mac dùng.
 </Note>
 
-### Các Trường Hợp Phổ Biến
+### Các Trường hợp Phổ biến
 
 #### Database trên SSH Server
 
-Database chạy trên cùng máy với SSH server:
+Database chạy cùng máy SSH server:
 
 ```
 SSH Host:       jump.example.com
@@ -186,9 +186,9 @@ Database Host:  localhost
 Database Port:  3306
 ```
 
-#### Database trên Mạng Nội Bộ
+#### Database trên Mạng Nội bộ
 
-Database nằm trên server khác, chỉ có thể truy cập từ SSH server:
+Database ở server khác, chỉ truy cập được từ SSH server:
 
 ```
 SSH Host:       jump.example.com
@@ -200,7 +200,7 @@ Database Port:  5432
 
 #### AWS RDS qua Bastion
 
-Kết nối đến RDS thông qua EC2 bastion host:
+Kết nối RDS qua EC2 bastion host:
 
 ```
 SSH Host:       bastion.example.com
@@ -211,23 +211,23 @@ Database Host:  mydb.abc123.us-east-1.rds.amazonaws.com
 Database Port:  5432
 ```
 
-## Thiết Lập SSH Key
+## Thiết lập SSH Key
 
-### Tạo SSH Keys
+### Tạo SSH Key
 
-Nếu bạn chưa có SSH key:
+Nếu chưa có:
 
 ```bash
 # Tạo key pair mới
 ssh-keygen -t ed25519 -C "your_email@example.com"
 
-# Hoặc sử dụng RSA để tương thích rộng hơn
+# Hoặc RSA cho tương thích rộng hơn
 ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 ```
 
-### Vị Trí Key
+### Vị trí Key
 
-Vị trí key mặc định trên macOS:
+Vị trí mặc định trên macOS:
 
 | Loại Key | Private Key | Public Key |
 |----------|-------------|------------|
@@ -237,10 +237,10 @@ Vị trí key mặc định trên macOS:
 
 ### Thêm Key vào Server
 
-Sao chép public key của bạn đến SSH server:
+Copy public key đến SSH server:
 
 ```bash
-# Sử dụng ssh-copy-id
+# Dùng ssh-copy-id
 ssh-copy-id -i ~/.ssh/id_ed25519.pub user@server
 
 # Hoặc thủ công
@@ -261,9 +261,9 @@ chmod 644 ~/.ssh/config
 
 ## Nhập từ URL
 
-Bạn có thể nhập kết nối SSH tunnel từ URL thay vì điền từng trường thủ công. TablePro hỗ trợ scheme URL `+ssh` mã hóa cả thông tin SSH và database trong một chuỗi duy nhất.
+Import kết nối SSH tunnel từ URL thay vì điền từng trường. TablePro hỗ trợ scheme `+ssh` gộp cả SSH và database trong một chuỗi.
 
-Để biết đầy đủ thông số URL bao gồm tất cả các tham số truy vấn, xem [Tham chiếu URL kết nối](/databases/connection-urls#ssh-tunnel-format).
+Xem [Tham chiếu URL kết nối](/databases/connection-urls#ssh-tunnel-format) để biết đầy đủ thông số.
 
 **Định dạng:**
 
@@ -271,7 +271,7 @@ Bạn có thể nhập kết nối SSH tunnel từ URL thay vì điền từng t
 scheme+ssh://ssh_user@ssh_host:ssh_port/db_user:db_password@db_host/db_name?name=MyConnection&usePrivateKey=true
 ```
 
-**Các scheme được hỗ trợ:** `mysql+ssh`, `postgresql+ssh`, `postgres+ssh`, `mariadb+ssh`
+**Scheme hỗ trợ:** `mysql+ssh`, `postgresql+ssh`, `postgres+ssh`, `mariadb+ssh`
 
 **Ví dụ:**
 
@@ -279,61 +279,61 @@ scheme+ssh://ssh_user@ssh_host:ssh_port/db_user:db_password@db_host/db_name?name
 mysql+ssh://root@123.123.123.123:1234/database_user:database_password@127.0.0.1/database_name?name=FlashPanel&usePrivateKey=true
 ```
 
-Kết quả điền:
+Kết quả:
 - **SSH Host**: `123.123.123.123`, **SSH Port**: `1234`, **SSH User**: `root`
 - **Database Host**: `127.0.0.1`, **Database User**: `database_user`, **Database**: `database_name`
-- **Tên kết nối**: `FlashPanel`, **Phương thức xác thực**: Private Key
+- **Tên kết nối**: `FlashPanel`, **Xác thực**: Private Key
 
-**Tham số query:**
+**Query parameter:**
 
-| Tham số | Mô tả |
+| Parameter | Mô tả |
 |-----------|-------------|
 | `name` | Đặt tên kết nối |
-| `usePrivateKey` | Đặt `true` để chọn xác thực Private Key |
+| `usePrivateKey` | `true` để chọn xác thực Private Key |
 
-Để nhập, mở **New Connection**, nhấp **Import from URL**, và dán URL.
+Import: mở **New Connection**, nhấp **Import from URL**, dán URL.
 
 <Tip>
-Định dạng này tương thích với URL kết nối SSH của TablePlus, vì vậy bạn có thể dán URL trực tiếp khi di chuyển.
+Format này tương thích URL SSH của TablePlus, dán trực tiếp khi migrate.
 </Tip>
 
-## Khắc Phục Sự Cố
+## Khắc phục Sự cố
 
-### Từ Chối Kết Nối
+### Từ chối Kết nối
 
-**Triệu chứng**: "Connection refused" khi kiểm tra SSH tunnel
+**Triệu chứng**: "Connection refused" khi test SSH tunnel
 
 **Nguyên nhân và Giải pháp**:
 
 1. **SSH server không chạy**
    ```bash
-   # Kiểm tra kết nối SSH trực tiếp
+   # Test SSH trực tiếp
    ssh -v user@server
    ```
 
 2. **Sai cổng**
-   - Xác minh cổng SSH (một số server sử dụng cổng không chuẩn)
-   - Kiểm tra với quản trị viên server
+   - Kiểm tra cổng SSH (có server dùng cổng khác 22)
+   - Hỏi quản trị viên server
 
-3. **Firewall chặn kết nối**
-   - Đảm bảo cổng 22 (hoặc cổng tùy chỉnh) được mở
-   - Kiểm tra cả firewall cục bộ và server
+3. **Firewall chặn**
+   - Đảm bảo cổng 22 (hoặc cổng tùy chỉnh) mở
+   - Kiểm tra firewall cả hai phía
 
-### Xác Thực Thất Bại
+### Xác thực Thất bại
 
 **Triệu chứng**: "SSH authentication failed" hoặc "Permission denied"
 
-**Đối với Xác thực Mật khẩu**:
-1. Xác minh username và password
-2. Kiểm tra xem xác thực mật khẩu có được bật trên server không
-3. Thử kết nối qua terminal: `ssh user@server`
+**Cho xác thực mật khẩu**:
+1. Kiểm tra username và password
+2. Kiểm tra password auth có bật trên server
+3. Thử qua terminal: `ssh user@server`
 
-**Đối với Xác thực Key**:
-1. Xác minh đường dẫn file key chính xác
+**Cho xác thực key**:
+1. Kiểm tra đường dẫn key đúng
 2. Kiểm tra quyền key (`chmod 600`)
-3. Đảm bảo public key nằm trong `authorized_keys` của server
-4. Xác minh passphrase (nếu key được mã hóa)
-5. Thử kết nối qua terminal:
+3. Đảm bảo public key trong `authorized_keys` của server
+4. Kiểm tra passphrase (nếu key mã hóa)
+5. Thử qua terminal:
    ```bash
    ssh -i ~/.ssh/your_key user@server
    ```
@@ -341,8 +341,8 @@ Kết quả điền:
 ### Lỗi Private Key
 
 **"Private key file not found"**:
-- Xác minh đường dẫn tồn tại
-- Sử dụng nút Browse để chọn file
+- Kiểm tra đường dẫn tồn tại
+- Dùng nút Browse để chọn file
 
 **"Private key file is not readable"**:
 ```bash
@@ -351,99 +351,99 @@ chmod 600 ~/.ssh/your_key
 
 **"Wrong passphrase"**:
 - Nhập lại passphrase
-- Kiểm tra key thủ công: `ssh-keygen -y -f ~/.ssh/your_key`
+- Test key: `ssh-keygen -y -f ~/.ssh/your_key`
 
-### Tunnel Thiết Lập Nhưng Database Lỗi
+### Tunnel OK Nhưng Database Lỗi
 
-Nếu SSH tunnel kết nối nhưng kết nối database thất bại:
+Nếu SSH tunnel kết nối nhưng database thất bại:
 
-1. **Xác minh database host chính xác** (tương đối với SSH server)
+1. **Kiểm tra database host** (tương đối với SSH server)
    ```bash
-   # Từ SSH server, kiểm tra kết nối database
+   # Từ SSH server, test kết nối database
    ssh user@server "mysql -h localhost -u dbuser -p"
    ```
 
 2. **Kiểm tra cổng database**
-   - Đảm bảo cổng khớp với cổng thực tế của database server
+   - Đảm bảo cổng khớp cổng thực tế
 
-3. **Xác minh thông tin đăng nhập database**
-   - Username/password có thể khác với thông tin SSH
+3. **Kiểm tra thông tin database**
+   - Username/password có thể khác SSH
 
-### Tunnel Bị Ngắt Định Kỳ
+### Tunnel Bị ngắt
 
-TablePro bao gồm thiết lập keep-alive để ngăn tunnel bị ngắt:
+TablePro dùng keep-alive để duy trì tunnel:
 
-- `ServerAliveInterval=60` - Gửi keep-alive mỗi 60 giây
-- `ServerAliveCountMax=3` - Ngắt kết nối sau 3 lần không phản hồi
+- `ServerAliveInterval=60`: gửi keep-alive mỗi 60 giây
+- `ServerAliveCountMax=3`: ngắt sau 3 lần không phản hồi
 
-Nếu tunnel vẫn bị ngắt:
-1. Kiểm tra độ ổn định mạng
-2. Xác minh thiết lập `ClientAliveInterval` của server
-3. Kiểm tra thiết lập idle timeout trên firewall
+Nếu vẫn ngắt:
+1. Kiểm tra mạng ổn định
+2. Kiểm tra `ClientAliveInterval` trên server
+3. Kiểm tra idle timeout trên firewall
 
 {/* Screenshot: SSH tunnel đang hoạt động */}
-<Frame caption="Chỉ báo trạng thái SSH tunnel đang hoạt động">
+<Frame caption="Chỉ báo SSH tunnel đang hoạt động">
   <img
     className="block dark:hidden"
     src="/images/ssh-tunnel-active.png"
-    alt="Trạng thái SSH tunnel đang hoạt động"
+    alt="SSH tunnel đang hoạt động"
   />
   <img
     className="hidden dark:block"
     src="/images/ssh-tunnel-active-dark.png"
-    alt="Trạng thái SSH tunnel đang hoạt động"
+    alt="SSH tunnel đang hoạt động"
   />
 </Frame>
 
-## Cân Nhắc Bảo Mật
+## Bảo mật
 
-### Thực Hành Tốt Nhất
+### Thực hành tốt
 
-1. **Sử dụng xác thực bằng key** thay vì mật khẩu
-2. **Sử dụng key Ed25519 hoặc RSA** với 4096+ bit
+1. **Dùng xác thực key** thay mật khẩu
+2. **Dùng Ed25519 hoặc RSA** 4096+ bit
 3. **Bảo vệ private key** bằng passphrase
-4. **Giới hạn truy cập SSH** cho người dùng/IP cụ thể trên server
-5. **Sử dụng jump host chuyên dụng** thay vì truy cập database trực tiếp
+4. **Giới hạn SSH** cho user/IP cụ thể trên server
+5. **Dùng jump host chuyên dụng** thay truy cập database trực tiếp
 
-### Những Gì Được Mã Hóa
+### Dữ liệu Được Mã hóa
 
-| Dữ liệu | Được mã hóa |
+| Dữ liệu | Mã hóa |
 |------|-----------|
 | Kết nối SSH | Có |
-| Thông tin đăng nhập database | Có (qua tunnel) |
+| Thông tin database | Có (qua tunnel) |
 | Dữ liệu query | Có (qua tunnel) |
-| Mật khẩu lưu cục bộ | Có (macOS Keychain) |
+| Mật khẩu lưu local | Có (macOS Keychain) |
 
-### Những Điều Cần Tránh
+### Cần Tránh
 
 - Không chia sẻ private key
-- Không sử dụng xác thực mật khẩu trên server production
-- Không lưu mật khẩu SSH ở dạng plain text
-- Không để lộ cổng database trực tiếp ra internet
+- Không dùng mật khẩu trên server production
+- Không lưu mật khẩu SSH dạng plain text
+- Không để cổng database lộ ra internet
 
-## Nâng Cao: SSH Agent
+## Nâng cao: SSH Agent
 
-Nếu bạn sử dụng SSH Agent để quản lý key:
+Nếu dùng SSH Agent quản lý key:
 
 1. Thêm key vào agent:
    ```bash
    ssh-add ~/.ssh/id_ed25519
    ```
 
-2. TablePro có thể sử dụng key từ SSH Agent tự động
-3. Bạn không cần nhập passphrase nhiều lần
+2. TablePro dùng key từ SSH Agent tự động
+3. Không cần nhập passphrase nhiều lần
 
-## Các Bước Tiếp Theo
+## Bước Tiếp theo
 
 <CardGroup cols={2}>
   <Card title="Kết nối MySQL" icon="database" href="/vi/databases/mysql">
-    Thiết lập và tính năng MySQL cụ thể
+    Cài đặt và tính năng MySQL
   </Card>
   <Card title="Kết nối PostgreSQL" icon="database" href="/vi/databases/postgresql">
-    Thiết lập và tính năng PostgreSQL cụ thể
+    Cài đặt và tính năng PostgreSQL
   </Card>
   <Card title="Quản lý Kết nối" icon="plug" href="/vi/databases/overview">
-    Quản lý tất cả các kết nối của bạn
+    Quản lý tất cả kết nối
   </Card>
   <Card title="Phím tắt" icon="keyboard" href="/vi/features/keyboard-shortcuts">
     Tăng tốc quy trình làm việc

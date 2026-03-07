@@ -1,11 +1,11 @@
 ---
 title: SSH Tunneling
-description: Securely connect to remote databases through SSH tunnels
+description: Route database connections through an encrypted SSH tunnel to reach servers in private networks
 ---
 
 # SSH Tunneling
 
-SSH tunneling allows you to securely connect to databases on remote servers that aren't directly accessible from your Mac. TablePro creates an encrypted tunnel through an SSH server to reach your database.
+SSH tunneling routes your database connection through an encrypted tunnel to reach servers that aren't directly accessible from your Mac. TablePro manages the tunnel lifecycle, including keep-alive and auto-reconnect.
 
 ## How SSH Tunneling Works
 
@@ -26,16 +26,16 @@ flowchart LR
     TablePro -->|"Encrypted<br>Tunnel"| Jump -->|"Internal<br>Network"| Database
 ```
 
-1. TablePro creates an SSH connection to your jump server
+1. TablePro opens an SSH connection to your jump server
 2. A local port (e.g., 60000) forwards through the tunnel
-3. Traffic is encrypted between your Mac and the SSH server
+3. All traffic between your Mac and the SSH server is encrypted
 4. The SSH server connects to the database on your behalf
 
 ## When to Use SSH Tunneling
 
 - Database server is in a private network
 - Database server only accepts local connections
-- You need to encrypt connections to the database
+- You need to encrypt the database connection
 - You want to access databases through a bastion/jump host
 
 ## Setting Up SSH Tunneling
@@ -57,15 +57,15 @@ flowchart LR
 
 {/* Screenshot: Connection form with SSH section expanded */}
 <Frame caption="SSH tunnel configuration">
-  <img 
-    className="block dark:hidden" 
-    src="/images/ssh-tunnel-config.png" 
-    alt="SSH tunnel settings" 
+  <img
+    className="block dark:hidden"
+    src="/images/ssh-tunnel-config.png"
+    alt="SSH tunnel settings"
   />
-  <img 
-    className="hidden dark:block" 
-    src="/images/ssh-tunnel-config-dark.png" 
-    alt="SSH tunnel settings" 
+  <img
+    className="hidden dark:block"
+    src="/images/ssh-tunnel-config-dark.png"
+    alt="SSH tunnel settings"
   />
 </Frame>
 
@@ -92,11 +92,11 @@ TablePro supports two SSH authentication methods:
     | **SSH Pass** | Your SSH password |
 
     <Warning>
-    Password authentication is less secure than key-based authentication. Consider using SSH keys for production servers.
+    Password authentication is less secure than key-based authentication. Use SSH keys for production servers.
     </Warning>
   </Tab>
   <Tab title="Private Key">
-    More secure key-based authentication:
+    Key-based authentication (more secure):
 
     | Field | Description |
     |-------|-------------|
@@ -125,9 +125,9 @@ TablePro supports two SSH authentication methods:
 
 ### Using SSH Config
 
-If you have entries in your `~/.ssh/config` file, TablePro can use them:
+If you have entries in `~/.ssh/config`, TablePro reads them automatically:
 
-1. TablePro reads your SSH config automatically
+1. TablePro reads your SSH config on launch
 2. Select a host from the **SSH Host** dropdown
 3. Settings are auto-filled from your config
 
@@ -261,9 +261,9 @@ chmod 644 ~/.ssh/config
 
 ## Import from URL
 
-You can import SSH tunnel connections from a URL instead of filling in each field manually. TablePro supports `+ssh` URL schemes that encode both SSH and database credentials in a single string.
+Import SSH tunnel connections from a URL instead of filling in each field. TablePro supports `+ssh` URL schemes that encode both SSH and database credentials in a single string.
 
-For the full URL specification including all query parameters, see [Connection URL Reference](/databases/connection-urls#ssh-tunnel-format).
+For the full URL specification, see [Connection URL Reference](/databases/connection-urls#ssh-tunnel-format).
 
 **Format:**
 
@@ -355,7 +355,7 @@ chmod 600 ~/.ssh/your_key
 
 ### Tunnel Established but Database Fails
 
-If SSH tunnel connects but database connection fails:
+If the SSH tunnel connects but the database connection fails:
 
 1. **Verify database host is correct** (relative to SSH server)
    ```bash
@@ -371,10 +371,10 @@ If SSH tunnel connects but database connection fails:
 
 ### Tunnel Drops Periodically
 
-TablePro includes keep-alive settings to prevent tunnel drops:
+TablePro uses keep-alive settings to maintain tunnels:
 
-- `ServerAliveInterval=60` - Send keep-alive every 60 seconds
-- `ServerAliveCountMax=3` - Disconnect after 3 missed responses
+- `ServerAliveInterval=60`: send keep-alive every 60 seconds
+- `ServerAliveCountMax=3`: disconnect after 3 missed responses
 
 If tunnels still drop:
 1. Check network stability
