@@ -4,6 +4,36 @@ description: "Cập nhật sản phẩm và thông báo cho TablePro"
 rss: true
 ---
 
+<Update label="8 tháng 3, 2026" description="v0.15.0">
+  ### Tính năng mới
+
+  - **Hỗ trợ Oracle Database**: Kết nối đến cơ sở dữ liệu Oracle qua OCI (Oracle Call Interface)
+  - **URL Scheme cho cơ sở dữ liệu**: Mở kết nối trực tiếp từ terminal với `open "mysql://user@host/db" -a TablePro` — hỗ trợ MySQL, PostgreSQL, SQLite, MongoDB, Redis, MSSQL và Oracle
+  - **Xác thực SSH Agent**: Sử dụng SSH Agent để xác thực tunnel, tương thích với 1Password SSH Agent, Secretive và ssh-agent
+  - **SSH đa bước nhảy**: Chuỗi nhiều bước nhảy SSH (ProxyJump) để kết nối đến cơ sở dữ liệu qua các bastion host — cấu hình jump host trong biểu mẫu kết nối hoặc nhập từ `~/.ssh/config`
+
+  ### Cải tiến
+
+  - Giảm ~55% kích thước ứng dụng bằng cách thay thế CodeEditLanguages xcframework (38 grammar) bằng package cục bộ chỉ biên dịch SQL, Bash và JavaScript
+
+  ### Sửa lỗi
+
+  - Sửa lỗi rò rỉ bộ nhớ khi đối tượng trạng thái phiên được tạo lại mỗi lần mở tab, gây sử dụng 785MB ở 5 tab
+  - Sửa lỗi cấp phát field editor cho từng ô trong DataGrid tạo 180+ NSTextView thay vì dùng chung một
+  - Sửa lỗi NSEvent monitor không được gỡ trên tất cả đường đóng popover trong connection switcher
+  - Sửa lỗi race condition trong FreeTDS `disconnect()` khi `dbproc` được đặt nil mà không giữ lock
+  - Sửa lỗi JSON encoding và file I/O chặn main thread trong TabStateStorage
+  - Sửa lỗi MySQL/MariaDB nhận `BEGIN` thay vì `START TRANSACTION` trong thao tác bảng
+  - Sửa lỗi port bị reset về giá trị mặc định khi chỉnh sửa kết nối có port tùy chỉnh
+  - Sửa lỗi data race trong `MainContentCoordinator`, `LibPQConnection` và `VimKeyInterceptor`
+  - Sửa lỗi script SSH askpass được ghi với quyền đọc toàn cục
+  - Sửa lỗi màn hình chào hiển thị panel trống khi kết nối có group ID mồ côi
+  - Sửa lỗi nhiều tab tự động thực thi truy vấn đồng thời khi khôi phục kết nối
+  - Sửa lỗi identifier không được escape trong MySQL `SHOW CREATE TABLE` cho phép SQL injection qua tên bảng
+  - Sửa lỗi `QueryResultRow` equality bỏ qua giá trị ô, ngăn SwiftUI render lại hàng đã cập nhật
+  - Sửa lỗi `Cmd+Delete` trong tìm kiếm sidebar xóa nội dung query editor
+</Update>
+
 <Update label="6 tháng 3, 2026" description="v0.14.1">
   ### Tính năng mới
 

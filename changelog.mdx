@@ -4,6 +4,36 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="March 8, 2026" description="v0.15.0">
+  ### New Features
+
+  - **Oracle Database Support**: Connect to Oracle databases via OCI (Oracle Call Interface)
+  - **Database URL Scheme**: Open connections directly from terminal with `open "mysql://user@host/db" -a TablePro` — supports MySQL, PostgreSQL, SQLite, MongoDB, Redis, MSSQL, and Oracle
+  - **SSH Agent Authentication**: Use SSH Agent for tunnel authentication, compatible with 1Password SSH Agent, Secretive, and ssh-agent
+  - **Multi-Jump SSH**: Chain multiple SSH hops (ProxyJump) to reach databases through bastion hosts — configure jump hosts in the connection form or import from `~/.ssh/config`
+
+  ### Improvements
+
+  - Reduced app binary size by ~55% by replacing CodeEditLanguages xcframework (38 grammars) with a local package compiling only SQL, Bash, and JavaScript
+
+  ### Bug Fixes
+
+  - Fixed memory leak where session state objects were recreated on every tab open, causing 785MB usage at 5 tabs
+  - Fixed per-cell field editor allocation in DataGrid creating 180+ NSTextView instances instead of sharing one
+  - Fixed NSEvent monitor not removed on all popover dismissal paths in connection switcher
+  - Fixed race condition in FreeTDS `disconnect()` where `dbproc` was set to nil without holding the lock
+  - Fixed JSON encoding and file I/O blocking the main thread in TabStateStorage
+  - Fixed MySQL/MariaDB getting `BEGIN` instead of `START TRANSACTION` in table operations
+  - Fixed port resetting to default value when editing a connection with a custom port
+  - Fixed data races in `MainContentCoordinator`, `LibPQConnection`, and `VimKeyInterceptor`
+  - Fixed SSH askpass script written with world-readable permissions
+  - Fixed welcome screen showing blank panel when connections have orphaned group IDs
+  - Fixed multiple tabs auto-executing queries simultaneously on connection restore
+  - Fixed unescaped identifiers in MySQL `SHOW CREATE TABLE` queries allowing SQL injection via table names
+  - Fixed `QueryResultRow` equality ignoring cell values, preventing SwiftUI from re-rendering updated rows
+  - Fixed `Cmd+Delete` in sidebar search clearing the query editor
+</Update>
+
 <Update label="March 6, 2026" description="v0.14.1">
   ### New Features
 
