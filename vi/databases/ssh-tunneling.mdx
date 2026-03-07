@@ -81,7 +81,7 @@ flowchart LR
 
 ### Phương thức Xác thực
 
-TablePro hỗ trợ hai phương thức:
+TablePro hỗ trợ ba phương thức:
 
 <Tabs>
   <Tab title="Password">
@@ -105,6 +105,19 @@ TablePro hỗ trợ hai phương thức:
 
     <Tip>
     Nhấp **Browse** để chọn file private key. TablePro tìm trong `~/.ssh/` mặc định.
+    </Tip>
+  </Tab>
+  <Tab title="SSH Agent">
+    Ủy quyền ký cho tiến trình SSH agent (1Password, Secretive, macOS `ssh-agent`). Key nằm trong agent, TablePro không đọc trực tiếp.
+
+    | Trường | Mô tả |
+    |-------|-------------|
+    | **Agent Socket** | Đường dẫn socket tùy chỉnh (tùy chọn) |
+
+    Để trống để dùng `SSH_AUTH_SOCK` hệ thống.
+
+    <Tip>
+    Người dùng 1Password: đặt socket là `~/.1password/agent.sock`. Với ssh-agent macOS, để trống.
     </Tip>
   </Tab>
 </Tabs>
@@ -290,6 +303,8 @@ Kết quả:
 |-----------|-------------|
 | `name` | Đặt tên kết nối |
 | `usePrivateKey` | `true` để chọn xác thực Private Key |
+| `useSSHAgent` | `true` để chọn xác thực SSH Agent |
+| `agentSocket` | Đường dẫn socket SSH agent tùy chỉnh (ví dụ: `~/.1password/agent.sock`) |
 
 Import: mở **New Connection**, nhấp **Import from URL**, dán URL.
 
@@ -421,17 +436,35 @@ Nếu vẫn ngắt:
 - Không lưu mật khẩu SSH dạng plain text
 - Không để cổng database lộ ra internet
 
-## Nâng cao: SSH Agent
+## Xác thực SSH Agent
 
-Nếu dùng SSH Agent quản lý key:
+Với SSH Agent, private key không rời khỏi tiến trình agent — 1Password, Secretive, hoặc `ssh-agent` macOS giữ key và ký thay TablePro.
 
-1. Thêm key vào agent:
-   ```bash
-   ssh-add ~/.ssh/id_ed25519
-   ```
+### Thiết lập
 
-2. TablePro dùng key từ SSH Agent tự động
-3. Không cần nhập passphrase nhiều lần
+1. Chọn **SSH Agent** làm phương thức xác thực
+2. Để trống **Agent Socket** để dùng mặc định (`SSH_AUTH_SOCK`)
+3. Với 1Password, đặt socket là `~/.1password/agent.sock`
+
+### Kiểm tra Agent
+
+Xác nhận agent có key:
+
+```bash
+# Liệt kê key trong agent
+ssh-add -l
+
+# Nếu trống, thêm key
+ssh-add ~/.ssh/id_ed25519
+```
+
+### Socket Agent Tùy chỉnh
+
+| Công cụ | Đường dẫn Socket |
+|------|-------------|
+| 1Password | `~/.1password/agent.sock` |
+| Secretive | Xem tùy chọn Secretive để lấy đường dẫn socket |
+| macOS ssh-agent | Để trống (dùng `SSH_AUTH_SOCK`) |
 
 ## Bước Tiếp theo
 

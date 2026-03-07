@@ -81,7 +81,7 @@ flowchart LR
 
 ### Authentication Methods
 
-TablePro supports two SSH authentication methods:
+TablePro supports three SSH authentication methods:
 
 <Tabs>
   <Tab title="Password">
@@ -105,6 +105,19 @@ TablePro supports two SSH authentication methods:
 
     <Tip>
     Click **Browse** to select your private key file. TablePro looks in `~/.ssh/` by default.
+    </Tip>
+  </Tab>
+  <Tab title="SSH Agent">
+    Delegates signing to an SSH agent process (1Password, Secretive, macOS `ssh-agent`). Keys stay in the agent and are never read by TablePro.
+
+    | Field | Description |
+    |-------|-------------|
+    | **Agent Socket** | Custom socket path (optional) |
+
+    Leave empty to use the system `SSH_AUTH_SOCK`.
+
+    <Tip>
+    1Password users: set the socket to `~/.1password/agent.sock`. For the built-in macOS ssh-agent, leave it empty.
     </Tip>
   </Tab>
 </Tabs>
@@ -290,6 +303,8 @@ This fills in:
 |-----------|-------------|
 | `name` | Sets the connection name |
 | `usePrivateKey` | Set to `true` to select Private Key authentication |
+| `useSSHAgent` | Set to `true` to select SSH Agent authentication |
+| `agentSocket` | Custom SSH agent socket path (e.g., `~/.1password/agent.sock`) |
 
 To import, open **New Connection**, click **Import from URL**, and paste the URL.
 
@@ -421,17 +436,35 @@ If tunnels still drop:
 - Don't store SSH passwords in plain text
 - Don't expose database ports directly to the internet
 
-## Advanced: SSH Agent
+## SSH Agent Authentication
 
-If you use SSH Agent for key management:
+With SSH Agent auth, your private keys never leave the agent process — 1Password, Secretive, or the built-in macOS `ssh-agent` hold the keys and sign on behalf of TablePro.
 
-1. Add your key to the agent:
-   ```bash
-   ssh-add ~/.ssh/id_ed25519
-   ```
+### Setup
 
-2. TablePro can use keys from SSH Agent automatically
-3. You won't need to enter passphrases repeatedly
+1. Pick **SSH Agent** as the authentication method
+2. Leave **Agent Socket** empty to use the system default (`SSH_AUTH_SOCK`)
+3. For 1Password, set the socket to `~/.1password/agent.sock`
+
+### Verify Your Agent
+
+Confirm the agent has keys loaded:
+
+```bash
+# List keys in the agent
+ssh-add -l
+
+# If empty, add a key
+ssh-add ~/.ssh/id_ed25519
+```
+
+### Custom Agent Sockets
+
+| Tool | Socket Path |
+|------|-------------|
+| 1Password | `~/.1password/agent.sock` |
+| Secretive | Check Secretive preferences for the socket path |
+| macOS ssh-agent | Leave empty (uses `SSH_AUTH_SOCK`) |
 
 ## Next Steps
 
