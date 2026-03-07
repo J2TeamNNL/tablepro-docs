@@ -1,0 +1,224 @@
+---
+title: CockroachDB
+description: Connect to CockroachDB databases with TablePro
+---
+
+# CockroachDB Connections
+
+TablePro supports CockroachDB, a distributed SQL database built on PostgreSQL wire protocol. Connections work through the same libpq driver used for PostgreSQL, with CockroachDB-specific metadata queries.
+
+## Quick Setup
+
+<Steps>
+  <Step title="Open Connection Form">
+    Click **New Connection** from the Welcome screen or **File** > **New Connection**
+  </Step>
+  <Step title="Select CockroachDB">
+    Choose **CockroachDB** from the database type selector
+  </Step>
+  <Step title="Enter Connection Details">
+    Fill in host, port, username, password, and database name
+  </Step>
+  <Step title="Test and Connect">
+    Click **Test Connection**, then **Create**
+  </Step>
+</Steps>
+
+## Connection Settings
+
+### Required Fields
+
+| Field | Description | Default |
+|-------|-------------|---------|
+| **Name** | Connection identifier | - |
+| **Host** | Server hostname or IP | `localhost` |
+| **Port** | CockroachDB SQL port | `26257` |
+| **Username** | Database user | `root` |
+| **Password** | User password | - |
+| **Database** | Database name | `defaultdb` |
+
+<Tip>
+Local CockroachDB instances started with `cockroach demo` or `cockroach start-single-node --insecure` accept connections from `root` without a password on port 26257.
+</Tip>
+
+## Connection URL Format
+
+You can import connections using a CockroachDB URL.
+
+See [Connection URL Reference](/databases/connection-urls#cockroachdb) for the full URL format.
+
+## Example Configurations
+
+### Local Development (Single Node)
+
+```
+Name:     Local CockroachDB
+Host:     localhost
+Port:     26257
+Username: root
+Password: (empty for insecure mode)
+Database: defaultdb
+```
+
+### CockroachDB Cloud (Serverless)
+
+```
+Name:     CockroachDB Cloud
+Host:     free-tier.gcp-us-central1.cockroachlabs.cloud
+Port:     26257
+Username: your_user
+Password: (your password)
+Database: defaultdb
+```
+
+### Docker Container
+
+```
+Name:     Docker CockroachDB
+Host:     localhost
+Port:     26257 (or your mapped port)
+Username: root
+Password: (empty for insecure mode)
+Database: defaultdb
+```
+
+<Note>
+CockroachDB Cloud requires SSL/TLS. Download your cluster's CA certificate from the CockroachDB Cloud Console and configure it in the SSL/TLS section.
+</Note>
+
+## Features
+
+### Schema Support
+
+CockroachDB organizes tables into schemas, following PostgreSQL conventions. TablePro displays all schemas accessible to your user and their tables.
+
+### Schema Switching
+
+Switch between schemas using the database switcher (**Cmd+K**):
+
+1. Press **Cmd+K** to open the switcher
+2. Select the target schema
+3. The sidebar, queries, and toolbar update to reflect the selected schema
+
+### Table Browsing and Data Viewing
+
+Browse tables, views, and sequences. The data grid supports pagination and inline editing. Primary key and index information is displayed in the Structure tab.
+
+### Query Execution
+
+Execute queries with CockroachDB SQL syntax. The SQL editor provides PostgreSQL-compatible syntax highlighting.
+
+```sql
+-- CockroachDB-specific: SHOW RANGES
+SHOW RANGES FROM TABLE users;
+
+-- Serial columns use unique_rowid()
+CREATE TABLE events (
+    id INT DEFAULT unique_rowid() PRIMARY KEY,
+    name STRING NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Import data
+IMPORT INTO users CSV DATA ('nodelocal://1/users.csv');
+```
+
+### Data Export
+
+Export query results or table data in multiple formats:
+
+- CSV
+- JSON
+- SQL (INSERT statements)
+- XLSX
+
+### Data Import
+
+Import data from CSV, JSON, SQL, and XLSX files into CockroachDB tables.
+
+### DDL Generation
+
+View the CREATE TABLE statement for any table, including CockroachDB-specific clauses.
+
+## SSL/TLS
+
+CockroachDB connections support SSL/TLS encryption, using the same configuration as PostgreSQL:
+
+| SSL Mode | Description |
+|----------|-------------|
+| **Disabled** | No SSL encryption |
+| **Preferred** | Use SSL if available, fall back to unencrypted |
+| **Required** | Require SSL, but don't verify certificates |
+| **Verify CA** | Require SSL and verify the server certificate against a CA |
+| **Verify Identity** | Require SSL, verify CA, and verify the server hostname |
+
+<Warning>
+CockroachDB Cloud (serverless and dedicated) requires SSL. Download the CA certificate from the Cloud Console and use **Verify CA** mode.
+</Warning>
+
+## SSH Tunnel Support
+
+You can connect to CockroachDB through an SSH tunnel for secure access to remote servers. See [SSH Tunneling](/databases/ssh-tunneling) for detailed setup instructions.
+
+## Differences from PostgreSQL
+
+CockroachDB is PostgreSQL wire-compatible but has some differences:
+
+| PostgreSQL | CockroachDB |
+|------------|-------------|
+| Default port 5432 | Default port 26257 |
+| `SERIAL` type | `INT DEFAULT unique_rowid()` or `UUID DEFAULT gen_random_uuid()` |
+| `ENUM` via `CREATE TYPE` | `CREATE TYPE ... AS ENUM` (supported since v20.2) |
+| Single-node by default | Distributed by default |
+| `pg_stat_activity` | `crdb_internal.node_sessions` |
+| Triggers | Not supported |
+| Stored procedures | Limited PL/pgSQL support (since v23.1) |
+
+## Troubleshooting
+
+### Connection Refused
+
+**Symptoms**: "Connection refused" or timeout
+
+**Common causes**:
+
+1. **CockroachDB not running**: Start the node with `cockroach start-single-node` or `cockroach demo`
+2. **Wrong port**: Verify the SQL port (default 26257, not the HTTP admin port 8080)
+3. **Firewall rules**: Ensure port 26257 is open for your client IP
+
+### Authentication Failed
+
+**Symptoms**: "password authentication failed"
+
+**Solutions**:
+
+1. For insecure mode, ensure you started CockroachDB with `--insecure`
+2. For secure mode, verify your username and password
+3. Check that the user has been granted access: `SHOW GRANTS ON DATABASE defaultdb`
+
+### SSL Certificate Errors
+
+**Symptoms**: "certificate verify failed" or SSL handshake errors
+
+**Solutions**:
+
+1. Download the correct CA certificate from the CockroachDB Cloud Console
+2. For self-hosted clusters, use the CA cert generated during `cockroach cert create-ca`
+3. Set SSL mode to **Verify CA** and point to the CA certificate file
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="SSH Tunneling" icon="lock" href="/databases/ssh-tunneling">
+    Connect securely to remote CockroachDB clusters
+  </Card>
+  <Card title="SQL Editor" icon="code" href="/features/sql-editor">
+    Write and execute CockroachDB queries
+  </Card>
+  <Card title="Import/Export" icon="file-import" href="/features/import-export">
+    Import and export CockroachDB data
+  </Card>
+  <Card title="Data Grid" icon="table" href="/features/data-grid">
+    Browse and edit data in the data grid
+  </Card>
+</CardGroup>

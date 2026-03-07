@@ -1,0 +1,224 @@
+---
+title: CockroachDB
+description: Kết nối đến cơ sở dữ liệu CockroachDB với TablePro
+---
+
+# Kết nối CockroachDB
+
+TablePro hỗ trợ CockroachDB, cơ sở dữ liệu SQL phân tán dựa trên giao thức PostgreSQL wire. Các kết nối hoạt động qua cùng driver libpq được sử dụng cho PostgreSQL, với các truy vấn metadata riêng cho CockroachDB.
+
+## Thiết lập nhanh
+
+<Steps>
+  <Step title="Mở Form kết nối">
+    Click **New Connection** từ màn hình Welcome hoặc **File** > **New Connection**
+  </Step>
+  <Step title="Chọn CockroachDB">
+    Chọn **CockroachDB** từ danh sách loại cơ sở dữ liệu
+  </Step>
+  <Step title="Nhập thông tin kết nối">
+    Điền host, port, username, password và tên database
+  </Step>
+  <Step title="Kiểm tra và kết nối">
+    Click **Test Connection**, sau đó **Create**
+  </Step>
+</Steps>
+
+## Cài đặt kết nối
+
+### Các trường bắt buộc
+
+| Trường | Mô tả | Mặc định |
+|--------|-------|----------|
+| **Name** | Tên định danh kết nối | - |
+| **Host** | Hostname hoặc IP của server | `localhost` |
+| **Port** | Port SQL của CockroachDB | `26257` |
+| **Username** | Tên người dùng | `root` |
+| **Password** | Mật khẩu | - |
+| **Database** | Tên database | `defaultdb` |
+
+<Tip>
+Các instance CockroachDB cục bộ khởi động bằng `cockroach demo` hoặc `cockroach start-single-node --insecure` chấp nhận kết nối từ `root` không cần mật khẩu trên port 26257.
+</Tip>
+
+## Định dạng URL kết nối
+
+Bạn có thể import kết nối bằng URL CockroachDB.
+
+Xem [Tham khảo URL kết nối](/vi/databases/connection-urls#cockroachdb) để biết định dạng URL đầy đủ.
+
+## Cấu hình mẫu
+
+### Phát triển cục bộ (Single Node)
+
+```
+Name:     Local CockroachDB
+Host:     localhost
+Port:     26257
+Username: root
+Password: (để trống cho chế độ insecure)
+Database: defaultdb
+```
+
+### CockroachDB Cloud (Serverless)
+
+```
+Name:     CockroachDB Cloud
+Host:     free-tier.gcp-us-central1.cockroachlabs.cloud
+Port:     26257
+Username: your_user
+Password: (mật khẩu của bạn)
+Database: defaultdb
+```
+
+### Docker Container
+
+```
+Name:     Docker CockroachDB
+Host:     localhost
+Port:     26257 (hoặc port đã map)
+Username: root
+Password: (để trống cho chế độ insecure)
+Database: defaultdb
+```
+
+<Note>
+CockroachDB Cloud yêu cầu SSL/TLS. Tải chứng chỉ CA của cluster từ CockroachDB Cloud Console và cấu hình trong phần SSL/TLS.
+</Note>
+
+## Tính năng
+
+### Hỗ trợ Schema
+
+CockroachDB tổ chức các bảng theo schema, tuân theo quy ước PostgreSQL. TablePro hiển thị tất cả các schema mà người dùng có quyền truy cập và các bảng trong đó.
+
+### Chuyển đổi Schema
+
+Chuyển đổi giữa các schema bằng database switcher (**Cmd+K**):
+
+1. Nhấn **Cmd+K** để mở switcher
+2. Chọn schema mục tiêu
+3. Sidebar, truy vấn và toolbar sẽ cập nhật theo schema đã chọn
+
+### Duyệt bảng và xem dữ liệu
+
+Duyệt các bảng, view và sequence. Data grid hỗ trợ phân trang và chỉnh sửa trực tiếp. Thông tin primary key và index được hiển thị trong tab Structure.
+
+### Thực thi truy vấn
+
+Thực thi truy vấn với cú pháp SQL CockroachDB. Trình soạn thảo SQL cung cấp tô sáng cú pháp tương thích PostgreSQL.
+
+```sql
+-- Lệnh riêng CockroachDB: SHOW RANGES
+SHOW RANGES FROM TABLE users;
+
+-- Cột serial sử dụng unique_rowid()
+CREATE TABLE events (
+    id INT DEFAULT unique_rowid() PRIMARY KEY,
+    name STRING NOT NULL,
+    created_at TIMESTAMPTZ DEFAULT now()
+);
+
+-- Import dữ liệu
+IMPORT INTO users CSV DATA ('nodelocal://1/users.csv');
+```
+
+### Xuất dữ liệu
+
+Xuất kết quả truy vấn hoặc dữ liệu bảng ở nhiều định dạng:
+
+- CSV
+- JSON
+- SQL (câu lệnh INSERT)
+- XLSX
+
+### Nhập dữ liệu
+
+Nhập dữ liệu từ các file CSV, JSON, SQL và XLSX vào bảng CockroachDB.
+
+### Tạo DDL
+
+Xem câu lệnh CREATE TABLE cho bất kỳ bảng nào, bao gồm các mệnh đề riêng của CockroachDB.
+
+## SSL/TLS
+
+Kết nối CockroachDB hỗ trợ mã hóa SSL/TLS, sử dụng cùng cấu hình như PostgreSQL:
+
+| Chế độ SSL | Mô tả |
+|------------|-------|
+| **Disabled** | Không mã hóa SSL |
+| **Preferred** | Sử dụng SSL nếu có, chuyển sang không mã hóa nếu không |
+| **Required** | Yêu cầu SSL, nhưng không xác minh chứng chỉ |
+| **Verify CA** | Yêu cầu SSL và xác minh chứng chỉ server với CA |
+| **Verify Identity** | Yêu cầu SSL, xác minh CA và xác minh hostname server |
+
+<Warning>
+CockroachDB Cloud (serverless và dedicated) yêu cầu SSL. Tải chứng chỉ CA từ Cloud Console và sử dụng chế độ **Verify CA**.
+</Warning>
+
+## Hỗ trợ SSH Tunnel
+
+Bạn có thể kết nối đến CockroachDB thông qua SSH tunnel để truy cập an toàn đến server từ xa. Xem [SSH Tunneling](/vi/databases/ssh-tunneling) để biết hướng dẫn chi tiết.
+
+## Khác biệt so với PostgreSQL
+
+CockroachDB tương thích PostgreSQL wire nhưng có một số khác biệt:
+
+| PostgreSQL | CockroachDB |
+|------------|-------------|
+| Port mặc định 5432 | Port mặc định 26257 |
+| Kiểu `SERIAL` | `INT DEFAULT unique_rowid()` hoặc `UUID DEFAULT gen_random_uuid()` |
+| `ENUM` qua `CREATE TYPE` | `CREATE TYPE ... AS ENUM` (hỗ trợ từ v20.2) |
+| Đơn node mặc định | Phân tán mặc định |
+| `pg_stat_activity` | `crdb_internal.node_sessions` |
+| Triggers | Không hỗ trợ |
+| Stored procedures | Hỗ trợ PL/pgSQL giới hạn (từ v23.1) |
+
+## Khắc phục sự cố
+
+### Kết nối bị từ chối
+
+**Triệu chứng**: "Connection refused" hoặc timeout
+
+**Nguyên nhân thường gặp**:
+
+1. **CockroachDB không chạy**: Khởi động node bằng `cockroach start-single-node` hoặc `cockroach demo`
+2. **Sai port**: Xác nhận port SQL (mặc định 26257, không phải port HTTP admin 8080)
+3. **Quy tắc firewall**: Đảm bảo port 26257 được mở cho IP client
+
+### Xác thực thất bại
+
+**Triệu chứng**: "password authentication failed"
+
+**Giải pháp**:
+
+1. Cho chế độ insecure, đảm bảo CockroachDB được khởi động với `--insecure`
+2. Cho chế độ secure, xác nhận username và password
+3. Kiểm tra quyền truy cập: `SHOW GRANTS ON DATABASE defaultdb`
+
+### Lỗi chứng chỉ SSL
+
+**Triệu chứng**: "certificate verify failed" hoặc lỗi SSL handshake
+
+**Giải pháp**:
+
+1. Tải đúng chứng chỉ CA từ CockroachDB Cloud Console
+2. Cho cluster tự host, sử dụng cert CA được tạo bởi `cockroach cert create-ca`
+3. Đặt chế độ SSL thành **Verify CA** và trỏ đến file chứng chỉ CA
+
+## Bước tiếp theo
+
+<CardGroup cols={2}>
+  <Card title="SSH Tunneling" icon="lock" href="/vi/databases/ssh-tunneling">
+    Kết nối an toàn đến các cluster CockroachDB từ xa
+  </Card>
+  <Card title="SQL Editor" icon="code" href="/vi/features/sql-editor">
+    Viết và thực thi truy vấn CockroachDB
+  </Card>
+  <Card title="Import/Export" icon="file-import" href="/vi/features/import-export">
+    Nhập và xuất dữ liệu CockroachDB
+  </Card>
+  <Card title="Data Grid" icon="table" href="/vi/features/data-grid">
+    Duyệt và chỉnh sửa dữ liệu trong data grid
+  </Card>
+</CardGroup>
