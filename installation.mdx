@@ -1,6 +1,6 @@
 ---
 title: Installation
-description: Install TablePro via Homebrew or DMG on macOS 14.0+, with quarantine fix and build-from-source instructions
+description: Install TablePro via Homebrew or DMG on macOS 14.0+
 ---
 
 # Installation
@@ -35,7 +35,7 @@ brew install --cask tablepro
 ```
 
 <Tip>
-The cask formula automatically removes the macOS quarantine attribute, so you skip the `xattr -cr` step on first launch.
+Homebrew handles installation and updates in one place.
 </Tip>
 
 To update:
@@ -111,38 +111,6 @@ brew zap tablepro
    - Open **Finder** > **Applications**
    - Double-click **TablePro**
 
-### First Launch Security
-
-TablePro is not signed with an Apple Developer certificate. macOS will show a **"TablePro is damaged and can't be opened"** error on first launch. This is the standard quarantine behavior for unsigned apps.
-
-<Warning>
-This is normal for unsigned applications downloaded from the internet. TablePro is source-available, so the code is publicly viewable for inspection.
-</Warning>
-
-#### Remove the quarantine attribute
-
-Open **Terminal** and run:
-
-```bash
-xattr -cr /Applications/TablePro.app
-```
-
-Then open TablePro normally from Applications.
-
-<Tip>
-One-time step. After removing the quarantine attribute, TablePro opens normally on all future launches.
-</Tip>
-
-#### Alternative: System Settings
-
-If the security warning persists after running the command:
-
-1. Open **System Settings** > **Privacy & Security**
-2. Scroll down to the **Security** section
-3. You should see a message about TablePro being blocked
-4. Click **Open Anyway**
-5. Enter your password if prompted
-
 ## Updating TablePro
 
 ### Automatic Updates
@@ -204,14 +172,6 @@ This deletes all saved connections and query history. Export anything important 
 </Warning>
 
 ## Troubleshooting
-
-### "TablePro is damaged and can't be opened"
-
-Follow the [First Launch Security](#first-launch-security) instructions to remove the macOS quarantine attribute.
-
-### "TablePro can't be opened because it is from an unidentified developer"
-
-Follow the [First Launch Security](#first-launch-security) instructions.
 
 ### Application crashes on launch
 

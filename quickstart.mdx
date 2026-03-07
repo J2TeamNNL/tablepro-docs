@@ -16,7 +16,7 @@ brew install --cask tablepro
 ```
 
 <Tip>
-If you installed via Homebrew, skip to [Step 3](#step-3-create-your-first-connection). The cask formula handles installation and removes the macOS quarantine attribute automatically.
+If you installed via Homebrew, skip to [Step 3](#step-3-create-your-first-connection).
 </Tip>
 
 Alternatively, download manually:
@@ -50,16 +50,6 @@ Not sure which chip your Mac has? Click the Apple menu and select **About This M
     alt="Installation dialog"
   />
 </Frame>
-
-<Warning>
-On first launch, macOS shows a **"TablePro is damaged and can't be opened"** error because the app is not signed with an Apple Developer certificate. Fix it by opening **Terminal** and running:
-
-```bash
-xattr -cr /Applications/TablePro.app
-```
-
-Then open TablePro again. One-time step. See the [Installation guide](/installation#first-launch-security) for details.
-</Warning>
 
 ## Step 3: Create Your First Connection
 

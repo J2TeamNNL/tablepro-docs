@@ -1,6 +1,6 @@
 ---
 title: Cài đặt
-description: Cài TablePro qua Homebrew hoặc DMG trên macOS 14.0+, kèm hướng dẫn fix quarantine và build từ source
+description: Cài TablePro qua Homebrew hoặc DMG trên macOS 14.0+
 ---
 
 # Cài đặt
@@ -35,7 +35,7 @@ brew install --cask tablepro
 ```
 
 <Tip>
-Công thức cask tự động xóa thuộc tính quarantine, nên không cần chạy `xattr -cr` khi mở lần đầu.
+Homebrew xử lý cài đặt và cập nhật tại một nơi.
 </Tip>
 
 Cập nhật:
@@ -111,38 +111,6 @@ brew zap tablepro
    - Mở **Finder** > **Applications**
    - Nhấp đúp **TablePro**
 
-### Bảo mật Khởi chạy Lần đầu
-
-TablePro chưa được ký chứng chỉ Apple Developer. macOS sẽ báo lỗi **"TablePro is damaged and can't be opened"** khi mở lần đầu. Đây là hành vi quarantine tiêu chuẩn với app unsigned.
-
-<Warning>
-Bình thường với app unsigned tải từ internet. TablePro là source-available, mã nguồn công khai để ai cũng kiểm tra được.
-</Warning>
-
-#### Xóa thuộc tính quarantine
-
-Mở **Terminal** và chạy:
-
-```bash
-xattr -cr /Applications/TablePro.app
-```
-
-Sau đó mở TablePro bình thường từ Applications.
-
-<Tip>
-Chỉ cần làm một lần. Sau khi xóa quarantine, TablePro mở bình thường mọi lần sau.
-</Tip>
-
-#### Cách khác: System Settings
-
-Nếu vẫn thấy cảnh báo bảo mật sau khi chạy lệnh:
-
-1. Mở **System Settings** > **Privacy & Security**
-2. Cuộn xuống phần **Security**
-3. Sẽ thấy thông báo TablePro bị chặn
-4. Nhấp **Open Anyway**
-5. Nhập mật khẩu nếu được yêu cầu
-
 ## Cập nhật TablePro
 
 ### Cập nhật Tự động
@@ -204,14 +172,6 @@ Thao tác này xóa toàn bộ kết nối đã lưu và lịch sử truy vấn.
 </Warning>
 
 ## Khắc phục Sự cố
-
-### "TablePro is damaged and can't be opened"
-
-Làm theo hướng dẫn [Bảo mật Khởi chạy Lần đầu](#bảo-mật-khởi-chạy-lần-đầu) để xóa thuộc tính quarantine.
-
-### "TablePro can't be opened because it is from an unidentified developer"
-
-Làm theo hướng dẫn [Bảo mật Khởi chạy Lần đầu](#bảo-mật-khởi-chạy-lần-đầu).
 
 ### Ứng dụng crash khi khởi chạy
 
