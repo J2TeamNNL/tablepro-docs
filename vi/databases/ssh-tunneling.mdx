@@ -226,6 +226,82 @@ Database Host:  mydb.abc123.us-east-1.rds.amazonaws.com
 Database Port:  5432
 ```
 
+## Multi-Jump SSH (ProxyJump)
+
+Khi database server nằm sau nhiều bastion host, TablePro có thể nối chuỗi các bước nhảy SSH bằng cờ `-J` (ProxyJump) của OpenSSH. Một tiến trình `ssh` duy nhất xử lý tất cả các hop trung gian.
+
+```mermaid
+flowchart LR
+    subgraph mac ["Your Mac"]
+        TablePro["TablePro"]
+    end
+
+    subgraph hop1 ["Bastion 1"]
+        B1["Jump Host 1"]
+    end
+
+    subgraph hop2 ["Bastion 2"]
+        B2["Jump Host 2"]
+    end
+
+    subgraph db ["Database Server"]
+        Database["MySQL<br>PostgreSQL"]
+    end
+
+    TablePro -->|"Jump 1"| B1 -->|"Jump 2"| B2 -->|"Final Hop"| Database
+```
+
+### Thiết lập Multi-Jump
+
+1. Mở form kết nối và chuyển sang tab **SSH Tunnel**
+2. Bật SSH và cấu hình **SSH server cuối cùng** (server có thể truy cập database)
+3. Mở rộng phần **Jump Hosts** bên dưới cài đặt xác thực
+4. Nhấp **Add Jump Host** và điền thông tin từng bastion host trung gian theo thứ tự
+5. Các host được kết nối tuần tự: jump host đầu tiên được truy cập từ Mac, mỗi host tiếp theo được truy cập qua host trước đó
+
+### Cài đặt Jump Host
+
+Mỗi jump host có:
+
+| Trường | Mô tả |
+|-------|-------------|
+| **Host** | Hostname hoặc IP của jump host |
+| **Port** | Cổng SSH (mặc định `22`) |
+| **Username** | Tên người dùng SSH cho hop này |
+| **Auth Method** | **Private Key** hoặc **SSH Agent** (không hỗ trợ password cho jump host) |
+| **Key File** | Đường dẫn private key (nếu dùng Private Key) |
+
+### Ví dụ: Hai Bastion Host
+
+```
+Jump Host 1:    admin@bastion1.example.com:22    (SSH Agent)
+Jump Host 2:    tunnel@bastion2.internal:2222     (Private Key)
+
+SSH Server:     deploy@final-ssh.internal:22
+Database Host:  db.internal:5432
+```
+
+Tương đương lệnh:
+```bash
+ssh -J admin@bastion1.example.com:22,tunnel@bastion2.internal:2222 deploy@final-ssh.internal
+```
+
+### Tích hợp SSH Config
+
+TablePro đọc directive `ProxyJump` từ `~/.ssh/config`. Khi chọn config host có `ProxyJump`, các jump host tự động được điền.
+
+```
+# ~/.ssh/config
+Host production-db
+    HostName final-ssh.internal
+    User deploy
+    ProxyJump admin@bastion1.example.com,tunnel@bastion2.internal:2222
+```
+
+<Note>
+Jump host chỉ hỗ trợ xác thực **Private Key** và **SSH Agent**. Xác thực password không khả dụng cho các hop trung gian vì cờ `-J` của OpenSSH không hỗ trợ nhập password tương tác cho jump host.
+</Note>
+
 ## Thiết lập SSH Key
 
 ### Tạo SSH Key
