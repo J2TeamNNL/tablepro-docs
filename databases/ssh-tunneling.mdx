@@ -226,6 +226,82 @@ Database Host:  mydb.abc123.us-east-1.rds.amazonaws.com
 Database Port:  5432
 ```
 
+## Multi-Jump SSH (ProxyJump)
+
+When a database server sits behind multiple bastion hosts, TablePro can chain SSH hops using OpenSSH's `-J` (ProxyJump) flag. A single `ssh` process handles all intermediate jumps.
+
+```mermaid
+flowchart LR
+    subgraph mac ["Your Mac"]
+        TablePro["TablePro"]
+    end
+
+    subgraph hop1 ["Bastion 1"]
+        B1["Jump Host 1"]
+    end
+
+    subgraph hop2 ["Bastion 2"]
+        B2["Jump Host 2"]
+    end
+
+    subgraph db ["Database Server"]
+        Database["MySQL<br>PostgreSQL"]
+    end
+
+    TablePro -->|"Jump 1"| B1 -->|"Jump 2"| B2 -->|"Final Hop"| Database
+```
+
+### Setting Up Multi-Jump
+
+1. Open the connection form and switch to the **SSH Tunnel** tab
+2. Enable SSH and configure the **final SSH server** (the one that can reach the database)
+3. Expand the **Jump Hosts** section below the authentication settings
+4. Click **Add Jump Host** and fill in each intermediate bastion host in order
+5. Hosts are connected in sequence: first jump host is reached from your Mac, each subsequent host is reached through the previous one
+
+### Jump Host Settings
+
+Each jump host has:
+
+| Field | Description |
+|-------|-------------|
+| **Host** | Hostname or IP of the jump host |
+| **Port** | SSH port (default `22`) |
+| **Username** | SSH username for this hop |
+| **Auth Method** | **Private Key** or **SSH Agent** (password auth is not supported for jump hosts) |
+| **Key File** | Path to private key (if using Private Key auth) |
+
+### Example: Two Bastion Hosts
+
+```
+Jump Host 1:    admin@bastion1.example.com:22    (SSH Agent)
+Jump Host 2:    tunnel@bastion2.internal:2222     (Private Key)
+
+SSH Server:     deploy@final-ssh.internal:22
+Database Host:  db.internal:5432
+```
+
+This produces the equivalent of:
+```bash
+ssh -J admin@bastion1.example.com:22,tunnel@bastion2.internal:2222 deploy@final-ssh.internal
+```
+
+### SSH Config Integration
+
+TablePro reads `ProxyJump` directives from `~/.ssh/config`. When you select a config host that has `ProxyJump` set, the jump hosts are auto-filled.
+
+```
+# ~/.ssh/config
+Host production-db
+    HostName final-ssh.internal
+    User deploy
+    ProxyJump admin@bastion1.example.com,tunnel@bastion2.internal:2222
+```
+
+<Note>
+Jump hosts only support **Private Key** and **SSH Agent** authentication. Password authentication is not available for intermediate hops because OpenSSH's `-J` flag does not support interactive password prompts for jump hosts.
+</Note>
+
 ## SSH Key Setup
 
 ### Generating SSH Keys
