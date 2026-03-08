@@ -154,6 +154,7 @@ For each table, TablePro shows:
 - **Structure**: Columns with ClickHouse data types, default expressions, and comments
 - **Indexes**: Data skipping indices (minmax, set, bloom_filter, etc.)
 - **DDL**: The full CREATE TABLE statement including engine and settings
+- **Parts**: Partition and part details from `system.parts` (rows, disk size, active status)
 
 ### Engine Information
 
@@ -181,6 +182,26 @@ ClickHouse supports secondary indices that skip granules during queries. TablePr
 -- Example: bloom filter index on a URL column
 ALTER TABLE hits ADD INDEX url_idx url TYPE bloom_filter GRANULARITY 4;
 ```
+
+### Query Progress Tracking
+
+During query execution, the toolbar shows live progress: rows read and bytes processed. After completion, a summary displays total execution time, rows read, and bytes read. This data is polled from `system.processes`.
+
+### EXPLAIN Variants
+
+ClickHouse supports multiple EXPLAIN modes. Click the Explain dropdown in the query editor to choose:
+
+| Variant | Description |
+|---------|-------------|
+| **Plan** | Logical query plan (default) |
+| **Pipeline** | Physical execution pipeline with thread/port info |
+| **AST** | Abstract syntax tree of the parsed query |
+| **Syntax** | Query after syntax optimizations |
+| **Estimate** | Estimated rows, marks, and parts to read |
+
+### Server-side Query Cancellation
+
+When you cancel a running query, TablePro sends a `KILL QUERY` command to the ClickHouse server. This stops the query on the server side, not just the HTTP connection.
 
 ### Query Editor
 
