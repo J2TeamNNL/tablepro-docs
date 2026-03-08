@@ -328,7 +328,8 @@ ORDER BY sum(bytes_on_disk) DESC;
   ```sql
   SELECT * FROM system.mutations WHERE is_done = 0;
   ```
-- **No schema editing UI.** Table structure modifications (add/drop columns, modify types) must be done via SQL in the query editor.
+- **No auto-increment.** ClickHouse does not support auto-increment columns.
+- **Primary key is immutable.** The primary key and sorting key cannot be changed after table creation.
 - **INSERT-optimized.** ClickHouse is designed for batch inserts, not single-row writes. Inserting one row at a time works but is not efficient for bulk loading.
 
 ## Next Steps

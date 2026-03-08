@@ -328,7 +328,8 @@ ORDER BY sum(bytes_on_disk) DESC;
   ```sql
   SELECT * FROM system.mutations WHERE is_done = 0;
   ```
-- **Không có giao diện chỉnh sửa schema.** Thay đổi cấu trúc bảng (thêm/xóa cột, sửa kiểu) phải thực hiện qua SQL trong trình soạn truy vấn.
+- **Không có auto-increment.** ClickHouse không hỗ trợ cột tự tăng.
+- **Primary key không thể thay đổi.** Primary key và sorting key không thể thay đổi sau khi tạo bảng.
 - **Tối ưu cho INSERT.** ClickHouse được thiết kế cho chèn hàng loạt, không phải ghi từng hàng đơn lẻ. Chèn từng hàng một vẫn hoạt động nhưng không hiệu quả cho tải dữ liệu lớn.
 
 ## Bước tiếp theo
