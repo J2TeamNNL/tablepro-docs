@@ -1,6 +1,6 @@
 ---
 title: Settings Overview
-description: All settings categories - General, Appearance, Editor, Data Grid, Tabs, Keyboard, AI, History, and License
+description: All settings categories - General, Appearance, Editor, Data Grid, Tabs, Keyboard, AI, History, Plugins, and License
 ---
 
 # Settings Overview
@@ -47,6 +47,9 @@ Open settings via **TablePro** > **Settings** or `Cmd+,`.
   </Card>
   <Card title="History" icon="clock-rotate-left">
     Query history retention settings
+  </Card>
+  <Card title="Plugins" icon="puzzle-piece">
+    Manage database driver plugins
   </Card>
   <Card title="License" icon="key">
     License activation and management
@@ -339,6 +342,45 @@ Disabling auto cleanup with unlimited entries may cause the history database to 
     alt="History settings"
   />
 </Frame>
+
+## Plugins Settings
+
+Manage database driver plugins from the **Plugins** tab in Settings.
+
+### Installed Plugins
+
+TablePro ships with 8 built-in database driver plugins:
+
+| Plugin | Database Types | Default Port |
+|--------|---------------|--------------|
+| MySQL | MySQL, MariaDB | 3306 |
+| PostgreSQL | PostgreSQL, Redshift | 5432 |
+| SQLite | SQLite | -- |
+| ClickHouse | ClickHouse | 8123 |
+| SQL Server | SQL Server | 1433 |
+| MongoDB | MongoDB | 27017 |
+| Redis | Redis | 6379 |
+| Oracle | Oracle | 1521 |
+
+Each plugin has a toggle to enable or disable it. Disabled plugins hide their database type from the connection dialog and prevent connections to that database type.
+
+### Plugin Details
+
+Click a plugin to view its details: version, bundle ID, supported capabilities, database type, and default port.
+
+### Installing Third-Party Plugins
+
+1. Click **Install from File...**
+2. Select a `.zip` archive containing a `.tableplugin` bundle
+3. TablePro verifies the code signature and installs the plugin
+
+<Warning>
+Only install plugins from sources you trust. TablePro checks the code signature of sideloaded plugins but cannot guarantee their behavior.
+</Warning>
+
+### Uninstalling Plugins
+
+User-installed plugins show an **Uninstall** button in the plugin details view. Built-in plugins cannot be uninstalled, only disabled.
 
 ## License Settings
 
