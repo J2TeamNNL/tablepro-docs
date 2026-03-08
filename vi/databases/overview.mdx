@@ -1,15 +1,15 @@
 ---
 title: Quản lý Kết nối
-description: Tạo, tổ chức và quản lý kết nối đến 11 hệ quản trị cơ sở dữ liệu từ một giao diện duy nhất
+description: Tạo, tổ chức và quản lý kết nối đến 10 hệ quản trị cơ sở dữ liệu từ một giao diện duy nhất
 ---
 
 # Quản lý Kết nối
 
-TablePro kết nối được đến 11 hệ quản trị cơ sở dữ liệu từ cùng một giao diện. Tạo kết nối, sắp xếp bằng màu sắc, tag và nhóm, rồi chuyển đổi giữa chúng mà không cần rời khỏi cửa sổ làm việc.
+TablePro kết nối được đến 10 hệ quản trị cơ sở dữ liệu từ cùng một giao diện. Tạo kết nối, sắp xếp bằng màu sắc, tag và nhóm, rồi chuyển đổi giữa chúng mà không cần rời khỏi cửa sổ làm việc.
 
 ## Cơ sở dữ liệu được hỗ trợ
 
-TablePro hỗ trợ 11 hệ thống cơ sở dữ liệu:
+TablePro hỗ trợ 10 hệ thống cơ sở dữ liệu:
 
 <CardGroup cols={2}>
   <Card title="MySQL" icon="database">
@@ -105,7 +105,7 @@ open "mysql://root:secret@localhost:3306/myapp"
 open "redis://:password@localhost:6379"
 ```
 
-TablePro đăng ký `postgresql`, `postgres`, `mysql`, `mariadb`, `sqlite`, `mongodb`, `mongodb+srv`, `redis`, `rediss`, `redshift`, `cockroachdb`, `mssql`, `sqlserver`, `oracle` và `clickhouse` là các URL scheme trên macOS, nên hệ điều hành sẽ chuyển hướng các URL này trực tiếp đến ứng dụng.
+TablePro đăng ký `postgresql`, `postgres`, `mysql`, `mariadb`, `sqlite`, `mongodb`, `mongodb+srv`, `redis`, `rediss`, `redshift`, `mssql`, `sqlserver`, `oracle` và `clickhouse` là các URL scheme trên macOS, nên hệ điều hành sẽ chuyển hướng các URL này trực tiếp đến ứng dụng.
 
 **Khi mở URL:**
 
@@ -570,9 +570,6 @@ TablePro tự động điền cổng khi chọn loại database:
   </Card>
   <Card title="Amazon Redshift" icon="database" href="/vi/databases/redshift">
     Kết nối kho dữ liệu Redshift
-  </Card>
-  <Card title="CockroachDB" icon="database" href="/vi/databases/cockroachdb">
-    Kết nối CockroachDB distributed SQL
   </Card>
   <Card title="ClickHouse" icon="database" href="/vi/databases/clickhouse">
     Kết nối cơ sở dữ liệu OLAP ClickHouse
