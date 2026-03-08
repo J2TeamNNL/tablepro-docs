@@ -43,6 +43,7 @@
                   "databases/oracle",
                   "databases/clickhouse",
                   "databases/mssql",
+                  "databases/oracle",
                   "databases/ssh-tunneling"
                 ]
               },
@@ -134,6 +135,7 @@
                   "vi/databases/oracle",
                   "vi/databases/clickhouse",
                   "vi/databases/mssql",
+                  "vi/databases/oracle",
                   "vi/databases/ssh-tunneling"
                 ]
               },

@@ -1,23 +1,23 @@
 ---
 title: Settings Overview
-description: Configure TablePro to match your workflow and preferences
+description: All settings categories - General, Appearance, Editor, Data Grid, Tabs, Keyboard, AI, History, and License
 ---
 
 # Settings Overview
 
-TablePro provides various settings to customize your experience. Access settings via **TablePro** > **Settings** or press `Cmd+,`.
+Open settings via **TablePro** > **Settings** or `Cmd+,`.
 
 {/* Screenshot: Settings window showing all categories */}
 <Frame caption="TablePro settings">
-  <img 
-    className="block dark:hidden" 
-    src="/images/settings.png" 
-    alt="Settings window" 
+  <img
+    className="block dark:hidden"
+    src="/images/settings.png"
+    alt="Settings window"
   />
-  <img 
-    className="hidden dark:block" 
-    src="/images/settings-dark.png" 
-    alt="Settings window" 
+  <img
+    className="hidden dark:block"
+    src="/images/settings-dark.png"
+    alt="Settings window"
   />
 </Frame>
 
@@ -57,8 +57,6 @@ TablePro provides various settings to customize your experience. Access settings
 
 ### Language
 
-Choose the display language for the TablePro interface:
-
 | Option | Description |
 |--------|-------------|
 | **System** | Follow macOS system language (default) |
@@ -66,37 +64,35 @@ Choose the display language for the TablePro interface:
 | **Tiếng Việt** | Vietnamese |
 
 <Note>
-Changing the language requires restarting TablePro to take full effect.
+Changing the language requires restarting TablePro.
 </Note>
 
 ### Startup Behavior
 
-Control what happens when TablePro launches:
-
 | Option | Description |
 |--------|-------------|
 | **Show Welcome Screen** | Display the welcome screen with recent connections |
-| **Reopen Last Session** | Automatically reconnect to your last database |
+| **Reopen Last Session** | Auto-reconnect to your last database |
 
 ### Query Execution Timeout
 
-Set a maximum time for queries to run before being cancelled:
+Set the maximum time a query runs before cancellation:
 
 | Setting | Default | Range | Description |
 |---------|---------|-------|-------------|
-| **Query timeout** | 60 seconds | 0 -- 600 | Maximum seconds to wait for a query. Set to 0 for no limit. |
+| **Query timeout** | 60 seconds | 0 -- 600 | Maximum seconds to wait. 0 means no limit. |
 
-The timeout is enforced at the database level for maximum reliability:
+The timeout is enforced at the database level:
 
 | Database | Mechanism |
 |----------|-----------|
-| PostgreSQL | `SET statement_timeout` (applies to all statements) |
-| MySQL | `SET SESSION max_execution_time` (applies to SELECT queries) |
-| MariaDB | `SET SESSION max_statement_time` (applies to SELECT queries) |
-| SQLite | `sqlite3_busy_timeout` (applies to lock contention) |
+| PostgreSQL | `SET statement_timeout` (all statements) |
+| MySQL | `SET SESSION max_execution_time` (SELECT queries) |
+| MariaDB | `SET SESSION max_statement_time` (SELECT queries) |
+| SQLite | `sqlite3_busy_timeout` (lock contention) |
 
 <Note>
-The timeout is applied when a new connection is established. Changing the timeout value requires reconnecting to take effect.
+The timeout applies when a new connection is established. Changing it requires reconnecting.
 </Note>
 
 {/* Screenshot: Query timeout setting */}
@@ -115,57 +111,49 @@ The timeout is applied when a new connection is established. Changing the timeou
 
 ### Software Update
 
-Control how TablePro checks for and installs updates:
-
 | Setting | Default | Description |
 |---------|---------|-------------|
 | **Automatically check for updates** | On | Periodically check for new versions in the background |
-| **Check for Updates...** | — | Manually check for updates now |
+| **Check for Updates...** | -- | Check right now |
 
-TablePro uses [Sparkle](https://sparkle-project.org/) for automatic updates. When an update is available, you'll see a dialog with release notes and the option to install.
+TablePro uses [Sparkle](https://sparkle-project.org/) for updates. When an update is available, a dialog shows release notes and an install option.
 
-You can also check for updates from the **TablePro** menu > **Check for Updates...**.
+Also available from the **TablePro** menu > **Check for Updates...**.
 
 ### Privacy
 
-Control anonymous usage data collection:
-
 | Setting | Default | Description |
 |---------|---------|-------------|
-| **Share anonymous usage data** | On | Send anonymous usage statistics (OS version, architecture, locale, database types) every 24 hours |
+| **Share anonymous usage data** | On | Sends anonymous stats (OS version, architecture, locale, database types) every 24 hours |
 
-Data collected is fully anonymous — no personal information, queries, or database content is ever transmitted. You can opt out at any time by toggling this setting off.
+Fully anonymous: no personal information, queries, or database content is transmitted. Toggle off at any time.
 
 {/* Screenshot: General settings panel */}
 <Frame caption="General settings">
-  <img 
-    className="block dark:hidden" 
-    src="/images/settings-general.png" 
-    alt="General settings" 
+  <img
+    className="block dark:hidden"
+    src="/images/settings-general.png"
+    alt="General settings"
   />
-  <img 
-    className="hidden dark:block" 
-    src="/images/settings-general-dark.png" 
-    alt="General settings" 
+  <img
+    className="hidden dark:block"
+    src="/images/settings-general-dark.png"
+    alt="General settings"
   />
 </Frame>
 
 ## Data Grid Settings
 
-Configure how data is displayed in the results grid.
-
 ### Row Height
 
 | Option | Height | Best For |
 |--------|--------|----------|
-| **Compact** | 20px | Dense data, see more rows |
-| **Normal** | 24px | Balanced view (default) |
+| **Compact** | 20px | Dense data, more rows visible |
+| **Normal** | 24px | Balanced (default) |
 | **Comfortable** | 28px | Better readability |
 | **Spacious** | 32px | Accessibility |
 
 ### Date Format
-
-Choose how dates are displayed:
 
 | Format | Example |
 |--------|---------|
@@ -177,26 +165,22 @@ Choose how dates are displayed:
 | EU Short | 31/12/2024 |
 
 <Tip>
-ISO 8601 format is recommended for consistency, especially when working with international teams.
+ISO 8601 is recommended for consistency, especially with international teams.
 </Tip>
 
 ### NULL Display
-
-Customize how NULL values appear:
 
 | Setting | Default | Description |
 |---------|---------|-------------|
 | **NULL Display** | "NULL" | Text shown for NULL values |
 
-Valid values:
+Options:
 - `NULL` - Standard database notation
 - `(null)` - Parenthesized
 - `∅` - Empty set symbol
 - Custom text (max 20 characters)
 
 ### Page Size
-
-Set the default number of rows loaded per page:
 
 | Range | Minimum | Maximum | Default |
 |-------|---------|---------|---------|
@@ -209,7 +193,7 @@ Larger page sizes use more memory but show more data at once.
 <Note>
 **Validation ranges:**
 - **Page Size**: 10 -- 100,000 rows (values outside this range are clamped)
-- **NULL Display**: Maximum 20 characters, no newlines or tabs allowed
+- **NULL Display**: Maximum 20 characters, no newlines or tabs
 </Note>
 
 ### Alternate Row Colors
@@ -223,7 +207,7 @@ Larger page sizes use more memory but show more data at once.
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| **Auto-show inspector on row select** | Off | Automatically open the right sidebar when selecting a row in a table tab |
+| **Auto-show inspector on row select** | Off | Open the right sidebar automatically when selecting a row in a table tab |
 
 {/* Screenshot: Data Grid settings */}
 <Frame caption="Data Grid settings: row height, date format, NULL display">
@@ -241,25 +225,23 @@ Larger page sizes use more memory but show more data at once.
 
 ## Tab Settings
 
-Configure tab behavior when opening tables from the sidebar.
-
 ### Reuse Clean Table Tab
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| **Reuse clean table tab** | Off | When enabled, clicking a new table in the sidebar replaces the current table tab instead of opening a new tab |
+| **Reuse clean table tab** | Off | Clicking a new table in the sidebar replaces the current table tab instead of opening a new one |
 
-A tab is considered "clean" when all of the following are true:
+A tab is "clean" when all of these are true:
 
-- It is a table tab (not a query or create table tab)
-- It is not pinned
-- It has no unsaved changes
-- You haven't interacted with it (no sorting, filtering, selecting rows, etc.)
+- It's a table tab (not query or create table)
+- Not pinned
+- No unsaved changes
+- You haven't interacted with it (no sorting, filtering, row selection, etc.)
 
-When this setting is off (the default), every table click opens a new tab.
+When off (default), every table click opens a new tab.
 
 <Tip>
-Enable this if you prefer a single-tab workflow when browsing tables, similar to TablePlus's default behavior.
+Enable this for single-tab browsing, similar to TablePlus's default behavior.
 </Tip>
 
 {/* Screenshot: Tab settings */}
@@ -285,7 +267,7 @@ Customize keyboard shortcuts for menu actions. See [Keyboard Shortcuts](/feature
 1. Open **Settings** > **Keyboard**
 2. Click the shortcut field next to any action
 3. Press the new key combination
-4. The shortcut updates immediately
+4. Updates immediately
 
 ### Conflict Detection
 
@@ -293,7 +275,7 @@ Assigning a shortcut already in use shows a dialog with **Cancel** or **Reassign
 
 ### Reset to Defaults
 
-Click **Reset to Defaults** to restore all shortcuts to their original values.
+Click **Reset to Defaults** to restore all shortcuts.
 
 {/* Screenshot: Keyboard settings */}
 <Frame caption="Keyboard settings: shortcut customization">
@@ -311,15 +293,13 @@ Click **Reset to Defaults** to restore all shortcuts to their original values.
 
 ## History Settings
 
-Control query history retention.
-
 ### Maximum Entries
 
 | Setting | Default | Description |
 |---------|---------|-------------|
 | **Max Entries** | 10,000 | Maximum queries to keep |
 
-Set to `0` for unlimited history.
+Set to `0` for unlimited.
 
 ### Maximum Days
 
@@ -342,8 +322,6 @@ Disabling auto cleanup with unlimited entries may cause the history database to 
 
 ### Clear History
 
-To clear all query history:
-
 1. Open Settings > History
 2. Click **Clear All History**
 3. Confirm the action
@@ -364,31 +342,29 @@ To clear all query history:
 
 ## License Settings
 
-Manage your TablePro license from the **License** tab in Settings.
+Manage your license from the **License** tab in Settings.
 
 ### Activating a License
 
 1. Open **Settings** (`Cmd+,`) and select the **License** tab
-2. Enter your license key in the text field
+2. Enter your license key
 3. Click **Activate**
 
-Once activated, the tab displays your registered email and license key.
+Once activated, the tab shows your registered email and license key.
 
 ### Deactivating a License
 
-To remove the license from this machine:
-
 1. Open **Settings** > **License**
 2. Click **Deactivate...**
-3. Confirm the action
+3. Confirm
 
 <Note>
-Deactivating frees up the activation slot so you can use the license on a different machine.
+Deactivating frees up the activation slot for use on a different machine.
 </Note>
 
 ### Offline Use
 
-TablePro validates your license locally using a cryptographic signature. No internet connection is required for day-to-day use after activation. The app periodically re-validates with the server (every 7 days) to check for updates.
+TablePro validates your license locally using a cryptographic signature. No internet needed for day-to-day use after activation. The app re-validates with the server every 7 days.
 
 {/* Screenshot: License settings */}
 <Frame caption="License activation and management">
@@ -414,7 +390,7 @@ Settings are stored in:
 
 ### Resetting Settings
 
-To reset all settings to defaults:
+To reset everything to defaults:
 
 ```bash
 # Remove preferences file
@@ -427,7 +403,7 @@ rm -rf ~/Library/Caches/com.TablePro
 Then restart TablePro.
 
 <Warning>
-Resetting preferences will not affect your saved connections or query history.
+Resetting preferences does not affect saved connections or query history.
 </Warning>
 
 ## Settings by Feature
@@ -485,8 +461,6 @@ See [Appearance](/customization/appearance) for details.
 See [Filtering](/features/filtering) for details.
 
 ## Keyboard Shortcut
-
-Open settings quickly:
 
 | Action | Shortcut |
 |--------|----------|
