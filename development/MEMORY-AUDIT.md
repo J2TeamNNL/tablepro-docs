@@ -51,7 +51,7 @@ For sorted tabs, `sortedRows(for:)` at `MainEditorContentView.swift:406` calls `
 
 **Fix options:**
 - [x] Make `InMemoryRowProvider` reference `RowBuffer` directly instead of copying rows — **Done**: primary init takes `rowBuffer: RowBuffer` + optional `sortIndices: [Int]?`; convenience init wraps rows for backward compat
-- [ ] Replace `rowCache` with index-based access into `sourceRows` (avoid `TableRowData` wrapper objects)
+- [x] Replace `rowCache` with index-based access into `sourceRows` (avoid `TableRowData` wrapper objects) — **Done**: added `value(atRow:column:)` and `rowValues(at:)` for zero-allocation direct access; removed 5,000-entry `rowCache` dictionary and `TableRowData` materialization
 - [x] For sorted tabs, store only the index permutation and let the provider apply it lazily — **Done**: `sortIndicesForTab(_:)` returns `[Int]?` permutation; `InMemoryRowProvider` resolves display→source indices via `resolveSourceIndex()`
 
 ---
@@ -140,6 +140,7 @@ Each `SQLEditorCoordinator` registers for `NSWindow.didUpdateNotification` with 
 
 **Fix options:**
 - [x] Filter by `object: textView.window` after the editor's window is known — **Done**: notification handler early-returns when `notification.object` doesn't match the editor's own window
+- [x] Consolidate all per-editor monitors into a shared `EditorEventRouter` singleton — **Done**: right-click, clipboard, and window-update monitors reduced from O(n) to O(1) per event
 - [ ] Or use KVO on the specific window's `firstResponder` instead
 
 ---
@@ -171,6 +172,9 @@ Each macOS native tab creates a full `NSWindow` with its own:
 This is inherent to the native-tab architecture and not easily reducible without moving to in-process tabs.
 
 **Fix options:**
+- [x] Lazy `AIChatViewModel` — defer creation until AI panel is first opened — **Done**: backed by optional, instantiated on first access
+- [x] Remove duplicate `connections` array from `ContentView` — **Done**: use `ConnectionStorage.shared` directly
+- [x] Fix tab persistence last-write-wins — **Done**: aggregate tabs from all coordinators at quit via static registry; only first coordinator saves
 - [ ] Consider lightweight in-process tab bar (shared NSWindow) for table tabs — major architectural change
 - [ ] Or accept this as the cost of native tabs and focus on reducing per-tab data overhead (items 2, 3, 5 above)
 
