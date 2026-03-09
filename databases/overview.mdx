@@ -471,6 +471,32 @@ SQLite connections are file-based and don't require health monitoring or auto-re
   />
 </Frame>
 
+## Startup Commands
+
+Startup commands are SQL statements that run automatically every time a connection is established. Use them to set session variables, configure timezone, change encoding, or set other session-level options.
+
+Configure startup commands in the **Advanced** tab of the connection form. Enter one SQL statement per line.
+
+### Common Examples
+
+```sql
+SET time_zone = '+00:00';
+SET NAMES utf8mb4;
+SET sql_mode = 'STRICT_TRANS_TABLES';
+SET search_path TO myschema, public;
+SET statement_timeout = '30s';
+```
+
+Startup commands execute in order, top to bottom. If a command fails, the connection still proceeds, but the failed command is skipped.
+
+<Tip>
+Startup commands are useful for enforcing consistent session settings across team members. For example, setting a specific timezone ensures all datetime queries return results in the same zone regardless of the server's default.
+</Tip>
+
+<Note>
+Startup commands run on every connection, including auto-reconnects. They are database-specific: use MySQL syntax for MySQL connections, PostgreSQL syntax for PostgreSQL, and so on.
+</Note>
+
 ## Editing Connections
 
 To modify an existing connection:

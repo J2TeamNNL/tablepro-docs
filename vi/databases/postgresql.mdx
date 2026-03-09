@@ -352,6 +352,26 @@ Nếu không muốn cấu hình chứng chỉ SSL, [SSH tunneling](/vi/databases
   />
 </Frame>
 
+## Lệnh Khởi động
+
+Đặt biến phiên tự động áp dụng mỗi khi kết nối. Cấu hình trong tab **Advanced** của form kết nối.
+
+Lệnh khởi động PostgreSQL thường dùng:
+
+```sql
+SET timezone = 'UTC';
+SET search_path TO myschema, public;
+SET statement_timeout = '30s';
+SET work_mem = '256MB';
+SET client_encoding = 'UTF8';
+```
+
+Đặt `search_path` hữu ích khi bảng nằm trong schema không mặc định. Thay vì phải ghi đầy đủ tên bảng (`myschema.users`), đặt search path một lần rồi truy vấn trực tiếp theo tên bảng.
+
+Đặt `timezone` giúp mọi truy vấn `timestamptz` trả kết quả cùng múi giờ, bất kể timezone của server hay hệ điều hành client.
+
+Xem [Lệnh Khởi động](/vi/databases/overview#lệnh-khởi-động) để biết thêm chi tiết.
+
 ## PostgreSQL Extensions
 
 TablePro hoạt động với database dùng các extension phổ biến:

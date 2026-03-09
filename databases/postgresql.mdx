@@ -352,6 +352,26 @@ If you'd rather skip SSL certificate setup, [SSH tunneling](/databases/ssh-tunne
   />
 </Frame>
 
+## Startup Commands
+
+Set session variables that apply automatically on every connection. Configure these in the **Advanced** tab of the connection form.
+
+Typical PostgreSQL startup commands:
+
+```sql
+SET timezone = 'UTC';
+SET search_path TO myschema, public;
+SET statement_timeout = '30s';
+SET work_mem = '256MB';
+SET client_encoding = 'UTF8';
+```
+
+Setting `search_path` is useful when your tables live in a non-default schema. Instead of qualifying every table name (`myschema.users`), set the search path once and query tables by name directly.
+
+Setting `timezone` ensures all `timestamptz` queries return results in the same zone, regardless of the server or client OS timezone.
+
+See [Startup Commands](/databases/overview#startup-commands) for more details.
+
 ## PostgreSQL Extensions
 
 TablePro works with databases using popular extensions:
