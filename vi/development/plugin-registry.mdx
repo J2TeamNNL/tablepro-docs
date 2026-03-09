@@ -1,0 +1,125 @@
+---
+title: Plugin Registry
+description: Cách xuất bản plugin tải về lên registry plugin của TablePro
+---
+
+# Plugin Registry
+
+Plugin registry là một file JSON manifest được lưu trữ tại [github.com/TableProApp/plugins](https://github.com/TableProApp/plugins). TablePro tải manifest này để hiển thị **Cài đặt > Plugin > Duyệt** và tự động cài đặt plugin driver còn thiếu.
+
+## Định dạng Manifest
+
+Registry manifest (`plugins.json`) theo cấu trúc `RegistryManifest`:
+
+```json
+{
+  "schemaVersion": 1,
+  "plugins": [
+    // ... các mục plugin
+  ]
+}
+```
+
+Mỗi mục tương ứng với model `RegistryPlugin`:
+
+| Trường | Kiểu | Bắt buộc | Mô tả |
+|--------|------|----------|-------|
+| `id` | `string` | Có | Bundle identifier (vd: `com.TablePro.OracleDriver`) |
+| `name` | `string` | Có | Tên hiển thị |
+| `version` | `string` | Có | Phiên bản semantic |
+| `summary` | `string` | Có | Mô tả ngắn một dòng |
+| `author` | `object` | Có | `{ "name": "...", "url": "..." }` |
+| `homepage` | `string` | Không | URL dự án |
+| `category` | `string` | Có | Một trong: `database-driver`, `export-format`, `import-format`, `theme`, `other` |
+| `databaseTypeIds` | `[string]` | Không | Ánh xạ đến giá trị `DatabaseType.pluginTypeId`. Dùng cho tự động cài đặt. |
+| `downloadURL` | `string` | Có | URL trực tiếp đến file `.zip` |
+| `sha256` | `string` | Có | SHA-256 hex digest của file ZIP |
+| `minAppVersion` | `string` | Không | Phiên bản TablePro tối thiểu (vd: `"0.17.0"`) |
+| `minPluginKitVersion` | `int` | Không | Phiên bản PluginKit tối thiểu (hiện tại là `1`) |
+| `iconName` | `string` | Không | Tên SF Symbol để hiển thị |
+| `isVerified` | `bool` | Có | Plugin đã được đội ngũ TablePro xác minh hay chưa |
+
+## Mục Oracle và ClickHouse
+
+Hai database driver này được phân phối dưới dạng plugin tải về thay vì đóng gói trong ứng dụng:
+
+```json
+{
+  "id": "com.TablePro.OracleDriver",
+  "name": "Oracle Driver",
+  "version": "1.0.0",
+  "summary": "Oracle Database 12c+ driver via OracleNIO",
+  "author": {
+    "name": "TablePro",
+    "url": "https://tablepro.dev"
+  },
+  "homepage": "https://tablepro.dev/databases/oracle",
+  "category": "database-driver",
+  "databaseTypeIds": ["Oracle"],
+  "downloadURL": "https://github.com/datlechin/TablePro/releases/download/plugin-oracle-v1.0.0/OracleDriver-arm64.zip",
+  "sha256": "<sha256-cua-zip>",
+  "minAppVersion": "0.17.0",
+  "minPluginKitVersion": 1,
+  "iconName": "server.rack",
+  "isVerified": true
+}
+```
+
+```json
+{
+  "id": "com.TablePro.ClickHouseDriver",
+  "name": "ClickHouse Driver",
+  "version": "1.0.0",
+  "summary": "ClickHouse OLAP database driver via HTTP interface",
+  "author": {
+    "name": "TablePro",
+    "url": "https://tablepro.dev"
+  },
+  "homepage": "https://tablepro.dev/databases/clickhouse",
+  "category": "database-driver",
+  "databaseTypeIds": ["ClickHouse"],
+  "downloadURL": "https://github.com/datlechin/TablePro/releases/download/plugin-clickhouse-v1.0.0/ClickHouseDriver-arm64.zip",
+  "sha256": "<sha256-cua-zip>",
+  "minAppVersion": "0.17.0",
+  "minPluginKitVersion": 1,
+  "iconName": "chart.bar.xaxis",
+  "isVerified": true
+}
+```
+
+Thay `<sha256-cua-zip>` bằng SHA-256 thực tế từ output của `build-plugin.sh`.
+
+## Ánh xạ databaseTypeIds
+
+Trường `databaseTypeIds` ánh xạ mục registry đến giá trị `DatabaseType.pluginTypeId`. Ứng dụng dùng trường này để biết plugin nào cần cài khi người dùng chọn loại database chưa có driver.
+
+| DatabaseType | pluginTypeId |
+|-------------|-------------|
+| MySQL, MariaDB | `"MySQL"` |
+| PostgreSQL, Redshift | `"PostgreSQL"` |
+| SQLite | `"SQLite"` |
+| MongoDB | `"MongoDB"` |
+| Redis | `"Redis"` |
+| SQL Server | `"SQL Server"` |
+| Oracle | `"Oracle"` |
+| ClickHouse | `"ClickHouse"` |
+
+## Xuất bản Plugin
+
+1. Tạo tag: `git tag plugin-oracle-v1.0.0 && git push --tags`
+2. CI workflow `build-plugin.yml` sẽ build, ký và tạo GitHub release với file ZIP
+3. Sao chép SHA-256 từ output build
+4. Thêm hoặc cập nhật mục trong `plugins.json` trên repo [TableProApp/plugins](https://github.com/TableProApp/plugins)
+5. Ứng dụng sẽ tải manifest mới khi mở **Duyệt** (có cache ETag)
+
+## Luồng tự động cài đặt
+
+Khi người dùng chọn loại database tải về (Oracle hoặc ClickHouse):
+
+1. `DatabaseType.isDownloadablePlugin` trả về `true`
+2. `PluginManager.isDriverAvailable(for:)` trả về `false` (chưa có driver)
+3. Form kết nối hiển thị badge tải và gọi `installPluginForType`
+4. `PluginManager.installMissingPlugin(for:)` tải registry, tìm plugin theo `databaseTypeIds`, và gọi `installFromRegistry`
+5. File ZIP được tải, xác minh SHA-256, giải nén, xác minh chữ ký code, và nạp vào ứng dụng
+
+Nếu người dùng kết nối đến connection đã lưu mà thiếu plugin, luồng tương tự sẽ được kích hoạt qua hộp thoại nhắc nhở.
