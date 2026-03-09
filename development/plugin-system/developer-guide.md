@@ -218,10 +218,13 @@ Note: `DatabaseDriverFactory.createDriver` now throws (rather than calling `fata
 ### Manual Testing
 
 1. Build the plugin target.
-2. Copy the `.tableplugin` bundle to `~/Library/Application Support/TablePro/Plugins/`.
-3. Launch TablePro. Check the log for `"Loaded plugin 'MyDB Driver'"`.
+2. Install via any of these methods:
+   - **File picker**: Settings > Plugins > "Install from File..." — select the `.tableplugin` bundle directly or a `.zip` containing it.
+   - **Drag-and-drop**: Drag the `.tableplugin` bundle onto the Settings > Plugins view.
+   - **Finder double-click**: Double-click the `.tableplugin` bundle in Finder. TablePro opens and navigates to Settings > Plugins.
+   - **Manual copy**: Copy the `.tableplugin` bundle to `~/Library/Application Support/TablePro/Plugins/` and relaunch.
+3. Check the log for `"Loaded plugin 'MyDB Driver'"`.
 4. Create a connection using your database type.
-5. Alternatively, install via Settings > Plugins: click "Install from File...", select a `.zip` containing your `.tableplugin` bundle, and verify it appears in the plugin list.
 
 For built-in plugin development, the plugin target is embedded in the app bundle automatically via Xcode's "Embed Without Signing" build phase.
 

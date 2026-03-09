@@ -118,18 +118,55 @@ Disabled plugins remain in the `plugins` array and their bundles stay loaded in 
 ### installPlugin(from:)
 
 ```swift
-func installPlugin(from zipURL: URL) async throws -> PluginEntry
+func installPlugin(from url: URL) async throws -> PluginEntry
 ```
 
-1. Extracts the `.zip` archive to a temp directory using `/usr/bin/ditto`.
-2. The `ditto` process runs asynchronously via `withCheckedThrowingContinuation` -- it does not block the calling thread with `waitUntilExit`.
-3. Finds the first `.tableplugin` bundle in the extracted contents.
-4. Verifies code signature on the extracted bundle.
-5. Checks for conflicts with built-in plugins. If a built-in plugin already has the same bundle ID, throws `pluginConflict(existingName:)`.
-6. Copies to `~/Library/Application Support/TablePro/Plugins/`.
-7. Loads the plugin via `loadPlugin(at:source:)` and returns the entry directly from that call.
+Entry point for all plugin installation. Guards against concurrent installs via the `isInstalling` property (rejects with `installFailed` if already in progress). Routes by file extension:
+
+- `.tableplugin` → `installBundle(from:)` (synchronous)
+- `.zip` → `installFromZip(from:)` (async, extracts via `ditto`)
+
+Called from three places:
+- **File picker** (`InstalledPluginsView.installFromFile`) — accepts both `.zip` and `.tableplugin`
+- **Drag-and-drop** (`InstalledPluginsView.onDrop`) — validates extension before calling
+- **Finder double-click** (`AppDelegate.handlePluginInstall`) — handles `.tableplugin` files opened via macOS file association
+
+#### installBundle(from:)
+
+Direct `.tableplugin` bundle installation:
+
+1. `Bundle(url:)` to validate structure.
+2. `verifyCodeSignature(bundle:)`.
+3. Checks for built-in conflict (same bundle ID → `pluginConflict`).
+4. `replaceExistingPlugin(bundleId:)` to cleanly remove any existing version.
+5. Copies to `userPluginsDir` (skips copy if source and destination are the same path via `standardizedFileURL` comparison).
+6. `loadPlugin(at:source: .userInstalled)`.
+
+#### installFromZip(from:)
+
+Archive-based installation:
+
+1. Extracts `.zip` to a temp directory using `/usr/bin/ditto` (async via `withCheckedThrowingContinuation`).
+2. Finds the first `.tableplugin` bundle in extracted contents.
+3. `verifyCodeSignature(bundle:)`.
+4. Checks for built-in conflict.
+5. `replaceExistingPlugin(bundleId:)` to cleanly remove any existing version.
+6. Copies to `userPluginsDir`.
+7. `loadPlugin(at:source: .userInstalled)`.
 
 If a plugin with the same filename already exists in the user plugins directory, it is replaced.
+
+#### replaceExistingPlugin(bundleId:)
+
+Shared helper called by both install paths. If a plugin with the given bundle ID is already loaded:
+
+1. `unregisterCapabilities(pluginId:)` — must run first since it reads from `plugins` to find the principal class.
+2. `bundle.unload()`.
+3. Removes entry from `plugins` array.
+
+#### isInstalling
+
+`private(set) var isInstalling = false` — observable property set by `installPlugin(from:)`. The UI observes this to disable the install button and show a spinner. Also prevents concurrent installs from different entry points (file picker, drag-and-drop, Finder).
 
 ### uninstallPlugin(id:)
 
