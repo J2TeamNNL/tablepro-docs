@@ -28,9 +28,9 @@ Every connection creates three separate C-level driver instances:
 Each carries its own C library state (libmariadb internal buffers, TLS context, TCP socket). For MySQL this is ~30–50 MB per connection × 3 = the bulk of the +110 MB jump on connect.
 
 **Fix options:**
-- [ ] Multiplex metadata queries on the main driver when idle (eliminates 1 driver)
+- [x] Multiplex metadata queries on the main driver when idle (eliminates 1 driver) — **Done**: metadata driver eliminated entirely; all queries multiplex on main driver via C-level DispatchQueue serialization
 - [x] Use a lightweight ping mechanism (e.g., TCP keepalive or `mysql_ping` on main driver with a mutex) instead of a dedicated ping driver — **Done**: removed dedicated `pingDrivers` dict, health checks now use main driver
-- [x] Lazy-create the metadata driver only when needed, release after use — **Done**: `ensureMetadataDriver(for:)` creates on first Phase 2 request; deduplicates in-flight creation tasks
+- [x] ~~Lazy-create the metadata driver only when needed~~ → Superseded: metadata driver eliminated entirely (see multiplex fix above)
 
 ---
 
@@ -184,7 +184,7 @@ This is inherent to the native-tab architecture and not easily reducible without
 | 2 | `InMemoryRowProvider` references `RowBuffer` instead of copying | -3–10 MB per tab | Medium | **Done** |
 | 9 | Remove `RowBuffer.sourceQuery`, use `tab.query` | -0–500 KB per tab | Low | **Done** |
 | 4 | Lazy plugin loading | -20–30 MB at launch | Low-Medium | **Done** |
-| 1 | Eliminate dedicated ping driver + lazy metadata driver | -60–100 MB per connection | Medium | **Done** |
+| 1 | Eliminate dedicated ping driver + metadata driver | -60–100 MB per connection | Medium | **Done** |
 
 ---
 
