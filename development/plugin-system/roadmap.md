@@ -112,21 +112,15 @@ Extracted all 5 built-in export formats into plugin bundles.
 
 ## Known Limitations / Tech Debt
 
-Issues identified during Phase 2 implementation that should be addressed in future phases:
+1. **`Bundle.unload()` unreliability**: macOS `Bundle.unload()` is not guaranteed to actually unload code. Uninstalled plugins may leave code in memory until app restart. The UI shows a restart recommendation banner after uninstalling.
 
-1. **Team ID placeholder**: `PluginManager.signingTeamId` is set to `"YOURTEAMID"` -- must be replaced with the actual Apple Developer Team ID before shipping sideloaded plugin support to users.
+2. **No hot-reload**: Enabling a previously disabled plugin re-instantiates the class but doesn't reconnect existing sessions using that driver. A `pluginStateDidChange` notification is posted so other components can react.
 
-2. **`Bundle.unload()` unreliability**: macOS `Bundle.unload()` is not guaranteed to actually unload code. Disabled/uninstalled plugins may leave code in memory until app restart.
+3. **`PluginDriverAdapter.beginTransaction` uses hardcoded SQL**: Sends `BEGIN` regardless of database type. Drivers that need different transaction syntax (e.g., Oracle's implicit transactions) must handle this at the plugin level.
 
-3. **No hot-reload**: Enabling a previously disabled plugin re-instantiates the class but doesn't reconnect existing sessions using that driver.
+4. **Single-zip install format**: Only `.zip` archives supported. No support for direct `.tableplugin` bundle drag-and-drop.
 
-4. **`executeParameterized` default is SQL injection-adjacent**: The default implementation does string replacement of `?` placeholders, which relies on single-quote escaping. Drivers should override with native prepared statements.
-
-5. **`PluginDriverAdapter.beginTransaction` uses hardcoded SQL**: Sends `BEGIN` regardless of database type. Drivers that need different transaction syntax (e.g., Oracle's implicit transactions) must handle this at the plugin level.
-
-6. **No plugin dependency resolution**: Plugins cannot declare dependencies on other plugins. Each plugin must be self-contained.
-
-7. **Single-zip install format**: Only `.zip` archives supported. No support for direct `.tableplugin` bundle drag-and-drop.
+5. **Capability enforcement is lenient**: Registration proceeds with a warning if a plugin's declared capabilities don't match its protocol conformance. This is intentional for backwards compatibility but means misconfigurations are only caught via logs.
 
 ## Timeline
 

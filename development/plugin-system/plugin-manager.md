@@ -50,20 +50,35 @@ The `loadPlugin(at:source:)` method is `@discardableResult` and returns the `Plu
 
 ## Registration
 
-### Driver Plugins
+### Capability-Gated Registration
 
-When a `TableProPlugin` instance also conforms to `DriverPlugin`:
+Registration checks the plugin's declared `capabilities` array before registering for each protocol:
 
 ```swift
-let typeId = type(of: driver).databaseTypeId
-driverPlugins[typeId] = driver
+let declared = Set(type(of: instance).capabilities)
 
-for additionalId in type(of: driver).additionalDatabaseTypeIds {
-    driverPlugins[additionalId] = driver
+if let driver = instance as? any DriverPlugin {
+    if !declared.contains(.databaseDriver) {
+        // Log warning, but register anyway (lenient mode)
+    }
+    let typeId = type(of: driver).databaseTypeId
+    driverPlugins[typeId] = driver
+    for additionalId in type(of: driver).additionalDatabaseTypeIds {
+        driverPlugins[additionalId] = driver
+    }
 }
 ```
 
 The `driverPlugins` dictionary maps type ID strings to `DriverPlugin` instances. It is a regular `@MainActor`-isolated property on `PluginManager`. `DatabaseDriverFactory` is also `@MainActor`, ensuring safe access to `driverPlugins` without data races.
+
+### Capability Validation
+
+`validateCapabilityDeclarations()` runs at load time for each plugin and checks both directions:
+
+- Plugin declares `.databaseDriver` but doesn't conform to `DriverPlugin` -- logs warning
+- Plugin declares `.exportFormat` but doesn't conform to `ExportFormatPlugin` -- logs warning
+
+This catches configuration mistakes early. Registration is lenient (proceeds with a warning) to avoid breaking third-party plugins that forget to declare capabilities.
 
 ### Unregistration
 
@@ -94,6 +109,7 @@ func setEnabled(_ enabled: Bool, pluginId: String)
 - Persists the disabled set to `UserDefaults` under the key `"disabledPlugins"`.
 - If enabling: instantiates the plugin class and registers capabilities.
 - If disabling: unregisters capabilities (removes from `driverPlugins`).
+- Posts `Notification.Name.pluginStateDidChange` with `userInfo: ["pluginId": pluginId]`.
 
 Disabled plugins remain in the `plugins` array and their bundles stay loaded in memory. They just have no registered capabilities.
 
@@ -128,6 +144,7 @@ func uninstallPlugin(id: String) throws
 5. Removes the entry from the `plugins` array.
 6. Deletes the `.tableplugin` directory from disk.
 7. Removes from the disabled plugins set.
+8. Sets `needsRestart = true` (the UI shows a restart recommendation banner).
 
 ## Code Signature Verification
 
@@ -140,10 +157,10 @@ private func verifyCodeSignature(bundle: Bundle) throws
 Uses Security.framework:
 
 1. `SecStaticCodeCreateWithPath` to get a `SecStaticCode` reference. Throws `signatureInvalid(detail:)` if this fails.
-2. `createSigningRequirement()` builds a `SecRequirement` pinned to the team ID: `anchor apple generic and certificate leaf[subject.OU] = "YOURTEAMID"`.
+2. `createSigningRequirement()` builds a `SecRequirement` pinned to the team ID: `anchor apple generic and certificate leaf[subject.OU] = "D7HJ5TFYCU"`.
 3. `SecStaticCodeCheckValidity` with `kSecCSCheckAllArchitectures` and the team ID requirement. Throws `signatureInvalid(detail:)` if validation fails.
 
-The `signingTeamId` static property holds the team identifier (currently a placeholder `"YOURTEAMID"` -- must be replaced before shipping user-installed plugin support).
+The `signingTeamId` static property holds the TablePro team identifier (`D7HJ5TFYCU`).
 
 Error details come from `describeOSStatus(_:)`, which maps common Security.framework codes to readable strings:
 

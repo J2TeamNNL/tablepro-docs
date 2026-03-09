@@ -18,12 +18,12 @@ The plugin system defines three tiers of increasing complexity. Only Tier 3 is i
 
 ## Extension Points
 
-Nine extension points are identified. Only `databaseDriver` is implemented.
+Nine extension points are identified. Two are implemented.
 
 | Extension Point | Capability Enum | Tier | Status |
 |-----------------|----------------|------|--------|
 | Database drivers | `.databaseDriver` | 3 | Shipped |
-| Export formats | `.exportFormat` | 2-3 | Planned |
+| Export formats | `.exportFormat` | 3 | Shipped |
 | Import formats | `.importFormat` | 2-3 | Planned |
 | SQL dialects | `.sqlDialect` | 3 | Planned |
 | AI providers | `.aiProvider` | 3 | Planned |
@@ -85,7 +85,7 @@ graph LR
 1. `PluginManager` scans both plugin directories at startup.
 2. Each `.tableplugin` bundle is loaded via `Bundle(url:)`.
 3. The `NSPrincipalClass` is cast to `TableProPlugin` and instantiated.
-4. If the plugin conforms to `DriverPlugin`, it is registered by its `databaseTypeId` (and any `additionalDatabaseTypeIds`).
+4. Capability declarations are validated (`validateCapabilityDeclarations`). If the plugin conforms to `DriverPlugin` and declares `.databaseDriver`, it is registered by its `databaseTypeId` (and any `additionalDatabaseTypeIds`). A mismatch between declared capabilities and protocol conformance logs a warning but proceeds.
 5. When a connection is opened, `DatabaseManager` looks up the driver plugin by type ID, calls `createDriver(config:)`, and wraps the result in a `PluginDriverAdapter`.
 6. `PluginDriverAdapter` conforms to the main app's `DatabaseDriver` protocol, translating between plugin transfer types (`PluginQueryResult`, `PluginColumnInfo`, etc.) and internal app types (`QueryResult`, `ColumnInfo`, etc.).
 

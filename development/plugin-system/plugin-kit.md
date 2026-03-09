@@ -14,12 +14,15 @@ public protocol TableProPlugin: AnyObject {
     static var pluginVersion: String { get }
     static var pluginDescription: String { get }
     static var capabilities: [PluginCapability] { get }
+    static var dependencies: [String] { get }
 
     init()
 }
 ```
 
 All metadata is on the type itself (static properties), not on instances. The `init()` requirement enables `PluginManager` to instantiate plugins without knowing their concrete type.
+
+`dependencies` defaults to `[]`. It contains bundle identifiers of required plugins. `PluginManager` validates dependencies at load time and logs warnings for missing or disabled dependencies.
 
 ### DriverPlugin
 
@@ -125,7 +128,7 @@ Everything else falls back to sensible defaults (e.g., `ping()` runs `SELECT 1`,
 | `ping()` | Runs `SELECT 1` |
 | `fetchRowCount(query:)` | Wraps in `SELECT COUNT(*) FROM (...) _t` |
 | `fetchRows(query:offset:limit:)` | Appends `LIMIT/OFFSET` to query |
-| `executeParameterized(query:parameters:)` | Replaces `?` placeholders with escaped values |
+| `executeParameterized(query:parameters:)` | Single-pass parser that replaces unquoted `?` placeholders with escaped values (skips `?` inside quoted strings, escapes backslashes) |
 | `fetchSchemas()` | Returns `[]` |
 | `switchSchema(to:)` | No-op |
 | `switchDatabase(to:)` | Throws "This driver does not support database switching" |
@@ -301,7 +304,7 @@ public enum PluginCapability: Int, Codable, Sendable {
 }
 ```
 
-A plugin declares its capabilities in `TableProPlugin.capabilities`. The `PluginManager` uses this to route registration. Currently only `.databaseDriver` triggers any registration logic.
+A plugin declares its capabilities in `TableProPlugin.capabilities`. The `PluginManager` uses this to validate and route registration. Both `.databaseDriver` and `.exportFormat` trigger registration logic. If a plugin conforms to `DriverPlugin` or `ExportFormatPlugin` but doesn't declare the matching capability, a warning is logged and registration proceeds (lenient mode). The reverse mismatch (declaring a capability without conforming to the protocol) is also logged.
 
 ## Multi-Type Support
 

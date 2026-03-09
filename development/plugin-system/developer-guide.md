@@ -148,7 +148,7 @@ These have working defaults in the protocol extension. Override only if your dat
 | `ping()` | Runs `SELECT 1` |
 | `fetchRowCount(query:)` | Wraps query in `SELECT COUNT(*) FROM (...)` |
 | `fetchRows(query:offset:limit:)` | Appends `LIMIT N OFFSET M` |
-| `executeParameterized(query:parameters:)` | String-replaces `?` placeholders |
+| `executeParameterized(query:parameters:)` | Single-pass parser replaces unquoted `?` with escaped values |
 | `beginTransaction()` | Runs `BEGIN` |
 | `commitTransaction()` | Runs `COMMIT` |
 | `rollbackTransaction()` | Runs `ROLLBACK` |

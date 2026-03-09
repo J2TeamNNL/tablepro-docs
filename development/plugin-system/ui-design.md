@@ -73,6 +73,18 @@ Implementation details:
 - The Uninstall button only appears for user-installed plugins. Clicking it shows a confirmation dialog before removal.
 - Built-in plugins cannot be uninstalled; they can only be disabled via the toggle in the list row.
 
+### Restart Banner
+
+After uninstalling a user plugin, a restart recommendation banner appears at the top of the Installed Plugins list:
+
+```
++-----------------------------------------------------------+
+| [↻] Restart TablePro to fully unload removed plugins. [×] |
++-----------------------------------------------------------+
+```
+
+The banner has a dismiss button (×) and persists for the current session. It appears because `Bundle.unload()` is not guaranteed to actually unload code on macOS.
+
 ### Disabled State
 
 When a plugin is disabled:

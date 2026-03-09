@@ -25,7 +25,7 @@ If verification fails, the plugin is rejected with a `PluginError.signatureInval
 
 The `signingTeamId` static property on `PluginManager` determines which Apple Developer Team ID is accepted. The requirement string pins to the leaf certificate's Organizational Unit (`subject.OU`), meaning only plugins signed by that specific team are accepted.
 
-**Current status**: `signingTeamId` is set to the placeholder `"YOURTEAMID"`. This must be replaced with a real team identifier before user-installed plugin support ships.
+`signingTeamId` is set to the TablePro team ID (`D7HJ5TFYCU`). Only plugins signed by this team pass verification.
 
 ### OSStatus error codes
 
@@ -80,7 +80,6 @@ Plugins are native Mach-O bundles loaded via `NSBundle.load()` into the app's ad
 
 - **Marketplace review process**: reviewing plugin code and behavior before listing in an official marketplace.
 - **Runtime sandboxing**: restricting plugin capabilities using macOS sandbox profiles or XPC (future work).
-- **Capability declarations**: enforcing that a plugin declaring only `.databaseDriver` cannot access export or AI APIs.
 
 ### What the system does NOT protect against
 
@@ -105,7 +104,9 @@ public enum PluginCapability: Int, Codable, Sendable {
 }
 ```
 
-These are currently **declarations only**, not enforced restrictions. A plugin declaring `.databaseDriver` has the same runtime access as one declaring `.aiProvider`. There is no sandbox boundary between capability types.
+Capabilities are checked at registration time: `PluginManager.registerCapabilities()` verifies that a plugin's declared capabilities match its protocol conformance. If a plugin conforms to `DriverPlugin` but does not declare `.databaseDriver`, a warning is logged and registration proceeds (lenient mode for backwards compatibility). `validateCapabilityDeclarations()` also logs warnings for the reverse mismatch (declaring a capability without conforming to the matching protocol).
+
+Note: capabilities are **registration-level checks**, not runtime sandboxing. A loaded plugin still has full process access regardless of declared capabilities. There is no sandbox boundary between capability types.
 
 Database driver plugins receive connection credentials via `DriverConnectionConfig`:
 
@@ -147,8 +148,7 @@ During installation (via `installPlugin(from:)`), the signature is verified on t
 
 ## Known Limitations
 
-- **`signingTeamId` is a placeholder**: set to `"YOURTEAMID"`. Must be replaced with the actual Apple Developer Team ID before sideloaded plugin support ships. Until then, no user-installed plugins will pass verification.
-- **`Bundle.unload()` is unreliable on macOS**: when a user-installed plugin is uninstalled, `PluginManager` calls `bundle.unload()`, but Apple's documentation notes this may not actually unload the code. The plugin's executable code may remain mapped in memory until the app restarts.
-- **No runtime sandboxing**: plugins run in the same process with the same entitlements as the app. There is no XPC boundary, no sandbox profile, no capability enforcement.
-- **No capability restrictions**: the `PluginCapability` enum is advisory. A plugin declaring only `.databaseDriver` has the same runtime access as the host app.
+- **`Bundle.unload()` is unreliable on macOS**: when a user-installed plugin is uninstalled, `PluginManager` calls `bundle.unload()`, but Apple's documentation notes this may not actually unload the code. The plugin's executable code may remain mapped in memory until the app restarts. The Settings UI shows a restart recommendation banner after uninstalling.
+- **No runtime sandboxing**: plugins run in the same process with the same entitlements as the app. There is no XPC boundary or sandbox profile.
+- **Capability checks are lenient**: `PluginCapability` declarations are validated at registration time (warnings logged for mismatches), but a plugin declaring only `.databaseDriver` still has the same runtime access as the host app.
 - **Credentials in plaintext**: `DriverConnectionConfig` passes database passwords as plain `String` values. There is no way for the app to restrict which plugins see which credentials.

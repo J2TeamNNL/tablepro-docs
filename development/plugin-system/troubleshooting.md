@@ -160,9 +160,26 @@ The plugin loaded successfully (check Console.app for "Loaded plugin" log), but 
 
 **Fix:**
 - Verify `databaseTypeId` on your `DriverPlugin` matches a `DatabaseType` case that the app knows about. For custom database types, the app must explicitly support the type in its enum.
-- Check that your plugin declares `.databaseDriver` in its `capabilities` array.
+- Check that your plugin declares `.databaseDriver` in its `capabilities` array. While registration is lenient (proceeds with a warning if the capability is missing), the warning in Console.app will confirm if this is the issue.
 - If your plugin serves multiple database types, implement `additionalDatabaseTypeIds` on your `DriverPlugin` conformance.
 - Make sure the plugin isn't disabled. Check `UserDefaults` key `disabledPlugins` or the Plugins preference pane.
+
+### "Plugin 'X' conforms to DriverPlugin but does not declare .databaseDriver capability"
+
+This is a warning, not an error. The plugin still registers and works, but it indicates a misconfiguration.
+
+**Fix:**
+- Add `.databaseDriver` to your plugin's `capabilities` array:
+  ```swift
+  static let capabilities: [PluginCapability] = [.databaseDriver]
+  ```
+
+### "Plugin 'X' declares .databaseDriver but does not conform to DriverPlugin"
+
+The plugin declares a capability it doesn't implement.
+
+**Fix:**
+- Either conform to `DriverPlugin` or remove `.databaseDriver` from the `capabilities` array.
 
 ### Connection fails immediately after plugin loads
 

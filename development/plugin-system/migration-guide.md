@@ -48,9 +48,12 @@ public protocol TableProPlugin: AnyObject {
     static var pluginVersion: String { get }
     static var pluginDescription: String { get }
     static var capabilities: [PluginCapability] { get }
+    static var dependencies: [String] { get }  // default: []
     init()
 }
 ```
+
+`dependencies` contains bundle identifiers of required plugins. Defaults to `[]`. Validated at load time (warnings logged for missing/disabled deps).
 
 **`DriverPlugin`** - entry point for database driver plugins:
 
