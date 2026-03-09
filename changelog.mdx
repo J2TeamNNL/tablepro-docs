@@ -4,6 +4,28 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="March 9, 2026" description="v0.16.0">
+  ### New Features
+
+  - **Plugin System**: All 8 database drivers and 5 export formats extracted into `.tableplugin` bundles loaded at runtime — enables third-party plugins
+  - **Plugin Marketplace**: Browse, search, and install plugins from the GitHub-hosted registry with checksum verification
+  - **Settings > Plugins**: Manage installed plugins — enable/disable, install from file or marketplace, view details
+  - **ClickHouse Support**: Query ClickHouse databases with progress tracking, EXPLAIN variants, TLS/HTTPS, server-side cancellation, and Parts view
+  - **Startup Commands**: Run custom SQL after connecting (e.g., `SET time_zone`) via Connection > Advanced tab
+  - **Chinese Simplified Localization**: Full zh-Hans translation for the entire app UI
+
+  ### Improvements
+
+  - Reduced memory by ~80-130 MB per connection: eliminated dedicated ping driver, lazy plugin loading, RowBuffer deduplication, metadata driver consolidation
+  - Consolidated per-editor NSEvent monitors into shared singleton (O(n) to O(1) per event)
+  - Reorganized project into domain-specific subdirectories
+
+  ### Bug Fixes
+
+  - Fixed inspector separator bleeding into toolbar area with default connection color
+  - Fixed inspector toggle lagging due to synchronous UserDefaults writes during animation
+</Update>
+
 <Update label="March 8, 2026" description="v0.15.0">
   ### New Features
 

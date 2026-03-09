@@ -4,6 +4,28 @@ description: "Cập nhật sản phẩm và thông báo cho TablePro"
 rss: true
 ---
 
+<Update label="9 tháng 3, 2026" description="v0.16.0">
+  ### Tính năng mới
+
+  - **Hệ thống Plugin**: Tất cả 8 trình điều khiển cơ sở dữ liệu và 5 định dạng xuất được tách thành gói `.tableplugin` tải lúc chạy — hỗ trợ plugin bên thứ ba
+  - **Chợ Plugin**: Duyệt, tìm kiếm và cài đặt plugin từ registry trên GitHub với xác minh checksum
+  - **Cài đặt > Plugin**: Quản lý plugin đã cài — bật/tắt, cài từ tập tin hoặc chợ, xem chi tiết
+  - **Hỗ trợ ClickHouse**: Truy vấn cơ sở dữ liệu ClickHouse với theo dõi tiến độ, EXPLAIN variants, TLS/HTTPS, huỷ phía server và xem Parts
+  - **Lệnh khởi động**: Chạy SQL tuỳ chỉnh sau khi kết nối (ví dụ `SET time_zone`) qua Connection > Advanced
+  - **Bản địa hoá Tiếng Trung Giản thể**: Dịch toàn bộ giao diện ứng dụng sang zh-Hans
+
+  ### Cải tiến
+
+  - Giảm bộ nhớ ~80-130 MB mỗi kết nối: loại bỏ driver ping riêng, tải plugin lười, loại bỏ trùng lặp RowBuffer, gộp metadata driver
+  - Gộp NSEvent monitor theo editor thành singleton chia sẻ (O(n) thành O(1) mỗi sự kiện)
+  - Tổ chức lại dự án thành thư mục con theo miền
+
+  ### Sửa lỗi
+
+  - Sửa lỗi đường phân cách inspector tràn vào vùng toolbar với màu kết nối mặc định
+  - Sửa lỗi nút bật/tắt inspector bị lag do ghi UserDefaults đồng bộ trong animation
+</Update>
+
 <Update label="8 tháng 3, 2026" description="v0.15.0">
   ### Tính năng mới
 
