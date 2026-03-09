@@ -306,6 +306,23 @@ Cho bảng hàng triệu dòng:
 
 2. Theo dõi thời gian thực thi trong bảng kết quả
 
+## Lệnh Khởi động
+
+Đặt biến phiên tự động áp dụng mỗi khi kết nối. Cấu hình trong tab **Advanced** của form kết nối.
+
+Lệnh khởi động MySQL thường dùng:
+
+```sql
+SET time_zone = '+00:00';
+SET NAMES utf8mb4;
+SET sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_DATE';
+SET group_concat_max_len = 1000000;
+```
+
+Ví dụ: đặt `time_zone` giúp mọi truy vấn `DATETIME` và `TIMESTAMP` trả kết quả theo UTC, bất kể timezone cấu hình trên server. Đặc biệt hữu ích khi application server và database server ở các múi giờ khác nhau.
+
+Xem [Lệnh Khởi động](/vi/databases/overview#lệnh-khởi-động) để biết thêm chi tiết.
+
 ## Bộ ký tự
 
 TablePro mặc định UTF-8 (utf8mb4) cho kết nối MySQL, xử lý đúng ký tự quốc tế, emoji và ký hiệu đặc biệt.

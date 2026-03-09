@@ -306,6 +306,23 @@ For tables with millions of rows:
 
 2. Monitor query execution time in the results panel
 
+## Startup Commands
+
+Set session variables that apply automatically on every connection. Configure these in the **Advanced** tab of the connection form.
+
+Typical MySQL startup commands:
+
+```sql
+SET time_zone = '+00:00';
+SET NAMES utf8mb4;
+SET sql_mode = 'STRICT_TRANS_TABLES,NO_ZERO_DATE';
+SET group_concat_max_len = 1000000;
+```
+
+For example, setting `time_zone` ensures all `DATETIME` and `TIMESTAMP` queries return results in UTC regardless of the server's configured timezone. This is especially useful when your application servers and database server are in different timezones.
+
+See [Startup Commands](/databases/overview#startup-commands) for more details.
+
 ## Character Sets
 
 TablePro defaults to UTF-8 (utf8mb4) for MySQL connections, which handles international characters, emoji, and special symbols correctly.

@@ -471,6 +471,32 @@ SQLite dạng file, không cần giám sát sức khỏe hay tự động kết 
   />
 </Frame>
 
+## Lệnh Khởi động
+
+Lệnh khởi động là các câu lệnh SQL tự động chạy mỗi khi kết nối được thiết lập. Dùng để đặt biến phiên, cấu hình timezone, thay đổi encoding hoặc thiết lập các tùy chọn cấp phiên khác.
+
+Cấu hình lệnh khởi động trong tab **Advanced** của form kết nối. Nhập mỗi câu lệnh SQL trên một dòng.
+
+### Ví dụ Phổ biến
+
+```sql
+SET time_zone = '+00:00';
+SET NAMES utf8mb4;
+SET sql_mode = 'STRICT_TRANS_TABLES';
+SET search_path TO myschema, public;
+SET statement_timeout = '30s';
+```
+
+Lệnh khởi động thực thi theo thứ tự từ trên xuống dưới. Nếu một lệnh thất bại, kết nối vẫn tiếp tục nhưng lệnh lỗi sẽ bị bỏ qua.
+
+<Tip>
+Lệnh khởi động hữu ích để đảm bảo cài đặt phiên thống nhất giữa các thành viên trong nhóm. Ví dụ: đặt timezone cụ thể giúp mọi truy vấn datetime trả kết quả cùng múi giờ, bất kể cài đặt mặc định của server.
+</Tip>
+
+<Note>
+Lệnh khởi động chạy mỗi lần kết nối, kể cả khi tự động kết nối lại. Lệnh phải đúng cú pháp của loại database: dùng cú pháp MySQL cho kết nối MySQL, PostgreSQL cho PostgreSQL, v.v.
+</Note>
+
 ## Chỉnh sửa Kết nối
 
 Sửa kết nối hiện có:
