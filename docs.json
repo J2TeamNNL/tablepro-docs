@@ -61,7 +61,8 @@
                   "features/query-history",
                   "features/ai-chat",
                   "features/keyboard-shortcuts",
-                  "features/deep-links"
+                  "features/deep-links",
+                  "features/safe-mode"
                 ]
               },
               {
@@ -152,7 +153,8 @@
                   "vi/features/query-history",
                   "vi/features/ai-chat",
                   "vi/features/keyboard-shortcuts",
-                  "vi/features/deep-links"
+                  "vi/features/deep-links",
+                  "vi/features/safe-mode"
                 ]
               },
               {
