@@ -32,12 +32,15 @@ Each entry matches the `RegistryPlugin` model:
 | `homepage` | `string` | No | Project URL |
 | `category` | `string` | Yes | One of: `database-driver`, `export-format`, `import-format`, `theme`, `other` |
 | `databaseTypeIds` | `[string]` | No | Maps to `DatabaseType.pluginTypeId` values. Used for auto-install prompts. |
-| `downloadURL` | `string` | Yes | Direct URL to the `.zip` file |
-| `sha256` | `string` | Yes | SHA-256 hex digest of the ZIP file |
+| `downloadURL` | `string` | No* | Direct URL to the `.zip` file |
+| `sha256` | `string` | No* | SHA-256 hex digest of the ZIP file |
+| `binaries` | `[object]` | No | Per-architecture binaries: `[{ "architecture": "arm64"\|"x86_64", "downloadURL": "...", "sha256": "..." }]` |
 | `minAppVersion` | `string` | No | Minimum TablePro version (e.g., `"0.17.0"`) |
 | `minPluginKitVersion` | `int` | No | Minimum PluginKit version (currently `1`) |
 | `iconName` | `string` | No | SF Symbol name for display |
 | `isVerified` | `bool` | Yes | Whether the plugin is verified by the TablePro team |
+
+\* Either `downloadURL`/`sha256` (flat fields) or `binaries` array is required. If `binaries` is present, the app picks the matching architecture. Flat fields serve as fallback for older app versions.
 
 ## Oracle and ClickHouse Entries
 
@@ -58,6 +61,10 @@ These two database drivers ship as downloadable plugins instead of being bundled
   "databaseTypeIds": ["Oracle"],
   "downloadURL": "https://github.com/datlechin/TablePro/releases/download/plugin-oracle-v1.0.0/OracleDriver-arm64.zip",
   "sha256": "<sha256-of-zip>",
+  "binaries": [
+    { "architecture": "arm64", "downloadURL": "https://github.com/datlechin/TablePro/releases/download/plugin-oracle-v1.0.0/OracleDriver-arm64.zip", "sha256": "<sha256-of-zip>" },
+    { "architecture": "x86_64", "downloadURL": "https://github.com/datlechin/TablePro/releases/download/plugin-oracle-v1.0.0/OracleDriver-x86_64.zip", "sha256": "<sha256-of-zip>" }
+  ],
   "minAppVersion": "0.17.0",
   "minPluginKitVersion": 1,
   "iconName": "server.rack",
@@ -80,6 +87,10 @@ These two database drivers ship as downloadable plugins instead of being bundled
   "databaseTypeIds": ["ClickHouse"],
   "downloadURL": "https://github.com/datlechin/TablePro/releases/download/plugin-clickhouse-v1.0.0/ClickHouseDriver-arm64.zip",
   "sha256": "<sha256-of-zip>",
+  "binaries": [
+    { "architecture": "arm64", "downloadURL": "https://github.com/datlechin/TablePro/releases/download/plugin-clickhouse-v1.0.0/ClickHouseDriver-arm64.zip", "sha256": "<sha256-of-zip>" },
+    { "architecture": "x86_64", "downloadURL": "https://github.com/datlechin/TablePro/releases/download/plugin-clickhouse-v1.0.0/ClickHouseDriver-x86_64.zip", "sha256": "<sha256-of-zip>" }
+  ],
   "minAppVersion": "0.17.0",
   "minPluginKitVersion": 1,
   "iconName": "chart.bar.xaxis",
@@ -87,7 +98,7 @@ These two database drivers ship as downloadable plugins instead of being bundled
 }
 ```
 
-Replace `<sha256-of-zip>` with the actual SHA-256 output from `build-plugin.sh`. You need one entry per architecture, or a universal ZIP.
+Replace `<sha256-of-zip>` with the actual SHA-256 output from `build-plugin.sh`. The `binaries` array provides per-architecture downloads; `downloadURL`/`sha256` flat fields point to arm64 as fallback for older app versions.
 
 ## databaseTypeIds Mapping
 
@@ -107,10 +118,8 @@ The `databaseTypeIds` field maps registry entries to `DatabaseType.pluginTypeId`
 ## Publishing a Plugin Release
 
 1. Tag the commit: `git tag plugin-oracle-v1.0.0 && git push --tags`
-2. The `build-plugin.yml` CI workflow builds, signs, and creates a GitHub release with ZIP artifacts
-3. Copy the SHA-256 from the build output
-4. Add or update the entry in `plugins.json` on the [TableProApp/plugins](https://github.com/TableProApp/plugins) repo
-5. The app fetches the updated manifest on next **Browse** visit (with ETag caching)
+2. The `build-plugin.yml` CI workflow builds both architectures (arm64 + x86_64), signs, creates a GitHub release with ZIP artifacts, and automatically updates the plugin registry with a `binaries` array
+3. The app fetches the updated manifest on next **Browse** visit (with ETag caching)
 
 ## Auto-Install Flow
 
