@@ -98,7 +98,8 @@
                   "development/setup",
                   "development/architecture",
                   "development/code-style",
-                  "development/building"
+                  "development/building",
+                  "development/plugin-registry"
                 ]
               }
             ]
@@ -194,7 +195,8 @@
                   "vi/development/setup",
                   "vi/development/architecture",
                   "vi/development/code-style",
-                  "vi/development/building"
+                  "vi/development/building",
+                  "vi/development/plugin-registry"
                 ]
               }
             ]
