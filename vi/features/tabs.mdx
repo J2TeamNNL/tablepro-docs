@@ -63,6 +63,21 @@ Khi click bảng trong sidebar:
 
 Bật **Tái sử dụng tab bảng sạch** trong **Cài đặt** > **Tab** để có hành vi giống TablePlus: click bảng khác sẽ thay thế tab bảng hiện tại nếu không có thay đổi chưa lưu, không có tương tác người dùng (sắp xếp, lọc, v.v.) và không bị ghim. Giữ thanh tab gọn mà vẫn bảo vệ công việc.
 
+### Tab Xem Trước
+
+Tab xem trước giảm lộn xộn tab khi duyệt bảng. Click đơn bảng trong sidebar mở tab tạm thời, sẽ bị thay thế khi click bảng khác. Tương tự tab xem trước của VS Code.
+
+Tab xem trước được chỉ báo bằng "Preview" trong subtitle cửa sổ. Chúng trở thành tab cố định khi:
+
+- **Click đúp** bảng trong sidebar
+- **Tương tác** với tab (sắp xếp, lọc, chỉnh sửa, chọn hàng)
+
+Tab xem trước không được lưu qua các lần khởi động lại.
+
+<Tip>
+Tắt tab xem trước trong **Settings** > **Tabs** nếu muốn mỗi click đều mở tab cố định.
+</Tip>
+
 {/* Screenshot: Các loại tab khác nhau: Truy vấn và Bảng */}
 <Frame caption="Các loại tab khác nhau: Truy vấn và Bảng">
   <img
@@ -228,6 +243,7 @@ Tab tồn tại qua các lần khởi động lại ứng dụng.
 | Loại tab | Hàng đã chọn |
 | Tên bảng | Trạng thái sắp xếp và filter |
 | Trạng thái ghim | Thời gian thực thi |
+| -- | Trạng thái tab xem trước (tab xem trước bị loại bỏ) |
 
 ### Cách Hoạt Động
 

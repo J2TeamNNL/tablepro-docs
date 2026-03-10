@@ -63,6 +63,21 @@ When you click a table in the sidebar:
 
 You can enable **Reuse clean table tab** in **Settings** > **Tabs** for TablePlus-style behavior: clicking a different table replaces the current table tab if it has no unsaved changes, no user interaction (sorting, filtering, etc.), and is not pinned. This keeps the tab bar clean while protecting your work.
 
+### Preview Tabs
+
+Preview tabs reduce tab clutter when browsing tables. Single-clicking a table in the sidebar opens a temporary tab that gets replaced when you click a different table. This is similar to VS Code's preview tabs.
+
+Preview tabs are indicated by "Preview" in the window subtitle. They become permanent when you:
+
+- **Double-click** a table in the sidebar
+- **Interact** with the tab (sort, filter, edit data, select rows)
+
+Preview tabs are not saved across app restarts.
+
+<Tip>
+Disable preview tabs in **Settings** > **Tabs** if you prefer every click to open a permanent tab.
+</Tip>
+
 {/* Screenshot: Different tab types: Query and Table */}
 <Frame caption="Different tab types: Query and Table">
   <img
@@ -228,6 +243,7 @@ Tabs persist across app restarts.
 | Tab type | Selected rows |
 | Table name | Sort and filter state |
 | Pin state | Execution time |
+| -- | Preview tab state (preview tabs are discarded) |
 
 ### How Persistence Works
 
