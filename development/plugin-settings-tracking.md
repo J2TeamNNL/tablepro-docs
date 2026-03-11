@@ -7,7 +7,7 @@ Analysis date: 2026-03-11 (updated).
 The plugin settings system has two dimensions:
 
 1. **Plugin management** (Settings > Plugins) — enable/disable, install/uninstall. Fully working.
-2. **Per-plugin configuration** — export plugins expose `optionsView()` with persistent settings via `PluginSettingsStorage`. Import plugin (SQL) has options UI but no persistence. Driver plugins have zero configurable settings.
+2. **Per-plugin configuration** — plugins conforming to `SettablePlugin` protocol get automatic persistence via `loadSettings()`/`saveSettings()` and expose `settingsView()` via the `SettablePluginDiscoverable` type-erased witness. All 5 export plugins and 1 import plugin use this pattern. Driver plugins have zero configurable settings but can adopt `SettablePlugin` when needed.
 
 Plugin enable/disable state lives in `UserDefaults["com.TablePro.disabledPlugins"]` (namespaced, with legacy key migration).
 
@@ -40,7 +40,7 @@ Plugin enable/disable state lives in `UserDefaults["com.TablePro.disabledPlugins
 | SQL    | `SQLExportOptions` — gzip, batch size                                                                       | `SQLExportOptionsView`  | `PluginSettingsStorage` (persisted)  | Done   |
 | MQL    | `MQLExportOptions`                                                                                          | `MQLExportOptionsView`  | `PluginSettingsStorage` (persisted)  | Done   |
 
-All export plugins use `PluginSettingsStorage(pluginId:)` which stores options in `UserDefaults` keyed as `com.TablePro.plugin.<id>.settings`, encoded via `JSONEncoder`.
+All export plugins conform to `SettablePlugin` which provides automatic `loadSettings()`/`saveSettings()` backed by `PluginSettingsStorage(pluginId:)`. Options are stored in `UserDefaults` keyed as `com.TablePro.plugin.<id>.settings`, encoded via `JSONEncoder`.
 
 ### Import Plugins
 
@@ -50,7 +50,7 @@ All export plugins use `PluginSettingsStorage(pluginId:)` which stores options i
 
 ### Driver Plugins
 
-All 8 driver plugins have zero per-plugin settings. No `optionsView()`, no configuration struct.
+All 8 driver plugins have zero per-plugin settings. They can adopt `SettablePlugin` when settings are needed.
 
 ---
 
@@ -68,7 +68,7 @@ None — previously tracked medium-priority issues have been resolved.
 
 | Issue                        | Description                                                                                                    | Impact                                        |
 | ---------------------------- | -------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| No settings protocol in SDK  | `TableProPluginKit` has no `PluginSettingsProtocol` for plugins to declare persistent preferences              | Third-party plugins can't define settings     |
+| _(none)_                     | All previously tracked low-priority issues have been resolved                                                   |                                               |
 
 ### Resolved (since initial analysis)
 
@@ -81,6 +81,7 @@ None — previously tracked medium-priority issues have been resolved.
 | SQL import options not persisted             | `SQLImportOptions` converted to `Codable` struct with `PluginSettingsStorage` persistence               |
 | `additionalConnectionFields` hardcoded       | Connection form Advanced tab now dynamically renders fields from `DriverPlugin.additionalConnectionFields` with `ConnectionField.FieldType` support (text, secure, dropdown) |
 | No driver plugin settings UI                 | `DriverPlugin.settingsView()` protocol method added with `nil` default; rendered in InstalledPluginsView |
+| No settings protocol in SDK                  | `SettablePlugin` protocol added to `TableProPluginKit` with `loadSettings()`/`saveSettings()` and `SettablePluginDiscoverable` type-erased witness; all 6 plugins migrated |
 | Hardcoded registry URL                       | `RegistryClient` now reads custom URL from UserDefaults with ETag invalidation on URL change            |
 | `needsRestart` not persisted                 | Backed by UserDefaults, cleared on next plugin load cycle                                               |
 
@@ -88,21 +89,11 @@ None — previously tracked medium-priority issues have been resolved.
 
 ## Recommended Next Steps
 
-### Step 1 — Persist SQL import options
+Steps 1-3 have been completed. All plugins with settings now use the `SettablePlugin` protocol.
 
-- Add `Codable` conformance to `SQLImportOptions`
-- Add `PluginSettingsStorage` integration (same pattern as export plugins)
+### Future — Driver plugin settings
 
-### Step 2 — Dynamic connection fields rendering
-
-- Refactor `ConnectionFormView` Advanced tab to iterate `additionalConnectionFields` from `DriverPlugin` instead of hardcoding per-database sections
-- Removes need for form changes when a plugin adds new fields
-
-### Step 3 — Plugin settings protocol (SDK v2)
-
-- Add `PluginSettingsProtocol` to `TableProPluginKit` with `settingsView() -> AnyView?` and `persistSettings()`/`loadSettings()`
-- Render in Settings > Plugins detail expansion for plugins that implement it
-- Driver plugins can then expose timeout, SSL, query behavior settings
+- When driver plugins need per-plugin configuration (timeout, SSL, query behavior), they can adopt `SettablePlugin` using the same pattern as export/import plugins
 
 ---
 
@@ -123,6 +114,7 @@ None — previously tracked medium-priority issues have been resolved.
 | Download count service         | `TablePro/Core/Plugins/Registry/DownloadCountService.swift`      |
 | Plugin models                  | `TablePro/Core/Plugins/PluginModels.swift`                       |
 | Plugin settings storage        | `Plugins/TableProPluginKit/PluginSettingsStorage.swift`          |
+| SDK — settable protocol        | `Plugins/TableProPluginKit/SettablePlugin.swift`                 |
 | Connection install prompt      | `TablePro/Views/Connection/PluginInstallModifier.swift`          |
 | SDK — base protocol            | `Plugins/TableProPluginKit/TableProPlugin.swift`                 |
 | SDK — driver protocol          | `Plugins/TableProPluginKit/DriverPlugin.swift`                   |
