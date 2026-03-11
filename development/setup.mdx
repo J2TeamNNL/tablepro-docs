@@ -22,32 +22,39 @@ description: Clone, build, and run TablePro locally with Xcode 15+, SwiftLint, a
 | **SwiftLint** | Code linting |
 | **SwiftFormat** | Code formatting |
 | **Homebrew** | Package management |
+| **Git LFS** | Pulls pre-built native libraries from `Libs/` |
 
 ## Getting Started
 
-### Step 1: Clone the Repository
+### Step 1: Clone and Bootstrap
 
 ```bash
 git clone https://github.com/datlechin/tablepro.git
 cd tablepro
-```
 
-### Step 2: Install Development Tools
+# Pull native libraries (stored in Git LFS)
+brew install git-lfs
+git lfs install
+git lfs pull
 
-```bash
-# Using Homebrew
+# Create required build config (empty is fine for development)
+touch Secrets.xcconfig
+
+# Install linting/formatting tools
 brew install swiftlint swiftformat
 ```
 
-### Step 3: Open in Xcode
+<Warning>
+Skipping `git lfs pull` leaves `Libs/` with pointer files instead of binaries, causing linker errors.
+</Warning>
+
+### Step 2: Open in Xcode
 
 ```bash
 open TablePro.xcodeproj
 ```
 
-Or open Xcode manually: **File** > **Open** > navigate to `TablePro.xcodeproj`.
-
-### Step 4: Build and Run
+### Step 3: Build and Run
 
 1. Select the **TablePro** scheme
 2. Select **My Mac** as the destination
@@ -308,13 +315,9 @@ logger.error("Failed to connect: \(error.localizedDescription)")
 3. Fix the issue or disable the rule if appropriate
 4. Run `swiftlint --fix` for auto-fixable issues
 
-### Missing Libraries
+### Missing Libraries or Secrets.xcconfig
 
-If native libraries are missing:
-
-1. Check the `Libs/` directory
-2. Verify `libmariadb_universal.a` exists
-3. Run `scripts/build-release.sh` to prepare libraries
+Run `git lfs pull` and `touch Secrets.xcconfig` at the repo root. See [Step 1](#step-1-clone-and-bootstrap).
 
 ## Next Steps
 

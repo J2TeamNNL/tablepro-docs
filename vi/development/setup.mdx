@@ -22,32 +22,39 @@ description: Clone, build và chạy TablePro cục bộ với Xcode 15+, SwiftL
 | **SwiftLint** | Code linting |
 | **SwiftFormat** | Code formatting |
 | **Homebrew** | Quản lý package |
+| **Git LFS** | Pull thư viện native từ `Libs/` |
 
 ## Bắt đầu
 
-### Bước 1: Clone Repository
+### Bước 1: Clone và Bootstrap
 
 ```bash
 git clone https://github.com/datlechin/tablepro.git
 cd tablepro
-```
 
-### Bước 2: Cài đặt Development Tools
+# Pull thư viện native (lưu trong Git LFS)
+brew install git-lfs
+git lfs install
+git lfs pull
 
-```bash
-# Dùng Homebrew
+# Tạo file config bắt buộc (file trống đủ cho phát triển)
+touch Secrets.xcconfig
+
+# Cài đặt công cụ lint/format
 brew install swiftlint swiftformat
 ```
 
-### Bước 3: Mở trong Xcode
+<Warning>
+Bỏ qua `git lfs pull` sẽ khiến `Libs/` chứa file con trỏ thay vì binary, gây lỗi linker.
+</Warning>
+
+### Bước 2: Mở trong Xcode
 
 ```bash
 open TablePro.xcodeproj
 ```
 
-Hoặc mở Xcode thủ công: **File** > **Open** > điều hướng đến `TablePro.xcodeproj`.
-
-### Bước 4: Build và Run
+### Bước 3: Build và Run
 
 1. Chọn scheme **TablePro**
 2. Chọn **My Mac** làm destination
@@ -308,11 +315,9 @@ logger.error("Failed to connect: \(error.localizedDescription)")
 3. Sửa vấn đề hoặc disable rule nếu phù hợp
 4. Chạy `swiftlint --fix` cho vấn đề auto-fix được
 
-### Thư viện bị thiếu
+### Thiếu thư viện hoặc Secrets.xcconfig
 
-1. Kiểm tra thư mục `Libs/`
-2. Xác minh `libmariadb_universal.a` tồn tại
-3. Chạy `scripts/build-release.sh` để chuẩn bị thư viện
+Chạy `git lfs pull` và `touch Secrets.xcconfig` tại thư mục gốc. Xem [Bước 1](#bước-1-clone-và-bootstrap).
 
 ## Bước tiếp theo
 
