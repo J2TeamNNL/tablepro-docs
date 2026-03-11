@@ -4,6 +4,38 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="March 11, 2026" description="v0.17.0">
+  ### New Features
+
+  - **DuckDB Support**: Connect to `.duckdb` files, query CSV/Parquet/JSON files via SQL, schema navigation, and extension management
+  - **MongoDB Auth Database**: Configure `authSource` to authenticate against any database instead of the default `admin`
+  - **Safe Mode Levels**: 6 per-connection levels (Silent, Alert, Alert Full, Safe Mode, Safe Mode Full, Read-Only) replacing the boolean read-only toggle, with confirmation dialogs and Touch ID/password authentication
+  - **Preview Tabs**: Single-click opens a temporary preview tab, double-click or editing promotes it to a permanent tab
+  - **Import Plugin System**: SQL import extracted into a `.tableplugin` bundle with support for `.sql` and `.gz` compressed files
+  - **Open SQLite from Finder**: Double-click `.sqlite`, `.sqlite3`, `.db3`, `.s3db`, `.sl3`, and `.sqlitedb` files to open them directly
+  - **Plugin Install Prompt**: Automatic prompt to install missing driver plugins when connecting to an unsupported database type
+
+  ### Improvements
+
+  - Oracle and ClickHouse shipped as downloadable plugins, reducing app bundle size
+  - SQLite driver extracted from built-in bundle to downloadable plugin
+  - Export plugin options (CSV, XLSX, JSON, SQL, MQL) now persist across app restarts
+  - Plugins can declare settings views rendered in Settings > Plugins
+  - True prepared statements for MSSQL and ClickHouse, eliminating string interpolation
+  - Batch query operations for MSSQL, Oracle, ClickHouse, and SQLite, eliminating N+1 patterns
+  - Unified error formatting and localized error messages across all database drivers
+  - Standardized parameter binding with type-aware numeric handling and NULL literal support
+
+  ### Bug Fixes
+
+  - Fixed MongoDB Read Preference, Write Concern, and Redis Database not persisting across app restarts
+  - Fixed DELETE and UPDATE queries using all columns in WHERE clause instead of primary key for PostgreSQL, Redshift, MSSQL, and ClickHouse
+  - Fixed SSL/TLS always being enabled for MongoDB, Redis, and ClickHouse connections
+  - Fixed Redis sidebar click showing data briefly then going empty
+  - Fixed MongoDB showing "Invalid database name" when connecting without a database name
+  - Fixed result truncation at 100K rows being silently discarded instead of reported to UI
+</Update>
+
 <Update label="March 9, 2026" description="v0.16.1">
   ### Bug Fixes
 

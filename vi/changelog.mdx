@@ -4,6 +4,38 @@ description: "Cập nhật sản phẩm và thông báo cho TablePro"
 rss: true
 ---
 
+<Update label="11 tháng 3, 2026" description="v0.17.0">
+  ### Tính năng mới
+
+  - **Hỗ trợ DuckDB**: Kết nối tới tập tin `.duckdb`, truy vấn CSV/Parquet/JSON qua SQL, điều hướng schema và quản lý extension
+  - **MongoDB Auth Database**: Cấu hình `authSource` để xác thực với bất kỳ cơ sở dữ liệu nào thay vì mặc định `admin`
+  - **Chế độ an toàn**: 6 cấp độ cho mỗi kết nối (Silent, Alert, Alert Full, Safe Mode, Safe Mode Full, Read-Only) thay thế nút bật/tắt chỉ đọc, với hộp thoại xác nhận và xác thực Touch ID/mật khẩu
+  - **Tab xem trước**: Nhấp một lần mở tab xem trước tạm thời, nhấp đúp hoặc chỉnh sửa chuyển thành tab cố định
+  - **Hệ thống plugin nhập**: SQL import được tách thành gói `.tableplugin` với hỗ trợ tập tin `.sql` và `.gz` nén
+  - **Mở SQLite từ Finder**: Nhấp đúp tập tin `.sqlite`, `.sqlite3`, `.db3`, `.s3db`, `.sl3` và `.sqlitedb` để mở trực tiếp
+  - **Nhắc cài đặt plugin**: Tự động nhắc cài đặt plugin driver khi kết nối tới loại cơ sở dữ liệu chưa có plugin
+
+  ### Cải tiến
+
+  - Oracle và ClickHouse chuyển thành plugin tải xuống, giảm kích thước ứng dụng
+  - Trình điều khiển SQLite tách từ gói tích hợp thành plugin tải xuống
+  - Tuỳ chọn plugin xuất (CSV, XLSX, JSON, SQL, MQL) được lưu giữ qua các lần khởi động lại
+  - Plugin có thể khai báo giao diện cài đặt hiển thị trong Cài đặt > Plugin
+  - Prepared statements thực sự cho MSSQL và ClickHouse, loại bỏ nội suy chuỗi
+  - Truy vấn hàng loạt cho MSSQL, Oracle, ClickHouse và SQLite, loại bỏ mẫu N+1
+  - Định dạng lỗi thống nhất và thông báo lỗi bản địa hoá cho tất cả trình điều khiển
+  - Ràng buộc tham số chuẩn hoá với xử lý số theo kiểu và hỗ trợ NULL literal
+
+  ### Sửa lỗi
+
+  - Sửa lỗi MongoDB Read Preference, Write Concern và Redis Database không lưu giữ qua các lần khởi động lại
+  - Sửa lỗi truy vấn DELETE và UPDATE dùng tất cả cột trong WHERE thay vì chỉ khoá chính cho PostgreSQL, Redshift, MSSQL và ClickHouse
+  - Sửa lỗi SSL/TLS luôn bật cho kết nối MongoDB, Redis và ClickHouse
+  - Sửa lỗi thanh bên Redis hiển thị dữ liệu rồi trống ngay sau khi nhấp
+  - Sửa lỗi MongoDB hiển thị "Invalid database name" khi kết nối không có tên cơ sở dữ liệu
+  - Sửa lỗi cắt ngắn kết quả tại 100K hàng bị bỏ qua thay vì báo cho giao diện
+</Update>
+
 <Update label="9 tháng 3, 2026" description="v0.16.1">
   ### Sửa lỗi
 
