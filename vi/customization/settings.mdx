@@ -374,7 +374,7 @@ Mỗi plugin có nút bật/tắt. Plugin bị tắt sẽ ẩn loại database k
 
 ### Chi tiết Plugin
 
-Click vào plugin để xem chi tiết: phiên bản, bundle ID, khả năng hỗ trợ, loại database và cổng mặc định.
+Click vào plugin để xem chi tiết: phiên bản, bundle ID, khả năng hỗ trợ, loại database và cổng mặc định. Driver plugin có thể cung cấp panel cài đặt tùy chỉnh riêng, hiển thị trong phần chi tiết plugin.
 
 ### Cài đặt Plugin Bên thứ ba
 
@@ -389,6 +389,15 @@ Chỉ cài plugin từ nguồn đáng tin cậy. TablePro kiểm tra chữ ký m
 ### Gỡ cài đặt Plugin
 
 Plugin do người dùng cài hiện nút **Uninstall** trong chi tiết plugin. Plugin tích hợp sẵn không thể gỡ, chỉ có thể tắt.
+
+### Cài Đặt Nâng Cao
+
+Một số cài đặt có sẵn qua `defaults write` cho người dùng nâng cao:
+
+| Cài đặt | Lệnh | Mô tả |
+|---------|------|-------|
+| Registry plugin tùy chỉnh | `defaults write com.TablePro com.TablePro.customRegistryURL <url>` | Sử dụng registry plugin riêng |
+| Xóa registry tùy chỉnh | `defaults delete com.TablePro com.TablePro.customRegistryURL` | Quay lại registry mặc định |
 
 ## Cài đặt Giấy phép
 

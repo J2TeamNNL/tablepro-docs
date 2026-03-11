@@ -373,6 +373,10 @@ TablePro import file **SQL** (`.sql` và `.sql.gz`). Câu lệnh chạy trực t
 Bọc trong transaction đảm bảo nếu câu lệnh nào lỗi, tất cả thay đổi rollback, giữ database nhất quán.
 </Tip>
 
+<Tip>
+Các tùy chọn import (gói trong transaction, tắt kiểm tra foreign key) được lưu lại giữa các lần khởi động ứng dụng. Chỉ cần thay đổi một lần.
+</Tip>
+
 ### Xem Trước SQL
 
 Trước khi import, hộp thoại hiển thị:

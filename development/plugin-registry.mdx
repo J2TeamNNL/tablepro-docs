@@ -100,6 +100,22 @@ These two database drivers ship as downloadable plugins instead of being bundled
 
 Replace `<sha256-of-zip>` with the actual SHA-256 output from `build-plugin.sh`. The `binaries` array provides per-architecture downloads; `downloadURL`/`sha256` flat fields point to arm64 as fallback for older app versions.
 
+## Custom Registry URL
+
+For enterprise or private plugin registries, you can override the default registry URL:
+
+```bash
+defaults write com.TablePro com.TablePro.customRegistryURL "https://your-registry.example.com/plugins.json"
+```
+
+To revert to the default registry:
+
+```bash
+defaults delete com.TablePro com.TablePro.customRegistryURL
+```
+
+The app invalidates its ETag cache when the registry URL changes, forcing a fresh fetch on the next Browse visit.
+
 ## databaseTypeIds Mapping
 
 The `databaseTypeIds` field maps registry entries to `DatabaseType.pluginTypeId` values. This is how the app knows which registry plugin to install when a user selects a database type that has no loaded driver.

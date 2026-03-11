@@ -376,7 +376,7 @@ Each plugin has a toggle to enable or disable it. Disabled plugins hide their da
 
 ### Plugin Details
 
-Click a plugin to view its details: version, bundle ID, supported capabilities, database type, and default port.
+Click a plugin to view its details: version, bundle ID, supported capabilities, database type, and default port. Driver plugins can provide custom settings panels that appear in this detail view.
 
 ### Installing Third-Party Plugins
 
@@ -391,6 +391,15 @@ Only install plugins from sources you trust. TablePro checks the code signature 
 ### Uninstalling Plugins
 
 User-installed plugins show an **Uninstall** button in the plugin details view. Built-in plugins cannot be uninstalled, only disabled.
+
+### Advanced Settings
+
+Some settings are available via `defaults write` for advanced users:
+
+| Setting | Command | Description |
+|---------|---------|-------------|
+| Custom plugin registry | `defaults write com.TablePro com.TablePro.customRegistryURL <url>` | Use a private plugin registry |
+| Clear custom registry | `defaults delete com.TablePro com.TablePro.customRegistryURL` | Revert to default registry |
 
 ## License Settings
 

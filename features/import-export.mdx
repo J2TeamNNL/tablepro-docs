@@ -373,6 +373,10 @@ TablePro imports **SQL files** (`.sql` and `.sql.gz`). Statements execute direct
 Wrapping in a transaction ensures that if any statement fails, all changes roll back, leaving your database in a consistent state.
 </Tip>
 
+<Tip>
+Import options (wrap in transaction, disable foreign key checks) persist across app launches. Change them once and they stick.
+</Tip>
+
 ### SQL Preview
 
 Before running the import, the dialog shows:

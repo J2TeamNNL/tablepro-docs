@@ -100,6 +100,22 @@ Hai database driver này được phân phối dưới dạng plugin tải về 
 
 Thay `<sha256-cua-zip>` bằng SHA-256 thực tế từ output của `build-plugin.sh`. Mảng `binaries` cung cấp tải về theo kiến trúc; trường phẳng `downloadURL`/`sha256` trỏ đến arm64 làm fallback cho phiên bản ứng dụng cũ.
 
+## URL Registry Tùy Chỉnh
+
+Đối với registry plugin riêng hoặc doanh nghiệp, bạn có thể thay đổi URL registry mặc định:
+
+```bash
+defaults write com.TablePro com.TablePro.customRegistryURL "https://your-registry.example.com/plugins.json"
+```
+
+Để quay lại registry mặc định:
+
+```bash
+defaults delete com.TablePro com.TablePro.customRegistryURL
+```
+
+Ứng dụng sẽ xóa cache ETag khi URL registry thay đổi, buộc tải lại dữ liệu mới trong lần truy cập Browse tiếp theo.
+
 ## Ánh xạ databaseTypeIds
 
 Trường `databaseTypeIds` ánh xạ mục registry đến giá trị `DatabaseType.pluginTypeId`. Ứng dụng dùng trường này để biết plugin nào cần cài khi người dùng chọn loại database chưa có driver.
