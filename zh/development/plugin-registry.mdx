@@ -100,6 +100,22 @@ description: 如何将可下载插件发布到 TablePro 插件注册表
 
 将 `<sha256-of-zip>` 替换为 `build-plugin.sh` 输出的实际 SHA-256 值。`binaries` 数组提供按架构区分的下载；`downloadURL`/`sha256` 平级字段指向 arm64 作为旧版应用的后备。
 
+## 自定义 Registry URL
+
+对于企业或私有插件 registry，可以覆盖默认的 registry URL：
+
+```bash
+defaults write com.TablePro com.TablePro.customRegistryURL "https://your-registry.example.com/plugins.json"
+```
+
+恢复默认 registry：
+
+```bash
+defaults delete com.TablePro com.TablePro.customRegistryURL
+```
+
+当 registry URL 变更时，应用会清除 ETag 缓存，在下次访问 Browse 时强制重新获取数据。
+
 ## databaseTypeIds 映射
 
 `databaseTypeIds` 字段将注册表条目映射到 `DatabaseType.pluginTypeId` 值。应用通过此映射确定在用户选择没有已加载驱动的数据库类型时，应安装哪个注册表插件。

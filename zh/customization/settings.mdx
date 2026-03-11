@@ -376,7 +376,7 @@ TablePro 内置 8 个数据库驱动插件：
 
 ### 插件详情
 
-点击插件查看详情：版本、Bundle ID、支持的功能、数据库类型和默认端口。
+点击插件查看详情：版本、Bundle ID、支持的功能、数据库类型和默认端口。驱动插件还可以提供自定义设置面板，用于配置特定于该驱动的选项。
 
 ### 安装第三方插件
 
@@ -391,6 +391,15 @@ TablePro 内置 8 个数据库驱动插件：
 ### 卸载插件
 
 用户安装的插件在插件详情视图中显示 **Uninstall** 按钮。内置插件不能卸载，只能禁用。
+
+### 高级设置
+
+部分设置可通过 `defaults write` 命令供高级用户使用：
+
+| 设置 | 命令 | 说明 |
+|------|------|------|
+| 自定义插件 registry | `defaults write com.TablePro com.TablePro.customRegistryURL <url>` | 使用私有插件 registry |
+| 清除自定义 registry | `defaults delete com.TablePro com.TablePro.customRegistryURL` | 恢复默认 registry |
 
 ## 许可证设置
 
