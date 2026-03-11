@@ -1,0 +1,334 @@
+---
+title: 外观
+description: 主题模式、强调色、连接颜色和数据库类型颜色编码
+---
+
+# 外观设置
+
+在 **Settings** > **Appearance** 中配置 TablePro 的外观。
+
+{/* Screenshot: Appearance settings panel */}
+<Frame caption="外观设置">
+  <img
+    className="block dark:hidden"
+    src="/images/settings-appearance.png"
+    alt="外观设置"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/settings-appearance-dark.png"
+    alt="外观设置"
+  />
+</Frame>
+
+## 主题
+
+三种主题模式：
+
+| 主题 | 描述 |
+|-------|-------------|
+| **System** | 自动跟随 macOS 外观（默认） |
+| **Light** | 始终使用浅色 |
+| **Dark** | 始终使用深色 |
+
+### 跟随系统主题
+
+设为 **System** 时，TablePro 会跟随 macOS 的外观设置：
+
+1. 打开 **System Settings** > **Appearance**
+2. 选择 Light、Dark 或 Auto
+3. TablePro 自动更新
+
+{/* Screenshot: Side-by-side light and dark themes */}
+<Frame caption="浅色与深色主题对比">
+  <img
+    className="block dark:hidden"
+    src="/images/theme-comparison.png"
+    alt="主题对比"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/theme-comparison-dark.png"
+    alt="主题对比"
+  />
+</Frame>
+
+### 浅色主题
+
+- 白色/浅灰色背景
+- 深色文字，可读性好
+- 适合光线充足的环境
+- 明亮房间中对比度较低
+
+### 深色主题
+
+- 深灰色/黑色背景
+- 浅色文字，对比鲜明
+- 在低光照环境下减轻眼睛疲劳
+- 在 OLED 屏幕上更省电
+
+<Tip>
+深色主题适合长时间工作，尤其是在光线较暗的环境中。
+</Tip>
+
+## 强调色
+
+| 选项 | 描述 |
+|--------|-------------|
+| **System** | 使用 macOS 系统强调色 |
+| **Blue** | 经典蓝色 |
+| **Purple** | 紫色 |
+| **Pink** | 粉色 |
+| **Red** | 红色 |
+| **Orange** | 橙色 |
+| **Yellow** | 黄色 |
+| **Green** | 绿色 |
+| **Graphite** | 灰色/中性色 |
+
+### 强调色的应用位置
+
+- 选中项目和高亮显示
+- 按钮和交互元素
+- 进度指示器
+- 焦点轮廓
+- 活动标签页指示器
+
+{/* Screenshot: Different accent colors applied */}
+<Frame caption="强调色选项">
+  <img
+    className="block dark:hidden"
+    src="/images/accent-colors.png"
+    alt="强调色"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/accent-colors-dark.png"
+    alt="强调色"
+  />
+</Frame>
+
+{/* Screenshot: Accent color applied to UI */}
+<Frame caption="强调色应用于界面元素">
+  <img
+    className="block dark:hidden"
+    src="/images/accent-color-applied.png"
+    alt="强调色应用于界面元素"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/accent-color-applied-dark.png"
+    alt="强调色应用于界面元素"
+  />
+</Frame>
+
+### 与 macOS 保持一致
+
+使用系统强调色：
+
+1. 将 TablePro 的强调色设置为 **System**
+2. 打开 **System Settings** > **Appearance**
+3. 选择你喜欢的强调色
+4. TablePro 自动更新
+
+## 连接颜色
+
+为连接分配颜色以便于视觉区分：
+
+| 颜色 | 建议用途 |
+|-------|---------------|
+| 无 | 默认，中性 |
+| 红色 | 生产数据库 |
+| 橙色 | 预发布环境 |
+| 黄色 | 测试数据库 |
+| 绿色 | 开发/本地环境 |
+| 蓝色 | 共享数据库 |
+| 紫色 | 特殊用途 |
+| 粉色 | 个人项目 |
+
+### 设置连接颜色
+
+1. 打开连接表单（编辑或新建）
+2. 在 **Appearance** 部分，点击 **Color**
+3. 从调色板中选择颜色
+4. 保存连接
+
+{/* Screenshot: Connection color picker */}
+<Frame caption="连接颜色选择器">
+  <img
+    className="block dark:hidden"
+    src="/images/connection-colors.png"
+    alt="连接颜色"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/connection-colors-dark.png"
+    alt="连接颜色"
+  />
+</Frame>
+
+### 连接颜色的显示位置
+
+连接颜色会显示在：
+
+- 侧边栏连接列表
+- 标签页头部
+- 连接状态栏
+- 窗口标题（已连接时）
+
+<Warning>
+建议将生产数据库设置为红色，作为执行查询时的视觉提醒。
+</Warning>
+
+{/* Screenshot: Connection colors in sidebar and tabs */}
+<Frame caption="侧边栏和标签页中的连接颜色">
+  <img
+    className="block dark:hidden"
+    src="/images/connection-colors-sidebar.png"
+    alt="侧边栏和标签页中的连接颜色"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/connection-colors-sidebar-dark.png"
+    alt="侧边栏和标签页中的连接颜色"
+  />
+</Frame>
+
+## 数据库类型颜色
+
+每种数据库类型都有固定的颜色用于快速识别：
+
+| 数据库 | 颜色 |
+|----------|-------|
+| MySQL | 橙色 |
+| MariaDB | 青色 |
+| PostgreSQL | 蓝色 |
+| SQLite | 绿色 |
+
+这些颜色出现在：
+
+- 数据库类型图标
+- 连接类型指示器
+- 侧边栏图标
+
+{/* Screenshot: Database type colors */}
+<Frame caption="数据库类型颜色编码：MySQL、MariaDB、PostgreSQL、SQLite">
+  <img
+    className="block dark:hidden"
+    src="/images/database-type-colors.png"
+    alt="数据库类型颜色"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/database-type-colors-dark.png"
+    alt="数据库类型颜色"
+  />
+</Frame>
+
+## 编辑器主题
+
+SQL 语法高亮颜色：
+
+| 元素 | 颜色 |
+|---------|-------|
+| 关键字 | 粉色 |
+| 字符串 | 绿色 |
+| 数字 | 蓝色 |
+| 注释 | 灰色 |
+| 标识符 | 默认文字颜色 |
+
+颜色会自动适应浅色/深色主题。
+
+## 界面元素
+
+### 状态颜色
+
+| 颜色 | 含义 |
+|-------|---------|
+| 绿色 | 成功、已连接、有效 |
+| 橙色 | 警告、进行中、连接中 |
+| 红色 | 错误、失败、无效 |
+| 蓝色 | 信息 |
+| 灰色 | 中性、已断开 |
+
+### 数据类型颜色
+
+在数据表格中：
+
+| 类型 | 显示方式 |
+|------|---------|
+| NULL | 灰色，斜体 |
+| 布尔值 True | 绿色 |
+| 布尔值 False | 红色 |
+| 数字 | 标准颜色 |
+| 文本 | 标准颜色 |
+
+## 最佳实践
+
+### 提升可读性
+
+1. **适应环境**：低光照用深色主题，明亮环境用浅色主题
+2. **对比度**：确保对比度适合你的光照条件
+3. **字体大小**：如果文字不易阅读，可以增大字号
+
+### 提高组织效率
+
+1. **连接颜色**：选择一套统一的颜色方案
+2. **环境编码**：红色=生产、绿色=开发，以此类推
+3. **团队约定**：与团队成员协商统一的颜色含义
+
+### 保护眼睛
+
+1. **夜间用深色主题**：减少蓝光暴露
+2. **适当休息**：定期将目光从屏幕移开
+3. **Night Shift**：启用 macOS Night Shift 获得更暖的色调
+
+## 无障碍
+
+### 色觉辨识
+
+1. 不要仅依赖颜色来传达信息
+2. 连接名称提供文字标识
+3. 图标辅助补充颜色信息
+
+### 高对比度
+
+1. 使用浅色或深色主题（不使用自动模式）
+2. 选择高对比度的强调色（蓝色、绿色）
+3. 在编辑器设置中增大字号
+
+## 故障排除
+
+### 主题未切换
+
+1. 更改设置后重启 TablePro
+2. 如果使用 System 主题，检查 macOS 外观设置
+3. 确认设置已保存
+
+### 颜色显示异常
+
+1. 在系统设置中检查显示器颜色配置文件
+2. 确认显示器校准正确
+3. 在支持的显示器上检查 True Tone 设置
+
+### 强调色未生效
+
+1. 重启 TablePro
+2. 设置为具体颜色而非 System
+3. 检查是否有冲突的系统扩展
+
+## 相关设置
+
+<CardGroup cols={2}>
+  <Card title="编辑器设置" icon="code" href="/zh/customization/editor-settings">
+    字体和编辑器外观
+  </Card>
+  <Card title="设置概览" icon="gear" href="/zh/customization/settings">
+    所有设置分类
+  </Card>
+  <Card title="数据表格" icon="table" href="/zh/features/data-grid">
+    配置数据显示
+  </Card>
+  <Card title="连接" icon="plug" href="/zh/databases/overview">
+    连接颜色设置
+  </Card>
+</CardGroup>

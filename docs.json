@@ -202,6 +202,103 @@
             ]
           }
         ]
+      },
+      {
+        "language": "zh",
+        "tabs": [
+          {
+            "tab": "文档",
+            "groups": [
+              {
+                "group": "快速开始",
+                "pages": [
+                  "zh/index",
+                  "zh/quickstart",
+                  "zh/installation",
+                  "zh/changelog"
+                ]
+              },
+              {
+                "group": "数据库连接",
+                "pages": [
+                  "zh/databases/overview",
+                  "zh/databases/connection-urls",
+                  "zh/databases/mysql",
+                  "zh/databases/postgresql",
+                  "zh/databases/sqlite",
+                  "zh/databases/mongodb",
+                  "zh/databases/redis",
+                  "zh/databases/redshift",
+                  "zh/databases/oracle",
+                  "zh/databases/clickhouse",
+                  "zh/databases/mssql",
+                  "zh/databases/oracle",
+                  "zh/databases/ssh-tunneling"
+                ]
+              },
+              {
+                "group": "功能特性",
+                "pages": [
+                  "zh/features/sql-editor",
+                  "zh/features/data-grid",
+                  "zh/features/autocomplete",
+                  "zh/features/table-structure",
+                  "zh/features/table-operations",
+                  "zh/features/filtering",
+                  "zh/features/change-tracking",
+                  "zh/features/tabs",
+                  "zh/features/import-export",
+                  "zh/features/query-history",
+                  "zh/features/ai-chat",
+                  "zh/features/keyboard-shortcuts",
+                  "zh/features/deep-links",
+                  "zh/features/safe-mode"
+                ]
+              },
+              {
+                "group": "自定义",
+                "pages": [
+                  "zh/customization/settings",
+                  "zh/customization/appearance",
+                  "zh/customization/editor-settings"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "API",
+            "groups": [
+              {
+                "group": "API 参考",
+                "pages": ["zh/api/overview"]
+              },
+              {
+                "group": "许可证",
+                "icon": "key",
+                "pages": [
+                  "zh/api/activate",
+                  "zh/api/validate",
+                  "zh/api/deactivate"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "开发",
+            "groups": [
+              {
+                "group": "参与贡献",
+                "pages": [
+                  "zh/development/setup",
+                  "zh/development/architecture",
+                  "zh/development/code-style",
+                  "zh/development/building",
+                  "zh/development/plugin-registry"
+                ]
+              }
+            ]
+          }
+        ]
       }
     ],
     "global": {
