@@ -1,6 +1,6 @@
 ---
 title: Introduction
-description: Native macOS database client supporting MySQL, PostgreSQL, SQLite, MongoDB, and Redshift with AI SQL assistance
+description: Native macOS database client supporting MySQL, PostgreSQL, SQLite, MongoDB, Redis, SQL Server, ClickHouse, Oracle, and Redshift with AI SQL assistance
 ---
 
 # TablePro
@@ -28,7 +28,7 @@ A native macOS database client. Fast, lightweight, with built-in AI SQL assistan
     Swift and Apple-native frameworks. No Electron, no web views. Just the responsiveness you expect from a real Mac app.
   </Card>
   <Card title="Multiple Databases" icon="database">
-    MySQL, MariaDB, PostgreSQL, SQLite, MongoDB, and Amazon Redshift in one interface.
+    MySQL, MariaDB, PostgreSQL, SQLite, MongoDB, Redis, SQL Server, ClickHouse, Oracle, and Amazon Redshift in one interface.
   </Card>
   <Card title="Smart Autocomplete" icon="wand-magic-sparkles">
     Context-aware SQL autocomplete that knows your schema, tables, columns, and SQL syntax.
@@ -75,12 +75,16 @@ Write queries in plain English, get Copilot-style inline suggestions, and right-
 | SQLite | Fully Supported | N/A (file-based) |
 | Amazon Redshift | Fully Supported | 5439 |
 | MongoDB | Fully Supported | 27017 |
+| Redis | Fully Supported | 6379 |
+| Microsoft SQL Server | Fully Supported | 1433 |
+| ClickHouse | Fully Supported | 8123 |
+| Oracle Database | Fully Supported | 1521 |
 
 ## System Requirements
 
 - **macOS**: 14.0 (Sonoma) or later
 - **Architecture**: Apple Silicon (arm64) or Intel (x86_64)
-- **Storage**: ~50 MB for the application
+- **Storage**: ~50 MB for the application (~200 MB recommended free disk space including data)
 
 ## Getting Started
 

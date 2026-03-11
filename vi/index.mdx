@@ -1,6 +1,6 @@
 ---
 title: Giới thiệu
-description: Ứng dụng database client macOS gốc, hỗ trợ MySQL, PostgreSQL, SQLite, MongoDB, Redshift và AI SQL
+description: Ứng dụng database client macOS gốc, hỗ trợ MySQL, PostgreSQL, SQLite, MongoDB, Redis, SQL Server, ClickHouse, Oracle, Redshift và AI SQL
 ---
 
 # TablePro
@@ -28,7 +28,7 @@ description: Ứng dụng database client macOS gốc, hỗ trợ MySQL, Postgre
     Swift và framework gốc Apple. Không Electron, không web view. Phản hồi nhanh đúng chuẩn app Mac thật.
   </Card>
   <Card title="Nhiều Cơ sở dữ liệu" icon="database">
-    MySQL, MariaDB, PostgreSQL, SQLite, MongoDB và Amazon Redshift trong một giao diện.
+    MySQL, MariaDB, PostgreSQL, SQLite, MongoDB, Redis, SQL Server, ClickHouse, Oracle và Amazon Redshift trong một giao diện.
   </Card>
   <Card title="Tự động hoàn thành Thông minh" icon="wand-magic-sparkles">
     Autocomplete SQL nhận biết ngữ cảnh, hiểu schema, bảng, cột và cú pháp SQL.
@@ -75,12 +75,16 @@ Viết query bằng ngôn ngữ tự nhiên, nhận gợi ý inline kiểu Copil
 | SQLite | Hỗ trợ đầy đủ | Không áp dụng (dựa trên file) |
 | Amazon Redshift | Hỗ trợ đầy đủ | 5439 |
 | MongoDB | Hỗ trợ đầy đủ | 27017 |
+| Redis | Hỗ trợ đầy đủ | 6379 |
+| Microsoft SQL Server | Hỗ trợ đầy đủ | 1433 |
+| ClickHouse | Hỗ trợ đầy đủ | 8123 |
+| Oracle Database | Hỗ trợ đầy đủ | 1521 |
 
 ## Yêu cầu hệ thống
 
 - **macOS**: 14.0 (Sonoma) trở lên
 - **Kiến trúc**: Apple Silicon (arm64) hoặc Intel (x86_64)
-- **Dung lượng**: ~50 MB cho ứng dụng
+- **Dung lượng**: ~50 MB cho ứng dụng (~200 MB dung lượng trống khuyến nghị bao gồm dữ liệu)
 
 ## Bắt đầu
 

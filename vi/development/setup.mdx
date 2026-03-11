@@ -79,43 +79,38 @@ open TablePro.xcodeproj
 <Tree>
   <Tree.Folder name="tablepro" defaultOpen>
     <Tree.Folder name="TablePro" defaultOpen>
-      <Tree.Folder name="Models">
-        <Tree.File name="DatabaseConnection.swift" />
-        <Tree.File name="QueryResult.swift" />
-        <Tree.File name="TableInfo.swift" />
-        <Tree.File name="AppSettings.swift" />
+      <Tree.Folder name="Core" defaultOpen>
+        <Tree.Folder name="Database">
+          <Tree.File name="DatabaseDriver.swift" />
+          <Tree.File name="DatabaseManager.swift" />
+        </Tree.Folder>
+        <Tree.Folder name="Plugins">
+          <Tree.File name="PluginDriverAdapter.swift" />
+          <Tree.File name="PluginManager.swift" />
+        </Tree.Folder>
+        <Tree.Folder name="Services" />
+        <Tree.Folder name="Utilities" />
       </Tree.Folder>
+      <Tree.Folder name="Models" />
       <Tree.Folder name="Views">
         <Tree.Folder name="Connection" />
         <Tree.Folder name="Editor" />
+        <Tree.Folder name="Main" />
         <Tree.Folder name="Results" />
-        <Tree.Folder name="Structure" />
         <Tree.Folder name="Settings" />
       </Tree.Folder>
-      <Tree.Folder name="ViewModels">
-        <Tree.File name="DatabaseManager.swift" />
-      </Tree.Folder>
-      <Tree.Folder name="Core">
-        <Tree.Folder name="Database">
-          <Tree.File name="DatabaseDriver.swift" />
-          <Tree.File name="MySQLDriver.swift" />
-          <Tree.File name="PostgreSQLDriver.swift" />
-          <Tree.File name="SQLiteDriver.swift" />
-        </Tree.Folder>
-        <Tree.Folder name="Autocomplete">
-          <Tree.File name="CompletionEngine.swift" />
-          <Tree.File name="SQLContextAnalyzer.swift" />
-          <Tree.File name="SQLKeywords.swift" />
-        </Tree.Folder>
-        <Tree.Folder name="SSH">
-          <Tree.File name="SSHTunnelManager.swift" />
-        </Tree.Folder>
-      </Tree.Folder>
+      <Tree.Folder name="ViewModels" />
       <Tree.Folder name="Extensions" />
-      <Tree.Folder name="Theme">
-        <Tree.File name="Theme.swift" />
-      </Tree.Folder>
+      <Tree.Folder name="Theme" />
       <Tree.Folder name="Resources" />
+    </Tree.Folder>
+    <Tree.Folder name="Plugins" defaultOpen>
+      <Tree.Folder name="TableProPluginKit" />
+      <Tree.Folder name="MySQLDriverPlugin" />
+      <Tree.Folder name="PostgreSQLDriverPlugin" />
+      <Tree.Folder name="SQLiteDriverPlugin" />
+      <Tree.Folder name="ClickHouseDriverPlugin" />
+      <Tree.Folder name="..." />
     </Tree.Folder>
     <Tree.Folder name="TableProTests" />
     <Tree.Folder name="Libs" />
@@ -285,10 +280,11 @@ logger.error("Failed to connect: \(error.localizedDescription)")
 
 ### Thêm tính năng Database
 
-1. Triển khai trong driver phù hợp (`MySQLDriver.swift`, v.v.)
-2. Thêm vào protocol `DatabaseDriver` nếu generic
-3. Thêm UI trong view components liên quan
-4. Thêm tests
+1. Tạo plugin bundle mới trong `Plugins/`, hoặc sửa driver plugin hiện có
+2. Triển khai các method trong protocol `PluginDatabaseDriver`
+3. Cập nhật `PluginDriverAdapter` nếu cần bridge method mới
+4. Thêm UI trong view components liên quan
+5. Thêm tests
 
 ### Sửa đổi Settings
 
