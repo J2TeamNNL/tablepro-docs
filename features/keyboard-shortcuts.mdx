@@ -264,6 +264,19 @@ Vim mode keybindings only apply in the SQL editor. They don't affect the data gr
 | Export data | `Cmd+Shift+E` |
 | Import data | `Cmd+Shift+I` |
 
+## Quick Switcher
+
+The Quick Switcher (`Cmd+P`) lets you search and jump to any table, view, database, schema, or recent query. It uses fuzzy matching, so typing `usr` finds `users`, `user_settings`, etc.
+
+| Action | Shortcut |
+|--------|----------|
+| Open Quick Switcher | `Cmd+P` |
+| Navigate results | `Up` / `Down` arrows |
+| Open selected item | `Return` |
+| Dismiss | `Escape` |
+
+Results are grouped by type (tables, views, system tables, databases, schemas, recent queries) and ranked by match quality when searching.
+
 ## Global Shortcuts
 
 ### Standard macOS
