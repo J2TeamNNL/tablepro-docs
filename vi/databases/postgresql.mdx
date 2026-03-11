@@ -372,6 +372,80 @@ SET client_encoding = 'UTF8';
 
 Xem [Lệnh Khởi động](/vi/databases/overview#lệnh-khởi-động) để biết thêm chi tiết.
 
+## Hỗ trợ file ~/.pgpass
+
+TablePro hỗ trợ file `~/.pgpass` chuẩn của PostgreSQL để xác thực không cần mật khẩu. Hữu ích cho môi trường quản lý mật khẩu bằng công cụ secrets bên ngoài.
+
+### Thiết lập
+
+1. Tạo `~/.pgpass` với các entry theo định dạng: `hostname:port:database:username:password`
+2. Đặt quyền: `chmod 0600 ~/.pgpass`
+3. Trong form kết nối, bật **Use ~/.pgpass** ở phần Authentication
+4. Để trống trường mật khẩu
+
+### Định dạng
+
+Mỗi dòng trong `~/.pgpass` theo định dạng:
+
+```
+hostname:port:database:username:password
+```
+
+Dùng `*` làm wildcard để khớp bất kỳ giá trị nào:
+
+```
+# Khớp mọi database trên localhost cho user postgres
+localhost:5432:*:postgres:mypassword
+
+# Khớp mọi host/port/database cho user cụ thể
+*:*:*:deploy_user:deploy_password
+```
+
+Escape dấu hai chấm bằng `\:` và dấu gạch chéo ngược bằng `\\`.
+
+### Xác minh
+
+Form kết nối hiển thị trạng thái khi bật **Use ~/.pgpass**:
+
+- **Xanh lá**: Tìm thấy `~/.pgpass` với entry khớp
+- **Vàng**: Không tìm thấy file, hoặc không có entry khớp
+- **Đỏ**: File có quyền không đúng (cần `chmod 0600`)
+
+<Warning>
+libpq bỏ qua `~/.pgpass` nếu quyền file không chính xác `0600`. TablePro hiển thị cảnh báo rõ ràng trong form kết nối.
+</Warning>
+
+<Note>
+Khi dùng SSH tunneling, libpq kết nối đến `127.0.0.1` trên cổng tunnel local, không phải host remote. Dùng wildcard (`*`) cho host và port trong `~/.pgpass` để khớp kết nối qua tunnel.
+</Note>
+
+## Script Pre-Connect
+
+Chạy shell script trước mỗi lần kết nối. Hữu ích cho việc làm mới credentials, cập nhật `~/.pgpass`, hoặc kiểm tra trước khi kết nối.
+
+### Thiết lập
+
+1. Mở tab **Advanced** trong form kết nối
+2. Nhập script vào trường **Pre-Connect Script**
+3. Script chạy qua `/bin/bash -c` trước mỗi kết nối
+
+### Hành vi
+
+- Script kế thừa môi trường parent (HOME, PATH, v.v.)
+- Exit code khác 0 sẽ hủy kết nối kèm thông báo lỗi
+- Timeout 10 giây: script bị dừng nếu chạy quá lâu
+- Chỉ chạy khi kết nối thủ công, không chạy khi tự động kết nối lại
+
+### Ví dụ: Làm mới pgpass từ secrets manager
+
+```bash
+#!/bin/bash
+vault read -field=password secret/postgres > ~/.pgpass_entry
+echo "db.example.com:5432:mydb:app_user:$(cat ~/.pgpass_entry)" > ~/.pgpass
+chmod 0600 ~/.pgpass
+rm ~/.pgpass_entry
+```
+
 ## PostgreSQL Extensions
 
 TablePro hoạt động với database dùng các extension phổ biến:
