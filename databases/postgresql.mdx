@@ -372,6 +372,80 @@ Setting `timezone` ensures all `timestamptz` queries return results in the same 
 
 See [Startup Commands](/databases/overview#startup-commands) for more details.
 
+## ~/.pgpass File Support
+
+TablePro supports the standard PostgreSQL `~/.pgpass` file for password-less authentication. This is useful for environments where passwords are managed by external secrets tools.
+
+### Setup
+
+1. Create `~/.pgpass` with entries in the format: `hostname:port:database:username:password`
+2. Set permissions: `chmod 0600 ~/.pgpass`
+3. In the connection form, enable **Use ~/.pgpass** in the Authentication section
+4. Leave the password field blank
+
+### Format
+
+Each line in `~/.pgpass` follows this format:
+
+```
+hostname:port:database:username:password
+```
+
+Use `*` as a wildcard to match any value:
+
+```
+# Match any database on localhost for user postgres
+localhost:5432:*:postgres:mypassword
+
+# Match any host/port/database for a specific user
+*:*:*:deploy_user:deploy_password
+```
+
+Escape literal colons with `\:` and backslashes with `\\`.
+
+### Validation
+
+The connection form shows live status when **Use ~/.pgpass** is enabled:
+
+- **Green**: `~/.pgpass` found with a matching entry
+- **Yellow**: File not found, or no matching entry
+- **Red**: File has incorrect permissions (needs `chmod 0600`)
+
+<Warning>
+libpq silently ignores `~/.pgpass` if file permissions are not exactly `0600`. TablePro surfaces this as a clear warning in the connection form.
+</Warning>
+
+<Note>
+When using SSH tunneling, libpq connects to `127.0.0.1` on the local tunnel port, not the remote host. Use wildcards (`*`) for host and port in your `~/.pgpass` entries to match tunneled connections.
+</Note>
+
+## Pre-Connect Script
+
+Run a shell script before each connection attempt. This is useful for refreshing credentials, updating `~/.pgpass`, or performing pre-flight checks.
+
+### Setup
+
+1. Open the **Advanced** tab in the connection form
+2. Enter your script in the **Pre-Connect Script** field
+3. The script runs via `/bin/bash -c` before each connection
+
+### Behavior
+
+- The script inherits the parent environment (HOME, PATH, etc.)
+- Non-zero exit code aborts the connection with an error message
+- 10-second timeout: the script is terminated if it takes too long
+- Only runs on explicit connect, not on automatic reconnections
+
+### Example: Refresh pgpass from secrets manager
+
+```bash
+#!/bin/bash
+vault read -field=password secret/postgres > ~/.pgpass_entry
+echo "db.example.com:5432:mydb:app_user:$(cat ~/.pgpass_entry)" > ~/.pgpass
+chmod 0600 ~/.pgpass
+rm ~/.pgpass_entry
+```
+
 ## PostgreSQL Extensions
 
 TablePro works with databases using popular extensions:
