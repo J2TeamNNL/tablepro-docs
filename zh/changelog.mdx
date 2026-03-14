@@ -4,6 +4,35 @@ description: "TablePro 产品更新与公告"
 rss: true
 ---
 
+<Update label="2026 年 3 月 14 日" description="v0.18.0">
+  ### 新功能
+
+  - **主题引擎**: 4 个内置主题（Default Light/Dark、Dracula、Nord），支持完整的颜色、字体和布局自定义，可导入/导出 JSON 格式主题
+  - **主题注册表**: 从插件注册表中浏览、安装和更新社区主题
+  - **Cassandra 和 ScyllaDB 支持**: 通过可下载插件连接 Cassandra 和 ScyllaDB 数据库
+  - **SSH 双因素认证**: 支持 TOTP，提供自动生成和提示两种模式
+  - **SSH 主机密钥验证**: 新的和已更改的主机密钥显示指纹确认对话框
+  - **Keyboard Interactive SSH**: 支持键盘交互认证方式
+  - **列可见性**: 通过状态栏按钮或表头右键菜单切换列的显示/隐藏
+  - **复制为 SQL**: 从数据网格右键菜单将选中行复制为 INSERT 或 UPDATE 语句
+  - **PostgreSQL `.pgpass` 支持**: 自动从 `~/.pgpass` 查找 PostgreSQL 和 Redshift 连接的密码
+  - **连接前脚本**: 通过 Connection > Advanced 在每次连接前运行 shell 命令
+  - **自定义插件注册表 URL**: 为企业/私有环境配置自定义注册表 URL
+
+  ### 改进
+
+  - MSSQL、MongoDB、Redis、XLSX 导出、MQL 导出和 SQL 导入提取为可下载插件，MySQL、PostgreSQL、SQLite、CSV、JSON 和 SQL 导出仍为内置
+  - 重新设计插件设置，采用主从布局和下载计数
+  - 所有数据库特定行为现在由插件元数据驱动，而非硬编码，支持第三方数据库插件
+  - 连接表单字段、侧边栏标签和 SQL 方言功能现在完全由插件驱动
+  - 应用级外观模式（浅色、深色、自动）独立于主题选择
+  - MSSQL 查询取消和锁定超时支持
+
+  ### 错误修复
+
+  - 修复插件图标渲染不支持自定义 asset 图片与 SF Symbols 并存的问题
+</Update>
+
 <Update label="2026 年 3 月 11 日" description="v0.17.0">
   ### 新功能
 

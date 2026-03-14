@@ -4,6 +4,35 @@ description: "Cập nhật sản phẩm và thông báo cho TablePro"
 rss: true
 ---
 
+<Update label="14 tháng 3, 2026" description="v0.18.0">
+  ### Tính năng mới
+
+  - **Theme Engine**: 4 theme tích hợp (Default Light/Dark, Dracula, Nord) với tuỳ chỉnh đầy đủ màu sắc, phông chữ và bố cục — nhập/xuất theme dưới dạng JSON
+  - **Theme Registry**: Duyệt, cài đặt và cập nhật theme cộng đồng từ registry plugin
+  - **Hỗ trợ Cassandra & ScyllaDB**: Kết nối tới cơ sở dữ liệu Cassandra và ScyllaDB qua plugin tải xuống
+  - **Xác thực hai yếu tố SSH**: Hỗ trợ TOTP với chế độ tự động tạo và nhắc nhở cho kết nối SSH
+  - **Xác minh khoá máy chủ SSH**: Hộp thoại xác nhận fingerprint cho khoá máy chủ mới và đã thay đổi
+  - **Keyboard Interactive SSH**: Hỗ trợ phương thức xác thực keyboard-interactive
+  - **Ẩn/hiện cột**: Bật/tắt cột qua nút thanh trạng thái hoặc menu ngữ cảnh tiêu đề
+  - **Sao chép dưới dạng SQL**: Sao chép hàng đã chọn dưới dạng câu lệnh INSERT hoặc UPDATE từ menu ngữ cảnh bảng dữ liệu
+  - **Hỗ trợ `.pgpass` PostgreSQL**: Tự động tra cứu mật khẩu từ `~/.pgpass` cho kết nối PostgreSQL và Redshift
+  - **Script trước kết nối**: Chạy lệnh shell trước mỗi kết nối qua Connection > Advanced
+  - **URL registry plugin tuỳ chỉnh**: Cấu hình URL registry riêng/doanh nghiệp cho phân phối plugin
+
+  ### Cải tiến
+
+  - MSSQL, MongoDB, Redis, XLSX export, MQL export và SQL import được tách thành plugin tải xuống — MySQL, PostgreSQL, SQLite, CSV, JSON và SQL export vẫn tích hợp sẵn
+  - Thiết kế lại cài đặt Plugin với bố cục master-detail và số lượt tải
+  - Tất cả hành vi theo loại cơ sở dữ liệu giờ dựa trên metadata plugin thay vì mã cứng, cho phép plugin cơ sở dữ liệu bên thứ ba
+  - Các trường biểu mẫu kết nối, nhãn thanh bên và tính năng SQL dialect giờ hoàn toàn do plugin điều khiển
+  - Chế độ giao diện ứng dụng (Sáng, Tối, Tự động) độc lập với lựa chọn theme
+  - Hỗ trợ huỷ truy vấn MSSQL và thời gian chờ khoá
+
+  ### Sửa lỗi
+
+  - Sửa lỗi hiển thị biểu tượng plugin không hỗ trợ hình ảnh asset tuỳ chỉnh bên cạnh SF Symbols
+</Update>
+
 <Update label="11 tháng 3, 2026" description="v0.17.0">
   ### Tính năng mới
 

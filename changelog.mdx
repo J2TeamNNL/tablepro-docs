@@ -4,6 +4,35 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="March 14, 2026" description="v0.18.0">
+  ### New Features
+
+  - **Theme Engine**: 4 built-in themes (Default Light/Dark, Dracula, Nord) with full color, font, and layout customization — import/export themes as JSON
+  - **Theme Registry**: Browse, install, and update community themes from the plugin registry
+  - **Cassandra & ScyllaDB Support**: Connect to Cassandra and ScyllaDB databases via a downloadable plugin
+  - **SSH Two-Factor Authentication**: TOTP support with auto-generate and prompt modes for SSH connections
+  - **SSH Host Key Verification**: Fingerprint confirmation dialog for new and changed host keys
+  - **Keyboard Interactive SSH**: Support for keyboard-interactive authentication method
+  - **Column Visibility**: Toggle columns on/off via status bar button or header context menu
+  - **Copy as SQL**: Copy selected rows as INSERT or UPDATE statements from the data grid context menu
+  - **PostgreSQL `.pgpass` Support**: Automatic password lookup from `~/.pgpass` for PostgreSQL and Redshift connections
+  - **Pre-connect Script**: Run a shell command before each connection via Connection > Advanced
+  - **Custom Plugin Registry URL**: Configure a private/enterprise registry URL for plugin distribution
+
+  ### Improvements
+
+  - MSSQL, MongoDB, Redis, XLSX export, MQL export, and SQL import extracted into downloadable plugins — MySQL, PostgreSQL, SQLite, CSV, JSON, and SQL export remain built-in
+  - Redesigned Plugins settings with master-detail layout and download counts
+  - All database-specific behavior now driven by plugin metadata instead of hardcoded switches, enabling third-party database plugins
+  - Connection form fields, sidebar labels, and SQL dialect features are now fully plugin-driven
+  - App-level appearance mode (Light, Dark, Auto) independent of theme selection
+  - MSSQL query cancellation and lock timeout support
+
+  ### Bug Fixes
+
+  - Fixed plugin icon rendering not supporting custom asset images alongside SF Symbols
+</Update>
+
 <Update label="March 11, 2026" description="v0.17.0">
   ### New Features
 
