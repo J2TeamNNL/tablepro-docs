@@ -4,6 +4,31 @@ description: "Cập nhật sản phẩm và thông báo cho TablePro"
 rss: true
 ---
 
+<Update label="17 tháng 3, 2026" description="v0.20.0">
+  ### Tính năng mới
+
+  - **Ngôn ngữ Thổ Nhĩ Kỳ**: Thêm tiếng Thổ Nhĩ Kỳ (Türkçe) làm tuỳ chọn ngôn ngữ mới trong Cài đặt > Chung
+  - **Hỗ trợ etcd v3**: Plugin cơ sở dữ liệu mới với duyệt khoá dạng cây tiền tố, trình soạn thảo cú pháp etcdctl, quản lý lease, watch, mTLS, xác thực và thông tin cluster
+  - **Nút Lưu thay đổi**: Nút mới trên thanh công cụ để xác nhận các chỉnh sửa dữ liệu đang chờ
+  - **Xác nhận xoá kết nối**: Hộp thoại xác nhận trước khi xoá kết nối
+  - **Bảo vệ chỉnh sửa chưa lưu**: Hộp thoại xác nhận trước khi sắp xếp, phân trang, lọc hoặc tìm kiếm huỷ bỏ các chỉnh sửa chưa lưu
+
+  ### Sửa lỗi
+
+  - Sửa lỗi SSH tunnel bị crash do các lệnh gọi libssh2 đồng thời trên cùng một phiên
+  - Sửa lỗi mất chỉnh sửa ô chưa lưu khi chuyển tab, sắp xếp, phân trang, lọc hoặc chuyển ứng dụng
+  - Sửa lỗi tự động kết nối lại và health monitor âm thầm huỷ bỏ các thay đổi chưa lưu
+  - Sửa lỗi khôi phục SSH tunnel thất bại sau khi tunnel ngắt do trạng thái driver cũ
+  - Sửa lỗi health monitor ping can thiệp vào truy vấn đang hoạt động của người dùng
+  - Sửa lỗi kiểm tra kết nối không dọn dẹp SSH tunnel khi hoàn thành
+  - Sửa lỗi chỉ báo kết nối thành công không đặt lại sau khi thay đổi trường
+  - Sửa lỗi trường SSH port chấp nhận giá trị không hợp lệ
+  - Sửa lỗi thao tác DROP TABLE và TRUNCATE TABLE trên thanh bên không tạo SQL cho driver dựa trên plugin
+  - Sửa lỗi mũi tên điều hướng khoá ngoại không hiển thị sau khi chuyển cơ sở dữ liệu bằng Cmd+K trên MySQL
+  - Sửa lỗi thanh bên không làm mới sau khi tạo hoặc xoá bảng
+  - Sửa lỗi xoá bảng làm ngắt kết nối cơ sở dữ liệu khi tab của bảng bị xoá đang hoạt động
+</Update>
+
 <Update label="16 tháng 3, 2026" description="v0.19.1">
   ### Sửa lỗi
 
