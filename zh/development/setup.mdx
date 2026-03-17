@@ -52,7 +52,17 @@ brew install swiftlint swiftformat
 open TablePro.xcodeproj
 ```
 
-### 步骤 3：构建并运行
+### 步骤 3：配置签名
+
+1. 在项目导航器中选择 **TablePro** target
+2. 进入 **Signing & Capabilities** 标签页
+3. 将 **Team** 更改为您自己的 Apple Developer 账号
+
+<Info>
+项目中包含维护者的 team ID。您需要切换为自己的 team 才能进行本地构建。免费的 Apple Developer 账号也可用于开发构建。
+</Info>
+
+### 步骤 4：构建并运行
 
 1. 选择 **TablePro** scheme
 2. 选择 **My Mac** 作为目标设备
