@@ -52,7 +52,17 @@ Bỏ qua `scripts/download-libs.sh` sẽ khiến `Libs/` không có binary, gây
 open TablePro.xcodeproj
 ```
 
-### Bước 3: Build và Run
+### Bước 3: Cấu hình Signing
+
+1. Chọn target **TablePro** trong project navigator
+2. Vào tab **Signing & Capabilities**
+3. Đổi **Team** sang tài khoản Apple Developer của bạn
+
+<Info>
+Dự án sử dụng team ID của maintainer. Bạn cần chuyển sang team của mình để build. Tài khoản Apple Developer miễn phí cũng có thể dùng cho bản development.
+</Info>
+
+### Bước 4: Build và Run
 
 1. Chọn scheme **TablePro**
 2. Chọn **My Mac** làm destination

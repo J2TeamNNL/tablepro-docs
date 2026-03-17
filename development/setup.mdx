@@ -52,7 +52,17 @@ Skipping `scripts/download-libs.sh` leaves `Libs/` without binaries, causing lin
 open TablePro.xcodeproj
 ```
 
-### Step 3: Build and Run
+### Step 3: Configure Signing
+
+1. Select the **TablePro** target in the project navigator
+2. Go to **Signing & Capabilities**
+3. Change **Team** to your own Apple Developer account
+
+<Info>
+The project ships with the maintainer's team ID. You must switch it to your own to build locally. A free Apple Developer account works for development builds.
+</Info>
+
+### Step 4: Build and Run
 
 1. Select the **TablePro** scheme
 2. Select **My Mac** as the destination
