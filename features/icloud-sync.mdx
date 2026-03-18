@@ -12,14 +12,14 @@ TablePro syncs your connections, groups, settings, and query history across all 
 | Data | Synced | Notes |
 |------|--------|-------|
 | **Connections** | Yes | Host, port, username, database type, SSH/SSL config |
-| **Passwords** | No | Stay in each Mac's local Keychain |
+| **Passwords** | Optional | Opt-in via iCloud Keychain (end-to-end encrypted) |
 | **Groups & Tags** | Yes | Full connection organization |
 | **App Settings** | Yes | All 8 categories (General, Appearance, Editor, Data Grid, History, Tabs, Keyboard, AI) |
 | **Query History** | Yes | Configurable limit: 100, 500, 1,000, or unlimited |
 
-<Warning>
-Passwords are never synced. They remain in your macOS Keychain on each machine. After syncing a connection to a new Mac, you need to enter the password once on that machine.
-</Warning>
+<Note>
+Passwords are not synced by default. Enable **Password sync** under the Connections toggle to sync passwords via Apple's iCloud Keychain (end-to-end encrypted). With password sync off, you need to enter the password once on each new Mac.
+</Note>
 
 ## Enabling iCloud Sync
 
@@ -50,7 +50,7 @@ Each data type has its own toggle. Sync connections but not history, or settings
 
 | Category | What it includes |
 |----------|-----------------|
-| **Connections** | All connection details except passwords |
+| **Connections** | Connection details, with optional password sync sub-toggle |
 | **Groups & Tags** | Connection groups and color tags |
 | **App Settings** | Preferences from all 8 settings categories |
 | **Query History** | Past queries up to the configured limit |
@@ -68,6 +68,19 @@ Control how many history entries sync across devices:
 
 <Tip>
 Start with 500. Unlimited history sync can slow down initial sync on large histories.
+</Tip>
+
+### Password sync
+
+When **Connections** sync is enabled, an additional **Passwords** toggle appears. This syncs all connection credentials (database passwords, SSH passwords, key passphrases, and TOTP secrets) using Apple's iCloud Keychain.
+
+- Uses the same end-to-end encryption as Safari passwords
+- Apple cannot read your passwords, even on their servers
+- Toggling off migrates all passwords back to local-only storage
+- Password sync is off by default -- you must opt in explicitly on each Mac
+
+<Tip>
+iCloud Keychain sync is handled entirely by macOS. Passwords never pass through TablePro's CloudKit sync.
 </Tip>
 
 ## Automatic sync
