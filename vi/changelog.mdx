@@ -4,6 +4,21 @@ description: "Cập nhật sản phẩm và thông báo cho TablePro"
 rss: true
 ---
 
+<Update label="19 tháng 3, 2026" description="v0.21.0">
+  ### Tính năng mới
+
+  - **Hỗ trợ Cloudflare D1**: Kết nối trực tiếp đến cơ sở dữ liệu Cloudflare D1 từ TablePro
+  - **Tô sáng kết quả khớp trong gợi ý**: Các ký tự khớp trong gợi ý tự động hoàn thành được hiển thị đậm
+  - **Chỉ báo tải gợi ý**: Hiển thị vòng quay tải khi đang lấy metadata cột
+
+  ### Cải thiện
+
+  - Giao diện gợi ý tự động hoàn thành được viết lại bằng SwiftUI gốc với vùng chọn rõ ràng, màu nhấn hệ thống và cuộn theo lựa chọn
+  - Gợi ý tự động hoàn thành giờ ẩn các gợi ý rỗng trong ngữ cảnh không duyệt được (ví dụ: sau SELECT, WHERE)
+  - Xếp hạng gợi ý giữ ổn định khi gõ với hệ thống chấm điểm fuzzy thống nhất
+  - Tăng giới hạn gợi ý từ 20 lên 40 cho ngữ cảnh có nhiều schema
+</Update>
+
 <Update label="19 tháng 3, 2026" description="v0.20.4">
   ### Cải thiện
 

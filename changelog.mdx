@@ -4,6 +4,21 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="March 19, 2026" description="v0.21.0">
+  ### New Features
+
+  - **Cloudflare D1 Support**: Connect to Cloudflare D1 databases directly from TablePro
+  - **Autocomplete Match Highlighting**: Matched characters in autocomplete suggestions are now shown in bold
+  - **Autocomplete Loading Indicator**: Loading spinner while fetching column metadata
+
+  ### Improvements
+
+  - Refactored autocomplete popup to native SwiftUI with visible selection highlight, native accent color, and scroll-to-selection
+  - Autocomplete now suppresses noisy empty-prefix suggestions in non-browseable contexts (e.g., after SELECT, WHERE)
+  - Autocomplete ranking stays consistent as you type with unified fuzzy scoring
+  - Increased autocomplete suggestion limit from 20 to 40 for schema-heavy contexts
+</Update>
+
 <Update label="March 19, 2026" description="v0.20.4">
   ### Improvements
 
