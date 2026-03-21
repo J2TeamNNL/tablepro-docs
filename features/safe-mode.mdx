@@ -24,6 +24,10 @@ TablePro provides 6 graduated safe mode levels:
 
 New connections default to **Silent**.
 
+<Note>
+**Safe Mode** (Touch ID), **Safe Mode (Full)**, and **Read-Only** levels require a **Pro license**. The **Silent**, **Alert**, and **Alert (Full)** levels are available in the free version.
+</Note>
+
 ## How It Works
 
 ### Silent
@@ -57,9 +61,9 @@ All write operations are blocked. The UI disables:
 
 Read queries (SELECT) execute normally.
 
-## MongoDB and Redis
+## NoSQL Databases
 
-MongoDB and Redis don't use SQL, so TablePro cannot distinguish between read and write operations by parsing the query text. All operations on these database types are treated as write operations for safe mode purposes. This means:
+NoSQL databases (MongoDB, Redis, DynamoDB, Cloudflare D1, Etcd, Cassandra) don't use SQL, so TablePro cannot distinguish between read and write operations by parsing the query text. All operations on these database types are treated as write operations for safe mode purposes. This means:
 
 - **Alert/Safe Mode**: Every query triggers the confirmation dialog
 - **Read-Only**: All operations are blocked

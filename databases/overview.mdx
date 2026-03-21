@@ -1,15 +1,15 @@
 ---
 title: Connection Management
-description: Create, organize, and manage database connections across 12 supported engines in TablePro
+description: Create, organize, and manage database connections across 18+ supported engines in TablePro
 ---
 
 # Connection Management
 
-TablePro connects to twelve database systems from a single interface. Create connections, organize them with colors, tags, and groups, and switch between them without leaving your workflow.
+TablePro connects to 18+ database systems from a single interface. Create connections, organize them with colors, tags, and groups, and switch between them without leaving your workflow.
 
 ## Supported Databases
 
-TablePro supports twelve database systems natively:
+TablePro supports 18+ database systems natively:
 
 <CardGroup cols={2}>
   <Card title="MySQL" icon="database">
@@ -44,6 +44,18 @@ TablePro supports twelve database systems natively:
   </Card>
   <Card title="Cassandra / ScyllaDB" icon="database">
     Cassandra 3.11+ and ScyllaDB 4.0+ via CQL native protocol. Default port: 9042
+  </Card>
+  <Card title="DuckDB" icon="database">
+    DuckDB embedded OLAP database. File-based, no server required
+  </Card>
+  <Card title="DynamoDB" icon="database">
+    Amazon DynamoDB via AWS SDK. NoSQL key-value and document database
+  </Card>
+  <Card title="Etcd" icon="database">
+    Etcd distributed key-value store via gRPC API. Default port: 2379
+  </Card>
+  <Card title="Cloudflare D1" icon="database">
+    Cloudflare D1 serverless SQLite database via Cloudflare API
   </Card>
 </CardGroup>
 
