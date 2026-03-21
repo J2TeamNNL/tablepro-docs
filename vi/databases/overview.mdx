@@ -1,15 +1,15 @@
 ---
 title: Quản lý Kết nối
-description: Tạo, tổ chức và quản lý kết nối đến 12 hệ quản trị cơ sở dữ liệu từ một giao diện duy nhất
+description: Tạo, tổ chức và quản lý kết nối đến 18+ hệ quản trị cơ sở dữ liệu từ một giao diện duy nhất
 ---
 
 # Quản lý Kết nối
 
-TablePro kết nối được đến 12 hệ quản trị cơ sở dữ liệu từ cùng một giao diện. Tạo kết nối, sắp xếp bằng màu sắc, tag và nhóm, rồi chuyển đổi giữa chúng mà không cần rời khỏi cửa sổ làm việc.
+TablePro kết nối được đến 18+ hệ quản trị cơ sở dữ liệu từ cùng một giao diện. Tạo kết nối, sắp xếp bằng màu sắc, tag và nhóm, rồi chuyển đổi giữa chúng mà không cần rời khỏi cửa sổ làm việc.
 
 ## Cơ sở dữ liệu được hỗ trợ
 
-TablePro hỗ trợ 12 hệ thống cơ sở dữ liệu:
+TablePro hỗ trợ 18+ hệ thống cơ sở dữ liệu:
 
 <CardGroup cols={2}>
   <Card title="MySQL" icon="database">
@@ -44,6 +44,18 @@ TablePro hỗ trợ 12 hệ thống cơ sở dữ liệu:
   </Card>
   <Card title="Cassandra / ScyllaDB" icon="database">
     Cassandra 3.11+ và ScyllaDB 4.0+ qua giao thức CQL native. Cổng mặc định: 9042
+  </Card>
+  <Card title="DuckDB" icon="database">
+    Cơ sở dữ liệu OLAP DuckDB nhúng. Dạng file, không cần server
+  </Card>
+  <Card title="DynamoDB" icon="database">
+    Amazon DynamoDB qua AWS SDK. Cơ sở dữ liệu NoSQL key-value và document
+  </Card>
+  <Card title="Etcd" icon="database">
+    Kho key-value phân tán Etcd qua gRPC API. Cổng mặc định: 2379
+  </Card>
+  <Card title="Cloudflare D1" icon="database">
+    Cơ sở dữ liệu SQLite serverless Cloudflare D1 qua Cloudflare API
   </Card>
 </CardGroup>
 
