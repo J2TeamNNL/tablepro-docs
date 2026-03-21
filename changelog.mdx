@@ -4,6 +4,22 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="March 21, 2026" description="v0.22.0">
+  ### New Features
+
+  - **Export Query Results**: Export the results of any SQL query directly to CSV, JSON, SQL, XLSX, or MQL files via right-click context menu or File > Export Results
+  - **Amazon DynamoDB Support**: Connect to DynamoDB with PartiQL queries, AWS IAM/Profile/SSO authentication, GSI/LSI browsing, table scanning, capacity display, and DynamoDB Local support
+  - **SSH Tunnel Profiles**: Save SSH configurations once and reuse them across multiple connections
+  - **Ctrl+HJKL Navigation**: Arrow key alternative for keyboards without dedicated arrow keys
+  - **Pro License Gating**: Safe Mode (Touch ID) and XLSX export now require a Pro license
+
+  ### Bug Fixes
+
+  - Fixed high CPU usage (79%+) and energy consumption when idle (#394)
+  - Fixed etcd connection failing with 404 when gRPC gateway uses a different API prefix
+  - Fixed data grid editing not working in query tabs (#383)
+</Update>
+
 <Update label="March 19, 2026" description="v0.21.0">
   ### New Features
 

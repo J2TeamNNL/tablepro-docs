@@ -4,6 +4,22 @@ description: "Cập nhật sản phẩm và thông báo cho TablePro"
 rss: true
 ---
 
+<Update label="21 tháng 3, 2026" description="v0.22.0">
+  ### Tính năng mới
+
+  - **Export Kết Quả Query**: Export kết quả bất kỳ truy vấn SQL nào trực tiếp sang file CSV, JSON, SQL, XLSX hoặc MQL qua menu chuột phải hoặc File > Export Results
+  - **Hỗ trợ Amazon DynamoDB**: Kết nối DynamoDB với PartiQL, xác thực AWS IAM/Profile/SSO, duyệt GSI/LSI, quét bảng, hiển thị dung lượng và hỗ trợ DynamoDB Local
+  - **Hồ sơ SSH Tunnel**: Lưu cấu hình SSH một lần và sử dụng lại cho nhiều kết nối
+  - **Điều hướng Ctrl+HJKL**: Thay thế phím mũi tên cho bàn phím không có phím mũi tên riêng
+  - **Giấy phép Pro**: Safe Mode (Touch ID) và export XLSX giờ yêu cầu giấy phép Pro
+
+  ### Sửa lỗi
+
+  - Sửa lỗi CPU cao (79%+) và tiêu thụ năng lượng khi rảnh (#394)
+  - Sửa lỗi kết nối etcd thất bại với 404 khi gRPC gateway sử dụng prefix API khác
+  - Sửa lỗi chỉnh sửa data grid không hoạt động trong tab query (#383)
+</Update>
+
 <Update label="19 tháng 3, 2026" description="v0.21.0">
   ### Tính năng mới
 
