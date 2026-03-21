@@ -255,11 +255,15 @@ Export data from query results or tables:
 
 ### Exporting Query Results
 
-To export the results of a specific query:
+To export the results of a specific query to a file:
 
-1. Write and execute your query
-2. Click **Export** while results are displayed
-3. Only the displayed results are exported
+1. Write and execute your query in the SQL editor
+2. Right-click on the results grid and select **Export Results...**, or go to **File** > **Export Results...**
+3. Choose your export format (CSV, JSON, SQL, XLSX, or MQL)
+4. Configure format-specific options and filename
+5. Click **Export**
+
+The export dialog shows the row count and uses a simplified layout without the table selection tree, since only the in-memory query results are exported.
 
 <Tip>
 For large exports, use pagination or LIMIT in your query to control the output size.
