@@ -1,15 +1,15 @@
 ---
 title: 连接管理
-description: 在 TablePro 中创建、组织和管理 12 种数据库引擎的连接
+description: 在 TablePro 中创建、组织和管理 18+ 种数据库引擎的连接
 ---
 
 # 连接管理
 
-TablePro 通过统一界面连接十二种数据库系统。你可以创建连接、用颜色、标签和分组来组织它们，并在不离开当前工作区的情况下自由切换。
+TablePro 通过统一界面连接18+ 种数据库系统。你可以创建连接、用颜色、标签和分组来组织它们，并在不离开当前工作区的情况下自由切换。
 
 ## 支持的数据库
 
-TablePro 原生支持十二种数据库系统：
+TablePro 原生支持18+ 种数据库系统：
 
 <CardGroup cols={2}>
   <Card title="MySQL" icon="database">
@@ -47,6 +47,15 @@ TablePro 原生支持十二种数据库系统：
   </Card>
   <Card title="DuckDB" icon="database">
     DuckDB 嵌入式分析数据库。基于文件
+  </Card>
+  <Card title="DynamoDB" icon="database">
+    Amazon DynamoDB，支持 PartiQL 查询和 AWS IAM/Profile/SSO 认证
+  </Card>
+  <Card title="Etcd" icon="database">
+    etcd v3 键值存储，支持前缀树浏览和租约管理
+  </Card>
+  <Card title="Cloudflare D1" icon="database">
+    Cloudflare D1 边缘 SQLite 数据库
   </Card>
 </CardGroup>
 
