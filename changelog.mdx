@@ -4,6 +4,25 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="March 22, 2026" description="v0.23.0">
+  ### New Features
+
+  - **Redis Key Tree**: Browse Redis keys grouped by namespace with collapsible tree view in the sidebar (#418)
+  - **Keyboard Focus Navigation**: Navigate connection list, quick switcher, and database switcher using Tab, Ctrl+J/K/N/P, and arrow keys
+  - **MongoDB SRV Support**: Connect using `mongodb+srv://` URIs with SRV toggle, Auth Mechanism dropdown, and Replica Set field (#419)
+  - **Database Type Badges**: Connection form shows all available database types with install status badges (#418)
+
+  ### Improvements
+
+  - MongoDB `authSource` now defaults to the database name per MongoDB URI spec instead of always "admin"
+
+  ### Bug Fixes
+
+  - Fixed DuckDB TIMESTAMPTZ, TIMETZ, and other temporal columns displaying as null (#424)
+  - Fixed onboarding "Get Started" button not rendering on macOS 15 until window loses focus (#420)
+  - Faster MongoDB sidebar loading with `estimatedDocumentCount` and smaller schema sample
+</Update>
+
 <Update label="March 22, 2026" description="v0.22.1">
   ### New Features
 
