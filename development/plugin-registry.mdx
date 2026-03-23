@@ -36,7 +36,7 @@ Each entry matches the `RegistryPlugin` model:
 | `sha256` | `string` | No* | SHA-256 hex digest of the ZIP file |
 | `binaries` | `[object]` | No | Per-architecture binaries: `[{ "architecture": "arm64"\|"x86_64", "downloadURL": "...", "sha256": "..." }]` |
 | `minAppVersion` | `string` | No | Minimum TablePro version (e.g., `"0.17.0"`) |
-| `minPluginKitVersion` | `int` | No | Minimum PluginKit version (currently `1`) |
+| `minPluginKitVersion` | `int` | No | Minimum PluginKit version (currently `2`) |
 | `iconName` | `string` | No | SF Symbol name for display |
 | `isVerified` | `bool` | Yes | Whether the plugin is verified by the TablePro team |
 
@@ -66,7 +66,7 @@ These two database drivers ship as downloadable plugins instead of being bundled
     { "architecture": "x86_64", "downloadURL": "https://github.com/datlechin/TablePro/releases/download/plugin-oracle-v1.0.0/OracleDriver-x86_64.zip", "sha256": "<sha256-of-zip>" }
   ],
   "minAppVersion": "0.17.0",
-  "minPluginKitVersion": 1,
+  "minPluginKitVersion": 2,
   "iconName": "server.rack",
   "isVerified": true
 }
@@ -92,7 +92,7 @@ These two database drivers ship as downloadable plugins instead of being bundled
     { "architecture": "x86_64", "downloadURL": "https://github.com/datlechin/TablePro/releases/download/plugin-clickhouse-v1.0.0/ClickHouseDriver-x86_64.zip", "sha256": "<sha256-of-zip>" }
   ],
   "minAppVersion": "0.17.0",
-  "minPluginKitVersion": 1,
+  "minPluginKitVersion": 2,
   "iconName": "chart.bar.xaxis",
   "isVerified": true
 }
