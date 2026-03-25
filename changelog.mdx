@@ -4,6 +4,27 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="March 26, 2026" description="v0.24.0">
+  ### New Features
+
+  - **Multi-select Connections**: Select multiple connections in the Welcome window with Cmd+Click and Shift+Click, then bulk delete (⌘⌫), move to group, or multi-connect
+  - **Reorder Connections**: Drag to reorder connections within groups and reorder groups in the Welcome window
+  - **Built-in Plugins**: ClickHouse, MSSQL, Redis, XLSX Export, MQL Export, and SQL Import now ship as built-in plugins (no separate installation needed)
+
+  ### Improvements
+
+  - Large document safety caps for syntax highlighting (skip files >5MB, throttle >50KB)
+  - Lazy-load full values for LONGTEXT/MEDIUMTEXT/CLOB columns in the detail pane sidebar
+
+  ### Bug Fixes
+
+  - SSH profile connections displaying incorrect host/username on the Welcome window home screen
+  - Saved connections disappearing after normal app quit (Cmd+Q) while persisting after force quit
+  - Crash when disconnecting an etcd connection while requests are in-flight
+  - Detail pane showing truncated values for LONGTEXT/MEDIUMTEXT/CLOB columns, preventing correct editing
+  - Redis hash/list/set/zset/stream views showing empty or misaligned rows when values contained binary, null, or integer types
+</Update>
+
 <Update label="March 24, 2026" description="v0.23.2">
   ### Bug Fixes
 
