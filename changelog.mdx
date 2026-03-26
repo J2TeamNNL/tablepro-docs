@@ -4,6 +4,22 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="March 26, 2026" description="v0.24.2">
+  ### New Features
+
+  - **Enum/Set Picker**: Edit enum and set columns with a dropdown picker for PostgreSQL custom enums, ClickHouse Enum8/Enum16, and DuckDB ENUM types
+  - **Boolean Picker**: MSSQL BIT columns and MySQL TINYINT(1) columns now use a boolean toggle instead of manual text entry
+
+  ### Improvements
+
+  - Correct type classification for ClickHouse Nullable()/LowCardinality() wrappers, MSSQL MONEY/IMAGE/DATETIME2, DuckDB unsigned integers, and parameterized MySQL integer types
+
+  ### Bug Fixes
+
+  - XLSX export producing corrupted files that Excel cannot open
+  - Deep link cold launch missing toolbar and duplicate windows
+</Update>
+
 <Update label="March 26, 2026" description="v0.24.1">
   ### Bug Fixes
 
