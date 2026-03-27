@@ -5,27 +5,21 @@ description: Export to CSV, JSON, SQL, MQL, or XLSX. Import SQL files with trans
 
 # Import & Export
 
-Export data in five formats (CSV, JSON, SQL, MQL, XLSX), import SQL files with gzip support, and paste tabular data from your clipboard directly into the grid.
+Export data in five formats (CSV, JSON, SQL, MQL, XLSX), import SQL files with gzip support, and paste tabular data from the clipboard into the grid.
 
 ## Export Data
 
-### Export Options
-
-Export data from query results or tables:
-
 1. Run a query or open a table
-2. Click the **Export** button in the toolbar (or press `Cmd+Shift+E`)
-3. Choose your export format
-4. Select tables to export using the tree view
-5. Configure format-specific options
-6. Click **Export**
+2. Click **Export** in the toolbar (`Cmd+Shift+E`)
+3. Choose a format, select tables, configure options
+4. Click **Export**
 
 <Note>
-**MongoDB**: SQL export is not available for MongoDB connections. Use CSV, JSON, MQL, or XLSX instead. MQL generates `db.collection.insertMany([...])` scripts that run directly in `mongosh`.
+**MongoDB**: SQL export is not available. Use CSV, JSON, MQL, or XLSX. MQL generates `db.collection.insertMany([...])` scripts for `mongosh`.
 </Note>
 
 <Note>
-**Redis**: SQL and MQL exports are not available for Redis connections. Use CSV, JSON, or XLSX to export key-value data.
+**Redis**: SQL and MQL exports are not available. Use CSV, JSON, or XLSX.
 </Note>
 
 {/* Screenshot: Export dialog with format options */}
@@ -46,81 +40,41 @@ Export data from query results or tables:
 
 <Tabs>
   <Tab title="CSV">
-    **Comma-Separated Values**
+    Best for spreadsheets and data analysis tools.
 
-    Best for:
-    - Excel and spreadsheet applications
-    - Data analysis tools
-    - Simple data exchange
-
-    Options:
-    | Option | Description | Default |
-    |--------|-------------|---------|
-    | Header | Include column names as first row | Yes |
-    | Delimiter | Separator character: comma, semicolon, tab, or pipe | Comma |
-    | Quote handling | When to quote values: always, as needed, or never | As needed |
-    | NULL handling | Convert NULL values to empty strings | Yes |
-    | Line breaks in data | Convert line breaks within values to spaces | No |
-    | Line break format | Line ending style: LF, CRLF, or CR | LF |
-    | Decimal format | Period or comma for decimal separator | Period |
-    | Formula sanitization | Prevent CSV injection attacks | Yes |
-
-    Example output:
-    ```csv
-    id,name,email,created_at
-    1,"John Doe",john@example.com,2024-01-15 10:30:00
-    2,"Jane Smith",jane@example.com,2024-01-16 14:45:00
-    ```
+    | Option | Default |
+    |--------|---------|
+    | Header row | Yes |
+    | Delimiter (comma, semicolon, tab, pipe) | Comma |
+    | Quote handling (always, as needed, never) | As needed |
+    | NULL to empty strings | Yes |
+    | Line breaks in values to spaces | No |
+    | Line ending (LF, CRLF, CR) | LF |
+    | Decimal separator (period, comma) | Period |
+    | Formula sanitization | Yes |
 
     {/* Screenshot: CSV export options: delimiter, quoting, line breaks */}
-    <Frame caption="CSV export options: delimiter, quoting, line breaks">
+    <Frame caption="CSV export options">
       <img
         className="block dark:hidden"
         src="/images/export-csv-options.png"
-        alt="CSV export options: delimiter, quoting, line breaks"
+        alt="CSV export options"
       />
       <img
         className="hidden dark:block"
         src="/images/export-csv-options-dark.png"
-        alt="CSV export options: delimiter, quoting, line breaks"
+        alt="CSV export options"
       />
     </Frame>
   </Tab>
   <Tab title="JSON">
-    **JavaScript Object Notation**
+    Best for APIs, web apps, and NoSQL workflows. Exports as an array of objects.
 
-    Best for:
-    - Web applications
-    - APIs
-    - NoSQL databases
-    - Programmatic processing
-
-    Data is exported as an array of objects.
-
-    Options:
-    | Option | Description | Default |
-    |--------|-------------|---------|
-    | Pretty print | Format with indentation | Yes |
-    | Include NULL values | Include keys with null values in output | Yes |
-    | Preserve as strings | Keep all values as strings (useful for ZIP codes, phone numbers) | No |
-
-    Example output:
-    ```json
-    [
-      {
-        "id": 1,
-        "name": "John Doe",
-        "email": "john@example.com",
-        "created_at": "2024-01-15T10:30:00Z"
-      },
-      {
-        "id": 2,
-        "name": "Jane Smith",
-        "email": "jane@example.com",
-        "created_at": "2024-01-16T14:45:00Z"
-      }
-    ]
-    ```
+    | Option | Default |
+    |--------|---------|
+    | Pretty print | Yes |
+    | Include NULL values | Yes |
+    | Preserve all values as strings | No |
 
     {/* Screenshot: JSON export options */}
     <Frame caption="JSON export options">
@@ -137,105 +91,65 @@ Export data from query results or tables:
     </Frame>
   </Tab>
   <Tab title="SQL">
-    **SQL INSERT Statements**
-
-    Best for:
-    - Database migration
-    - Backup and restore
-    - Seeding databases
+    Best for migrations, backups, and seeding databases.
 
     Global options:
-    | Option | Description | Default |
-    |--------|-------------|---------|
-    | Compress with gzip | Save as `.sql.gz` to reduce file size | No |
-    | Batch size | Number of rows per INSERT statement | 500 |
 
-    Per-table options (configurable individually when exporting multiple tables):
-    | Option | Description | Default |
-    |--------|-------------|---------|
-    | Include structure | Include CREATE TABLE statement | Yes |
-    | Include DROP | Include DROP TABLE IF EXISTS before CREATE | Yes |
-    | Include data | Include INSERT statements with row data | Yes |
+    | Option | Default |
+    |--------|---------|
+    | Compress with gzip (`.sql.gz`) | No |
+    | Batch size (rows per INSERT) | 500 |
 
-    Example output:
-    ```sql
-    DROP TABLE IF EXISTS `users`;
-    CREATE TABLE `users` ( ... );
+    Per-table options (configurable individually for multi-table exports):
 
-    INSERT INTO `users` (id, name, email, created_at) VALUES
-    (1, 'John Doe', 'john@example.com', '2024-01-15 10:30:00'),
-    (2, 'Jane Smith', 'jane@example.com', '2024-01-16 14:45:00');
-    ```
+    | Option | Default |
+    |--------|---------|
+    | Include CREATE TABLE | Yes |
+    | Include DROP TABLE IF EXISTS | Yes |
+    | Include INSERT data | Yes |
 
     {/* Screenshot: SQL export options: structure, data, batch size */}
-    <Frame caption="SQL export options: structure, data, batch size">
+    <Frame caption="SQL export options">
       <img
         className="block dark:hidden"
         src="/images/export-sql-options.png"
-        alt="SQL export options: structure, data, batch size"
+        alt="SQL export options"
       />
       <img
         className="hidden dark:block"
         src="/images/export-sql-options-dark.png"
-        alt="SQL export options: structure, data, batch size"
+        alt="SQL export options"
       />
     </Frame>
   </Tab>
   <Tab title="MQL">
-    **MongoDB Query Language Script**
+    MongoDB only. Generates `insertMany()` scripts that run directly in `mongosh`.
 
-    Best for:
-    - Restoring MongoDB data via `mongosh`
-    - MongoDB backup and migration
-    - Sharing MongoDB data as executable scripts
+    | Option | Default |
+    |--------|---------|
+    | Batch size (documents per `insertMany`) | 500 |
 
-    Options:
-    | Option | Description | Default |
-    |--------|-------------|---------|
-    | Batch size | Number of documents per `insertMany` statement | 500 |
-
-    Example output:
+    Output is a `.js` file:
     ```javascript
-    // TablePro MQL Export
-    // Generated: 2024-01-15T10:30:00Z
-    // Database: mydb
-
-    // Collection: users
     db.users.insertMany([
       {"_id": {"$oid": "507f1f77bcf86cd799439011"}, "name": "Alice", "age": 30},
       {"_id": {"$oid": "507f1f77bcf86cd799439012"}, "name": "Bob", "age": 25}
     ]);
     ```
-
-    <Note>
-    MQL export is only available for MongoDB connections. The output is a `.js` file that runs directly in `mongosh`.
-    </Note>
   </Tab>
   <Tab title="XLSX">
-    **Excel Spreadsheet**
-
     <Note>
-    XLSX export requires a **Pro license**. CSV, JSON, and SQL export are available in the free version.
+    XLSX export requires a **Pro license**.
     </Note>
 
-    Best for:
-    - Sharing data with non-technical users
-    - Excel and spreadsheet applications
-    - Business reports and analysis
+    Best for sharing data with non-technical users and business reports.
 
-    Options:
-    | Option | Description | Default |
-    |--------|-------------|---------|
-    | Include headers | Column names in first row (bold) | Yes |
-    | NULL as empty | Convert NULL values to empty cells | Yes |
+    | Option | Default |
+    |--------|---------|
+    | Include headers (bold first row) | Yes |
+    | NULL as empty cells | Yes |
 
-    Features:
-    - **Multi-sheet export**: Each table becomes a separate worksheet
-    - **Numeric detection**: Numbers are stored as numeric cells (not text) for proper Excel formatting
-    - **Shared strings**: String deduplication for smaller file sizes
-    - **Bold headers**: First row is automatically bolded when headers are included
-    - **Large dataset support**: Optimized for 175K+ rows using streaming Data buffers and background file assembly
-    - **No dependencies**: Pure-Swift OOXML writer, no external libraries
+    Each table exports as a separate worksheet. Numbers are stored as numeric cells for proper Excel formatting. Handles 175K+ rows.
 
     {/* Screenshot: Excel export options */}
     <Frame caption="Excel export options">
@@ -255,30 +169,18 @@ Export data from query results or tables:
 
 ### Exporting Query Results
 
-To export the results of a specific query to a file:
-
-1. Write and execute your query in the SQL editor
-2. Right-click on the results grid and select **Export Results...**, or go to **File** > **Export Results...**
-3. Choose your export format (CSV, JSON, SQL, XLSX, or MQL)
-4. Configure format-specific options and filename
-5. Click **Export**
-
-The export dialog shows the row count and uses a simplified layout without the table selection tree, since only the in-memory query results are exported.
+Right-click the results grid and select **Export Results...**, or go to **File** > **Export Results...**. Choose a format, configure options, and click **Export**. Only in-memory results are exported.
 
 <Tip>
-For large exports, use pagination or LIMIT in your query to control the output size.
+Use LIMIT in your query to control export size for large tables.
 </Tip>
 
 ### Exporting Entire Tables
 
-To export all data from a table:
-
-1. Click on the table in the sidebar
-2. Click **Export** without applying any filters
-3. Or run `SELECT * FROM table_name` and export
+Click a table in the sidebar and click **Export**, or run `SELECT * FROM table_name` and export.
 
 <Tip>
-Export multiple tables at once by selecting them in the export dialog's tree view. When exporting as SQL, each table can have individual options for structure (DDL), DROP statements, and data.
+Export multiple tables at once via the export dialog's tree view. SQL exports support per-table options for structure, DROP, and data.
 </Tip>
 
 
@@ -288,29 +190,23 @@ Paste tabular data directly into the data grid. Press `Cmd+V` after selecting a 
 
 ## Import Data
 
-TablePro imports **SQL files** (`.sql` and `.sql.gz`). Statements execute directly against your database, making it good for restoring backups, running migrations, or seeding data.
+Import `.sql` and `.sql.gz` files. Statements execute directly against your database: backups, migrations, seed data.
 
 <Note>
-**MongoDB**: SQL import is not available for MongoDB connections. Use `mongoimport` or the MQL shell for importing data.
+**MongoDB**: SQL import is not available. Use `mongoimport` or the MQL shell.
 </Note>
 
 ### Import Workflow
 
 <Steps>
   <Step title="Open Import Dialog">
-    Click **File** > **Import** (or press `Cmd+Shift+I`). You can also drag and drop a `.sql` or `.sql.gz` file onto the application.
-  </Step>
-  <Step title="Select SQL File">
-    Choose a `.sql` or `.sql.gz` file from your filesystem.
+    Click **File** > **Import** (`Cmd+Shift+I`), or drag and drop a `.sql` / `.sql.gz` file onto the app.
   </Step>
   <Step title="Configure Options">
     Set encoding, transaction wrapping, and foreign key check options.
   </Step>
-  <Step title="Preview SQL">
-    Review the SQL code preview, statement count, and file size before importing.
-  </Step>
-  <Step title="Import">
-    Click **Import** to execute the statements and monitor progress.
+  <Step title="Preview and Import">
+    Review the SQL preview, statement count, and file size. Click **Import** to execute.
   </Step>
 </Steps>
 
@@ -336,25 +232,9 @@ TablePro imports **SQL files** (`.sql` and `.sql.gz`). Statements execute direct
 | Wrap in transaction | Execute all statements within a single transaction | Yes |
 | Disable foreign key checks | Temporarily disable FK constraints during import | Yes |
 
-### SQL Preview
-
-Before running the import, the dialog shows:
-
-- **SQL code preview** of the file contents
-- **Statement count** -- total number of SQL statements detected
-- **File size** of the selected file
-
-This lets you verify the file contains the expected SQL before executing.
-
 ## Progress and Errors
 
-### Import Progress
-
-During import, a progress indicator shows:
-
-- **Statements processed** out of total statements
-- **Current statement** being executed (truncated to 50 characters)
-- **Progress bar** showing overall completion
+During import, a progress bar shows statements processed, current statement, and overall completion.
 
 {/* Screenshot: Import progress bar */}
 <Frame caption="Import progress">
@@ -370,6 +250,4 @@ During import, a progress indicator shows:
   />
 </Frame>
 
-### Error Handling
-
-Import stops on the first error. If wrapped in a transaction, all changes roll back automatically. Check the error message and line number to identify the problematic statement.
+Import stops on the first error. If wrapped in a transaction, all changes roll back automatically.

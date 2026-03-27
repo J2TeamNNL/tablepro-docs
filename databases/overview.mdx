@@ -5,11 +5,11 @@ description: Create, organize, and manage database connections across 18+ suppor
 
 # Connection Management
 
-TablePro connects to 18+ database systems from a single interface. Create connections, organize them with colors, tags, and groups, and switch between them without leaving your workflow.
+TablePro connects to 18+ database systems. Create connections, organize them with colors, tags, and groups, and switch between them instantly.
 
 ## Supported Databases
 
-TablePro supports 18+ database systems natively:
+Natively supported:
 
 <CardGroup cols={2}>
   <Card title="MySQL" icon="database">
@@ -92,7 +92,7 @@ Create a new connection at any time:
 
 ### From a Connection URL
 
-Hosting platforms, deployment tools, and documentation often provide connection strings. Paste them directly into the connection form:
+Paste a connection string directly into the form:
 
 1. Open the **New Connection** form
 2. Click **Import from URL** in the General tab
@@ -108,7 +108,7 @@ Connection URLs with special characters in the password (like `@`, `#`, or `%`) 
 
 ### Connect Directly from a URL
 
-Open a database URL from your browser or terminal. TablePro launches and connects immediately, no form or saved connection required.
+Open a database URL from your browser or terminal. TablePro connects immediately, no form required.
 
 **From a browser:** paste the URL into your address bar and press Enter.
 
@@ -244,7 +244,7 @@ SSL/TLS is not available for SQLite connections (file-based, no network involved
 
 ## Organizing Connections
 
-Assign colors and tags to connections for quick visual identification. Colors tint the toolbar when you connect (red for production, green for development), and tags group connections in the sidebar.
+Colors tint the toolbar when you connect (red for production, green for development). Tags group connections in the sidebar.
 
 Create connection groups by right-clicking in the connection list or using the folder icon. Groups collapse/expand and persist between sessions.
 
@@ -264,7 +264,7 @@ Create connection groups by right-clicking in the connection list or using the f
 
 ## Quick Connection Switching
 
-Switch between active or saved connections from the toolbar without returning to the Welcome screen:
+Switch connections from the toolbar:
 
 1. Click the **connection name** button in the toolbar
 2. A popover shows your active sessions and saved connections
@@ -272,7 +272,7 @@ Switch between active or saved connections from the toolbar without returning to
 4. Click **Manage Connections...** to open the full connection manager
 
 <Tip>
-The connection switcher is the fastest way to jump between databases during development. Clicking the connection button again dismisses the popover.
+Click the connection button again to dismiss the popover.
 </Tip>
 
 ## Switching Databases
@@ -283,7 +283,7 @@ To switch databases on the same connection:
 2. Select a different database from the dropdown
 3. The sidebar updates to show the new database's tables
 
-Faster than creating separate connections for each database on the same server.
+No need to create separate connections for each database on the same server.
 
 {/* Screenshot: Database switcher */}
 <Frame caption="Database switcher in toolbar">
@@ -301,7 +301,7 @@ Faster than creating separate connections for each database on the same server.
 
 ## Dock Menu Quick Connect
 
-Right-click the TablePro icon in the Dock and select a saved connection under **Open Connection** to connect directly without the Welcome screen. If the connection fails, you'll fall back to the Welcome screen to review settings.
+Right-click the TablePro icon in the Dock and select a saved connection under **Open Connection**. If it fails, you'll fall back to the Welcome screen.
 
 ## Creating Databases
 
@@ -345,27 +345,27 @@ Most test failures are due to the server being down, wrong credentials, or netwo
 
 ## Connection Health Monitoring
 
-TablePro monitors active connections and auto-recovers from interruptions.
+TablePro monitors active connections and auto-recovers from drops.
 
 ### Automatic Health Checks
 
-For MySQL, MariaDB, and PostgreSQL connections, TablePro pings (`SELECT 1`) every **30 seconds** to verify the connection is alive. SQLite connections are file-based and skip health monitoring.
+For MySQL, MariaDB, and PostgreSQL, TablePro pings (`SELECT 1`) every **30 seconds**. SQLite is file-based and skips health checks.
 
 ### Auto-Reconnect
 
-When a health check detects a lost connection, TablePro reconnects automatically with exponential backoff:
+When a connection drops, TablePro reconnects with exponential backoff:
 
 1. **Attempt 1** -- waits 2 seconds, then reconnects
 2. **Attempt 2** -- waits 4 seconds, then reconnects
 3. **Attempt 3** -- waits 8 seconds, then reconnects
 
-If all three attempts fail, the connection enters an error state. A **Reconnect** button appears in the toolbar.
+After three failures, the connection enters an error state. A **Reconnect** button appears in the toolbar.
 
-SSH tunnels have independent health monitoring. They are re-established automatically if the tunnel process dies.
+SSH tunnels have independent monitoring and are re-established automatically if the tunnel process dies.
 
 ### Manual Reconnect
 
-If auto-reconnect fails, click the **Reconnect** button in the toolbar to re-establish the connection manually. For SSH connections, this also recreates the SSH tunnel.
+Click the **Reconnect** button in the toolbar to retry manually. For SSH connections, this also recreates the tunnel.
 
 <Tip>
 The toolbar status indicator shows connection state: green for connected, orange for reconnecting, red for error/disconnected.
@@ -391,7 +391,7 @@ SQLite connections are file-based and don't require health monitoring or auto-re
 
 ## Startup Commands
 
-Startup commands are SQL statements that run automatically every time a connection is established. Use them to set session variables, configure timezone, change encoding, or set other session-level options.
+SQL statements that run automatically on every connection. Use them to set session variables, timezone, encoding, or other session options.
 
 Configure startup commands in the **Advanced** tab of the connection form. Enter one SQL statement per line.
 
@@ -408,7 +408,7 @@ SET statement_timeout = '30s';
 Startup commands execute in order, top to bottom. If a command fails, the connection still proceeds, but the failed command is skipped.
 
 <Tip>
-Startup commands are useful for enforcing consistent session settings across team members. For example, setting a specific timezone ensures all datetime queries return results in the same zone regardless of the server's default.
+Set a timezone here to ensure datetime results are consistent across team members, regardless of server defaults.
 </Tip>
 
 <Note>
@@ -417,9 +417,9 @@ Startup commands run on every connection, including auto-reconnects. They are da
 
 ## Editing and Deleting Connections
 
-Right-click a connection to edit or delete it. Changes take effect on the next connection. Deleting a connection only removes the saved settings — your actual database is unaffected.
+Right-click a connection to edit or delete it. Changes take effect on the next connection. Deleting removes the saved settings only; your database is unaffected.
 
 ## Backup and Restore
 
-Connections are stored in `~/Library/Preferences/com.TablePro.plist`. Passwords are in the macOS Keychain. To backup, copy the `.plist` file — but note that you'll need to re-enter passwords after restoring since Keychain entries don't transfer.
+Connections are stored in `~/Library/Preferences/com.TablePro.plist`. Passwords are in the macOS Keychain. Copy the `.plist` file to back up. You'll need to re-enter passwords after restoring since Keychain entries don't transfer.
 

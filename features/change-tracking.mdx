@@ -21,17 +21,13 @@ Changes in TablePro are queued in memory, not applied immediately. Edit cells, i
   />
 </Frame>
 
-## Overview
-
-Edits to data or table structure are queued locally and highlighted in the grid. Commit all changes at once or discard them entirely. This prevents accidental data loss and gives you full control over when modifications reach the database.
-
 <Tip>
-Change tracking is per-tab. Each tab has its own independent set of pending changes, so switching between tabs preserves your edits.
+Change tracking is per-tab. Switching tabs preserves your edits.
 </Tip>
 
 ## Data Changes
 
-TablePro tracks three types of data changes: cell edits (updates), row insertions, and row deletions. All lookups are O(1) using hash-based data structures, so performance stays fast even with many pending changes.
+TablePro tracks three types of data changes: cell edits, row insertions, and row deletions.
 
 ### Editing Cells
 
@@ -40,8 +36,6 @@ To edit an existing cell:
 1. Double-click the cell
 2. Enter the new value
 3. Press `Enter` to confirm or `Escape` to cancel
-
-Modified cells are highlighted in the data grid.
 
 {/* Screenshot: Modified cell highlighted in the data grid */}
 <Frame caption="Modified cells are highlighted">
@@ -58,7 +52,7 @@ Modified cells are highlighted in the data grid.
 </Frame>
 
 <Note>
-If you change a value back to its original, the change is automatically removed from the queue. TablePro detects when edits cancel each other out.
+Changing a value back to its original automatically removes it from the queue.
 </Note>
 
 ### Adding Rows
@@ -70,10 +64,10 @@ To insert a new row:
 3. Fill in the values for each column
 4. Columns with default values are pre-filled with `DEFAULT`
 
-New rows are tracked separately from updates. Edits to cells in a newly inserted row are folded into the insertion rather than creating separate update records.
+Edits to cells in a new row are folded into the insertion, not tracked as separate updates.
 
 {/* Screenshot: Newly added row with insertion indicator */}
-<Frame caption="Newly added row with insertion indicator">
+<Frame caption="Newly added row">
   <img
     className="block dark:hidden"
     src="/images/change-new-row.png"
@@ -94,10 +88,10 @@ To delete rows:
 2. Press the `Delete` key or click the delete button
 3. Deleted rows are marked with a strikethrough indicator
 
-Deleted rows remain visible in the grid until you commit or discard, so you can undo the deletion if needed.
+Deleted rows stay visible until you commit or discard.
 
 {/* Screenshot: Deleted row with deletion indicator */}
-<Frame caption="Deleted row with deletion indicator">
+<Frame caption="Deleted row">
   <img
     className="block dark:hidden"
     src="/images/change-deleted-row.png"
@@ -116,18 +110,11 @@ Batch deletion of multiple rows is tracked as a single undo action. Undoing a ba
 
 ## Commit & Discard
 
-Once you have staged your changes, commit them to the database or discard them.
-
 ### Committing Changes
 
-To apply all pending changes:
+Click **Commit** or press `Cmd+S`. TablePro generates parameterized SQL, executes it, clears the queue, and refreshes the grid.
 
-1. Click the **Commit** button in the toolbar, or press `Cmd+S`
-2. TablePro generates parameterized SQL statements for all queued changes
-3. The statements execute against the database
-4. On success, the change queue clears and the grid refreshes
-
-The commit generates:
+Generated SQL:
 
 | Change Type | SQL Generated |
 |-------------|--------------|
@@ -141,29 +128,14 @@ UPDATE statements require a primary key on the table. If no primary key is defin
 
 ### Discarding Changes
 
-To revert all pending changes:
-
-1. Click the **Discard** button in the toolbar
-2. All queued changes are removed
-3. Modified cells revert to their original values
-4. Inserted rows are removed from the grid
-5. Deleted rows are unmarked
-
-Discard also clears the undo/redo stack for the current tab.
+Click **Discard** to revert all pending changes. Modified cells return to their original values, inserted rows are removed, and deleted rows are unmarked. This also clears the undo/redo stack.
 
 ### Previewing Data SQL
 
-Before committing, preview the exact SQL statements that will execute:
-
-1. Make changes to data in the grid (edit cells, insert/delete rows)
-2. Click the **Preview SQL** button (eye icon) in the toolbar, or press `Cmd+Shift+P`
-3. A popover displays all pending SQL with syntax highlighting
-4. Use **Copy All** to copy the SQL to clipboard
-
-{/* Screenshot: SQL Preview popover showing pending statements */}
+Click the **Preview SQL** button (eye icon) or press `Cmd+Shift+P` to see the exact SQL before committing. Use **Copy All** to copy to clipboard.
 
 <Tip>
-The preview shows actual SQL with parameter values inlined, so you can verify exactly what will run. Destructive operations (DROP, TRUNCATE, DELETE) are highlighted with a warning banner.
+The preview inlines parameter values so you can verify exactly what will run. Destructive operations are highlighted with a warning banner.
 </Tip>
 
 {/* Screenshot: Commit and Discard buttons with pending changes count */}
@@ -182,35 +154,20 @@ The preview shows actual SQL with parameter values inlined, so you can verify ex
 
 ## Undo & Redo
 
-Full undo/redo stack for data edits. Step backward and forward through changes before committing.
-
-### How It Works
-
-Every data change is pushed onto an undo stack:
-
-- **Cell edits**: Store the previous and new value
-- **Row insertions**: Store the row index
-- **Row deletions**: Store the row index and original row data
-- **Batch deletions**: Store all affected rows as a single action
-
-Undo moves the action to the redo stack. Redo moves it back.
-
-### Using Undo & Redo
-
 | Action | Shortcut |
 |--------|----------|
 | Undo | `Cmd+Z` |
 | Redo | `Cmd+Shift+Z` |
 
 <Tip>
-Undo and redo are context-aware. When the SQL editor is focused, `Cmd+Z` undoes text edits. When the data grid is focused, it undoes data changes.
+Context-aware: `Cmd+Z` undoes text edits when the SQL editor is focused, data changes when the grid is focused.
 </Tip>
 
-Undo/redo stacks are maintained per-tab. Committing or discarding changes clears both stacks. The stack works the same for both data and schema changes.
+Stacks are per-tab. Committing or discarding clears both stacks.
 
 ## Schema Changes
 
-TablePro also tracks changes to table structure (columns, indexes, and foreign keys) using the same queue-based approach.
+Table structure changes (columns, indexes, foreign keys) use the same queue-based approach.
 
 ### Tracked Schema Operations
 
@@ -229,11 +186,9 @@ TablePro also tracks changes to table structure (columns, indexes, and foreign k
 
 ### Visual Indicators
 
-In the Structure tab, pending changes show with visual indicators:
-
-- **New items** (columns, indexes, foreign keys) are highlighted with an insertion color
-- **Modified items** show which fields have changed
-- **Deleted items** are marked with a deletion indicator
+- **New items**: highlighted with an insertion color
+- **Modified items**: changed fields are marked
+- **Deleted items**: shown with a deletion indicator
 
 {/* Screenshot: Schema changes highlighted in Structure tab */}
 <Frame caption="Schema changes highlighted in Structure tab">
@@ -288,7 +243,7 @@ Copy individual SQL statements from the preview sheet using the copy button next
 
 ## SQL Generation
 
-Data changes produce parameterized statements to prevent SQL injection. Schema changes produce ALTER TABLE statements with database-specific syntax:
+Data changes use parameterized statements. Schema changes produce database-specific ALTER TABLE statements:
 
 <Tabs>
   <Tab title="MySQL/MariaDB">

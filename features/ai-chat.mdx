@@ -5,11 +5,11 @@ description: Built-in AI chat panel with support for Claude, OpenAI, Gemini, Ope
 
 # AI Chat
 
-TablePro has a built-in AI chat panel for writing, explaining, and fixing SQL queries. It supports Claude (Anthropic), OpenAI, Gemini (Google), OpenRouter, Ollama, and custom OpenAI-compatible endpoints.
+Built-in AI chat panel for writing, explaining, and fixing SQL. Supports Claude, OpenAI, Gemini, OpenRouter, Ollama, and custom OpenAI-compatible endpoints.
 
-## Opening the AI Chat Panel
+## Opening the Panel
 
-Press `Cmd+Shift+L`, click the AI button in the toolbar, or go **View** > **Toggle AI Chat**. The panel appears on the right side of the editor.
+Press `Cmd+Shift+L`, click the AI toolbar button, or go **View** > **Toggle AI Chat**.
 
 <Frame caption="AI chat panel">
   <img
@@ -26,9 +26,7 @@ Press `Cmd+Shift+L`, click the AI button in the toolbar, or go **View** > **Togg
 
 ## Chatting with AI
 
-Type your question and press Enter. The AI receives your database type, schema (tables, columns, foreign keys), and current query, then responds with context-aware suggestions in Markdown with syntax-highlighted SQL code blocks.
-
-SQL code blocks in responses have **Copy** and **Insert to Editor** buttons. Token counts appear below each response for tracking API usage.
+Type a question and press Enter. The AI receives your database type, schema, and current query, then responds with syntax-highlighted SQL code blocks. Each code block has **Copy** and **Insert to Editor** buttons. Token counts appear below each response.
 
 <Frame caption="AI response with code block actions">
   <img
@@ -57,7 +55,7 @@ SQL code blocks in responses have **Copy** and **Insert to Editor** buttons. Tok
   />
 </Frame>
 
-Conversations save automatically to disk and auto-title from your first message. Use the chat panel buttons to browse history, start a new conversation, or delete one.
+Conversations auto-save and auto-title from your first message. Browse history, start new conversations, or delete old ones from the panel.
 
 <Frame caption="Conversation history">
   <img
@@ -72,9 +70,7 @@ Conversations save automatically to disk and auto-title from your first message.
   />
 </Frame>
 
-Failed responses show a **Retry** button; successful ones have a **Regenerate** button to get a new answer.
-
-Responses stream in real-time. Click **Stop** to cancel. You can scroll up while typing a new message.
+Failed responses show **Retry**; successful ones show **Regenerate**. Responses stream in real-time -- click **Stop** to cancel.
 
 <Frame caption="Streaming response">
   <img
@@ -91,11 +87,11 @@ Responses stream in real-time. Click **Stop** to cancel. You can scroll up while
 
 ## Configuring AI Providers
 
-TablePro supports Claude, OpenAI, Gemini, OpenRouter, Ollama, and custom OpenAI-compatible endpoints. Ollama auto-detects on launch. Configure providers in **Settings** (`Cmd+,`) > **AI**:
+Configure providers in **Settings** (`Cmd+,`) > **AI**. Ollama auto-detects on launch.
 
 ### Adding a Provider
 
-Click **Add Provider**, choose a type, enter your API key (endpoint pre-fills), specify a model or click **Fetch** to pull available models, then click **Test** to verify.
+Click **Add Provider**, choose a type, enter your API key, specify a model (or click **Fetch** to list available models), then **Test** to verify.
 
 <Frame caption="AI settings - provider configuration">
   <img
@@ -110,13 +106,11 @@ Click **Add Provider**, choose a type, enter your API key (endpoint pre-fills), 
   />
 </Frame>
 
-### API Key Security
-
-API keys are stored in your macOS Keychain. They never touch plain text files or preferences.
+API keys are stored in macOS Keychain, never in plain text.
 
 ### Feature Routing
 
-Route Chat, Explain Query, Optimize Query, Fix Error, and Inline Suggestions to different providers, or use the default (first enabled provider).
+Route each feature (Chat, Explain, Optimize, Fix Error, Inline Suggestions) to a specific provider, or use the default.
 
 <Frame caption="Feature routing configuration">
   <img
@@ -131,9 +125,7 @@ Route Chat, Explain Query, Optimize Query, Fix Error, and Inline Suggestions to 
   />
 </Frame>
 
-Configure what the AI receives in **Settings** > **AI** > **Context**: database schema (on), current query (on), query results (off), and max tables (20). More context improves answers but increases data sent.
-
-Set a per-connection AI policy (Use Default, Always Allow, Ask Each Time, or Never) to control access on sensitive connections.
+Configure context in **Settings** > **AI** > **Context**: schema (on), current query (on), query results (off), max tables (20). Set a per-connection AI policy (Use Default, Always Allow, Ask Each Time, or Never) for sensitive connections.
 
 <Frame caption="Per-connection AI policy">
   <img
@@ -150,9 +142,7 @@ Set a per-connection AI policy (Use Default, Always Allow, Ask Each Time, or Nev
 
 ## Editor Integration
 
-### Context Menu
-
-Right-click SQL in the editor for **Explain with AI** and **Optimize with AI** options.
+Right-click SQL in the editor for **Explain with AI** and **Optimize with AI**.
 
 <Frame caption="SQL editor context menu with AI items">
   <img
@@ -167,11 +157,11 @@ Right-click SQL in the editor for **Explain with AI** and **Optimize with AI** o
   />
 </Frame>
 
-Toggle AI Chat (`Cmd+Shift+L`), Explain (`Cmd+L`), or Optimize (`Cmd+Option+L`). All customizable in **Settings** > **Keyboard** > **AI**.
+Shortcuts: Toggle AI Chat (`Cmd+Shift+L`), Explain (`Cmd+L`), Optimize (`Cmd+Option+L`). Customizable in **Settings** > **Keyboard** > **AI**.
 
 ### Ask AI to Fix Errors
 
-Query error dialogs have an **Ask AI to Fix** button that opens the chat panel, sends the failed query and error message, and gets AI suggestions.
+Query error dialogs include an **Ask AI to Fix** button. It opens the chat panel with the failed query and error message.
 
 <Frame caption="Query error dialog with Ask AI to Fix button">
   <img

@@ -5,16 +5,41 @@ description: Save SSH tunnel configurations as reusable profiles shared across c
 
 # SSH Profiles
 
-When you connect to MySQL, Redis, and PostgreSQL on the same remote server, you'd normally enter the same SSH host, port, and credentials three times. SSH profiles fix that: define the tunnel config once, then pick it from a dropdown on any connection.
+Define an SSH tunnel config once, then reuse it across multiple connections. No more entering the same host, port, and credentials for every database on the same server.
 
-Create a profile in any connection's **SSH Tunnel** tab by clicking **Create New Profile...** and filling in host, port, username, and auth method. Once created, select the profile from the **Profile** picker in other connections. Updating a profile affects all connections using it.
+## Creating a Profile
 
-To edit a profile, select it and click **Edit Profile...**. To delete, click **Edit Profile...** then **Delete Profile**. You can also save an existing inline SSH config as a profile by clicking **Save Current as Profile...**.
+1. Open any connection's **SSH Tunnel** tab
+2. Click **Create New Profile...**
+3. Fill in host, port, username, and auth method
+4. Save
+
+Select the profile from the **Profile** picker in other connections. Changes to a profile apply to all connections using it.
+
+{/* Screenshot: SSH profile creation */}
+<Frame caption="Creating an SSH profile">
+  <img
+    className="block dark:hidden"
+    src="/images/ssh-profile-create.png"
+    alt="Creating an SSH profile"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/ssh-profile-create-dark.png"
+    alt="Creating an SSH profile"
+  />
+</Frame>
+
+You can also save an existing inline SSH config as a profile: click **Save Current as Profile...**.
+
+## Editing and Deleting
+
+Select a profile and click **Edit Profile...** to modify it. To delete, click **Edit Profile...** then **Delete Profile**.
 
 ## Testing a Profile
 
-Click **Test Connection** in the profile editor to verify your SSH settings without using the profile in a database connection. TablePro connects to the SSH server, performs the handshake, verifies the host key, and authenticates. A green checkmark appears on success; an error dialog shows the failure reason otherwise.
+Click **Test Connection** in the profile editor to verify SSH settings without connecting to a database. TablePro performs the SSH handshake, verifies the host key, and authenticates. Green checkmark on success; error dialog on failure.
 
 ## iCloud Sync
 
-SSH profiles sync across Macs when iCloud Sync is enabled with the **SSH Profiles** toggle on in **Settings > Sync**. SSH passwords and key passphrases stay local by default. Turn on **Password sync** in **Settings > Sync** to sync credentials via iCloud Keychain.
+SSH profiles sync across Macs when iCloud Sync is enabled with the **SSH Profiles** toggle on in **Settings > Sync**. Passwords and key passphrases stay local by default. Turn on **Password sync** to sync credentials via iCloud Keychain.

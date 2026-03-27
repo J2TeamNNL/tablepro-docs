@@ -7,11 +7,7 @@ description: Drop, truncate, duplicate tables, create views, and switch database
 
 Right-click tables in the sidebar to drop, truncate, or duplicate them. Create and manage views. Switch between databases on the same connection.
 
-## Table Operations
-
-Right-click a table in the sidebar to access these operations.
-
-### Drop Table
+## Drop Table
 
 Permanently deletes a table and all its data.
 
@@ -39,9 +35,9 @@ Permanently deletes a table and all its data.
 Dropping a table is irreversible. Always backup important data before dropping tables.
 </Warning>
 
-### Truncate Table
+## Truncate Table
 
-Removes all rows while keeping the table structure intact.
+Removes all rows while keeping the table structure.
 
 1. Right-click the table (or select multiple tables)
 2. Select **Truncate**
@@ -67,30 +63,20 @@ Truncate is faster than `DELETE FROM table` because it skips per-row delete logs
   />
 </Frame>
 
-### Batch Operations
+## Batch Operations
 
-Select multiple tables and apply Drop or Truncate to all at once. The same options apply to every selected table.
-
-1. Hold `Cmd` and click to select multiple tables
-2. Right-click and choose **Delete** or **Truncate**
-3. Configure options once in the dialog
-4. All selected tables are processed
+Hold `Cmd` and click to select multiple tables, then right-click and choose **Delete** or **Truncate**. The same options apply to all selected tables.
 
 ## View Management
 
-Database views are virtual tables defined by SQL queries. TablePro shows views in the sidebar with a distinctive eye icon and purple color.
+Views appear in the sidebar with an eye icon and purple color.
 
 ### Create View
 
-Create a new view by opening a SQL editor tab with a template:
-
-1. Right-click in the sidebar and select **Create New View...**
-2. Or go to **File** > **New View...**
-3. A new SQL editor tab opens with a CREATE VIEW template
-4. Modify the view name and SELECT query
-5. Execute the query to create the view
-
-The template adapts to your database type (MySQL, PostgreSQL, or SQLite).
+1. Right-click in the sidebar > **Create New View...** (or **File** > **New View...**)
+2. A SQL editor tab opens with a CREATE VIEW template adapted to your database type
+3. Modify the view name and SELECT query
+4. Execute to create
 
 {/* Screenshot: Create View with SQL template */}
 <Frame caption="Create View with SQL template">
@@ -121,19 +107,9 @@ For MySQL/MariaDB, use `ALTER VIEW` to modify a view. For PostgreSQL, use `CREAT
 
 ### Drop View
 
-Remove a view from the database:
-
-1. Right-click the view in the sidebar
-2. Select **Drop View**
-3. Confirm the deletion
-
-<Tip>
-Views don't store data. Dropping a view only removes the view definition. The underlying table data stays intact.
-</Tip>
+Right-click the view > **Drop View** > confirm. Dropping a view only removes the definition; underlying table data stays intact.
 
 ### Context Menu Differences
-
-The sidebar context menu adapts for views:
 
 | Action | Tables | Views |
 |--------|--------|-------|
@@ -160,7 +136,7 @@ The sidebar context menu adapts for views:
 
 ## Database Operations
 
-Create a new database (MySQL/MariaDB) by clicking the database name in the toolbar or pressing `Cmd+K`, then clicking **Create**. Enter a name, character set, and collation, then click **Create**.
+Create a new database (MySQL/MariaDB): click the database name in the toolbar or press `Cmd+K`, click **Create**, enter a name, character set, and collation.
 
 {/* Screenshot: Create database dialog */}
 <Frame caption="Create database dialog">
@@ -179,14 +155,7 @@ Create a new database (MySQL/MariaDB) by clicking the database name in the toolb
 
 ### Database Switcher
 
-Switch between databases on the same connection:
-
-1. Click the database name in the toolbar
-2. Browse available databases with metadata
-3. Search by name to filter
-4. Double-click or select and click **Open** to switch
-
-The switcher shows recent databases for quick access and supports refreshing the database list.
+Click the database name in the toolbar to browse databases on the current connection. Search by name, view recent databases, or double-click to switch.
 
 {/* Screenshot: Database switcher with search and recent databases */}
 <Frame caption="Database switcher with search and recent databases">
@@ -202,13 +171,11 @@ The switcher shows recent databases for quick access and supports refreshing the
   />
 </Frame>
 
-## MongoDB Collection Operations
-
-MongoDB collection operations differ from SQL table operations.
+## MongoDB Collections
 
 ### Create Collection
 
-Create a MongoDB collection using the MQL editor. For collections with specific options (capped, validator):
+Use the MQL editor. For collections with specific options (capped, validator):
 
 ```javascript
 db.createCollection("myCollection", {
@@ -224,9 +191,9 @@ Right-click a collection in the sidebar and select **Drop Table**. This executes
 
 ### Show All Collections
 
-Select **Show All Tables** from the sidebar to auto-execute `listCollections` and display all collections in the current database.
+Select **Show All Tables** from the sidebar to list all collections in the current database.
 
 <Note>
-**Truncate** is not available for MongoDB collections. To remove all documents while keeping the collection, use `db.collection.deleteMany({})` in the MQL editor.
+Truncate is not available for MongoDB. To remove all documents while keeping the collection, use `db.collection.deleteMany({})` in the MQL editor.
 </Note>
 

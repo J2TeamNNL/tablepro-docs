@@ -48,17 +48,14 @@ Place your cursor in any statement and press `Cmd+Enter` to execute just that on
 
 ### Selecting and Executing
 
-Select text and press `Cmd+Enter` to run only the selection.
+Select text and press `Cmd+Enter` to run only the selection. Multiple statements in the selection run sequentially in a transaction:
 
-If the selection contains **multiple statements** (separated by semicolons), they run sequentially in a transaction:
-
-- Statements execute in order, one at a time
 - If any statement fails, execution stops and all changes roll back
-- The error message identifies which statement failed (e.g. "Statement 3/5 failed: ...")
-- Results from the last `SELECT` are shown in the data grid
+- The error identifies which statement failed (e.g., "Statement 3/5 failed: ...")
+- The last `SELECT` result appears in the data grid
 - Each statement is recorded individually in query history
 
-Good for running SQL dumps, migrations, or batches of related statements:
+Good for running migrations or batches of related statements:
 
 ```sql
 DROP TABLE IF EXISTS users;
@@ -83,16 +80,7 @@ SELECT * FROM users;
 
 ## Autocomplete
 
-Schema-aware SQL autocomplete that adapts to your query context.
-
-### Triggering Autocomplete
-
-Autocomplete appears automatically as you type. You can also:
-
-- Start typing a keyword, table name, or column name
-- Press `Escape` to dismiss the popup
-- Use arrow keys to navigate suggestions
-- Press `Enter` or `Tab` to accept a suggestion
+Autocomplete appears as you type. Use arrow keys to navigate, `Enter`/`Tab` to accept, `Escape` to dismiss.
 
 {/* Screenshot: Autocomplete popup showing table and column suggestions */}
 <Frame caption="SQL autocomplete">
@@ -108,30 +96,21 @@ Autocomplete appears automatically as you type. You can also:
   />
 </Frame>
 
-### What Gets Suggested
+### Context-Aware Suggestions
 
 | Context | Suggestions |
 |---------|-------------|
 | After `SELECT` | Column names, `*`, functions |
-| After `FROM` | Table names, schema names |
-| After `JOIN` | Table names |
+| After `FROM` / `JOIN` | Table names, schema names |
 | After `WHERE` | Column names from selected tables |
-| After `.` (dot) | Columns from the specified table |
+| After `.` (dot) | Columns from the specified table/alias |
 | Start of statement | SQL keywords |
 
-### Schema-Aware Completion
+Table aliases are resolved automatically: typing `u.` after `FROM users u` shows columns from `users`.
 
-Autocomplete resolves table aliases and shows the right columns:
+### Keyword Suggestions
 
-```sql
-SELECT u.  -- Shows columns from 'users' table aliased as 'u'
-FROM users u
-JOIN orders o ON u.id = o.  -- Shows columns from 'orders' table
-```
-
-### SQL Keywords
-
-Keywords are suggested based on context:
+Keywords are context-sensitive:
 
 - After `SELECT`: `DISTINCT`, `TOP`, `ALL`
 - After `FROM`: `JOIN`, `LEFT JOIN`, `INNER JOIN`, `WHERE`
@@ -149,34 +128,14 @@ Keywords are suggested based on context:
 
 ### Query Results
 
-Results appear in the data grid below the editor:
-
-- Row count and execution time are shown
-- Results are paginated for large datasets
-- Click column headers to sort
+Results appear in the data grid below the editor with row count and execution time. Large result sets are paginated.
 
 ### Explain Query
 
-View the execution plan for your query to spot missing indexes or inefficient joins.
-
-To explain a query:
-
-- Click the **Explain** button in the editor toolbar, or
-- Press `Option+Cmd+E`, or
-- Use the menu: **Query** > **Explain Query**
-
-TablePro automatically uses the correct syntax for your database:
-
-| Database | Syntax Used |
-|----------|-------------|
-| MySQL / MariaDB | `EXPLAIN <query>` |
-| PostgreSQL | `EXPLAIN <query>` |
-| SQLite | `EXPLAIN QUERY PLAN <query>` |
-
-The execution plan shows index usage, join strategies, and estimated row counts in the data grid.
+Press `Option+Cmd+E` to view the execution plan. Shows index usage, join strategies, and estimated row counts. TablePro uses the correct syntax per database (`EXPLAIN` for MySQL/PostgreSQL, `EXPLAIN QUERY PLAN` for SQLite).
 
 <Tip>
-Run Explain before executing expensive queries to verify they use the expected indexes and join strategies.
+Run Explain before expensive queries to verify index usage.
 </Tip>
 
 {/* Screenshot: EXPLAIN output displayed in data grid */}
@@ -195,66 +154,35 @@ Run Explain before executing expensive queries to verify they use the expected i
 
 ## SQL Formatting
 
-Built-in SQL formatter that restructures queries for readability. Dialect-aware: it adapts output to MySQL, PostgreSQL, or SQLite syntax.
+Press `Option+Cmd+F` to format the current query. You can also click **Format** in the toolbar or use **Query** > **Format Query**.
 
-### Format Query
+The formatter:
+- Uppercases SQL keywords (`select` becomes `SELECT`)
+- Adds line breaks per clause (`SELECT`, `FROM`, `WHERE`, `JOIN`)
+- Indents logically with consistent spacing
+- Preserves comments, string literals, and cursor position
+- Detects your database dialect and preserves backtick (MySQL) or double-quote (PostgreSQL) identifiers
 
-To format the current query:
+### Example
 
-- Press `Option+Cmd+F`, or
-- Click the **Format** button in the editor toolbar, or
-- Use the menu: **Query** > **Format Query**
-
-The formatter applies these transformations:
-
-| Transformation | Description |
-|----------------|-------------|
-| **Keyword capitalization** | SQL keywords are uppercased (`select` becomes `SELECT`) |
-| **Smart indentation** | Clauses are indented logically with consistent spacing |
-| **Line breaks** | Each major clause (`SELECT`, `FROM`, `WHERE`, `JOIN`, etc.) starts on a new line |
-| **Cursor preservation** | Your cursor position is preserved after formatting |
-| **Comment preservation** | Single-line (`--`) and multi-line (`/* */`) comments are kept intact |
-| **String preservation** | String literals are never modified |
-
-### Dialect-Aware Formatting
-
-The formatter detects your connected database and applies dialect-specific rules:
-
-| Database | Formatting Behavior |
-|----------|---------------------|
-| MySQL / MariaDB | Backtick-quoted identifiers preserved, MySQL-specific syntax handled |
-| PostgreSQL | Double-quoted identifiers preserved, PostgreSQL-specific syntax handled |
-| SQLite | SQLite-specific keywords and syntax handled |
-
-### Before & After Example
-
-**Before** (unformatted):
-
+**Before**:
 ```sql
-select u.id,u.name,u.email,count(o.id) as order_count from users u left join orders o on u.id=o.user_id where u.created_at>'2024-01-01' and u.status='active' group by u.id,u.name,u.email having count(o.id)>5 order by order_count desc limit 100;
+select u.id,u.name,count(o.id) as order_count from users u left join orders o on u.id=o.user_id where u.status='active' group by u.id,u.name having count(o.id)>5 order by order_count desc;
 ```
 
-**After** (`Option+Cmd+F`):
-
+**After**:
 ```sql
 SELECT
     u.id,
     u.name,
-    u.email,
     COUNT(o.id) AS order_count
 FROM users u
 LEFT JOIN orders o ON u.id = o.user_id
-WHERE u.created_at > '2024-01-01'
-    AND u.status = 'active'
-GROUP BY u.id, u.name, u.email
+WHERE u.status = 'active'
+GROUP BY u.id, u.name
 HAVING COUNT(o.id) > 5
-ORDER BY order_count DESC
-LIMIT 100;
+ORDER BY order_count DESC;
 ```
-
-<Tip>
-Format queries before sharing with teammates or saving as templates for consistent, readable SQL.
-</Tip>
 
 {/* Screenshot: SQL query before and after formatting */}
 <Frame caption="SQL query before and after formatting">
@@ -272,11 +200,7 @@ Format queries before sharing with teammates or saving as templates for consiste
 
 ### Error Handling
 
-When a query fails:
-
-1. The error message appears below the editor
-2. Line numbers may be highlighted if the error references a specific line
-3. Read the error message for details on what went wrong
+Errors appear below the editor with the error message and relevant line number.
 
 {/* Screenshot: Query error message display */}
 <Frame caption="Query error message">
@@ -294,7 +218,34 @@ When a query fails:
 
 ## Vim Mode
 
-Enable optional Vim keybindings in **Settings** > **Editor** > **Vim mode**. Supports Normal, Insert, Visual, and Command-line modes with standard motions, operators, and count prefixes. Press `:w` to execute a query or `:q` to close the tab. `Escape` returns to Normal mode.
+Enable Vim keybindings in **Settings** > **Editor** > **Vim mode**. Supports Normal, Insert, Visual, and Command-line modes.
+
+Key mappings:
+
+| Action | Keys |
+|--------|------|
+| Execute query | `:w` |
+| Close tab | `:q` |
+| Enter Insert mode | `i`, `a`, `o`, `O` |
+| Return to Normal mode | `Escape` |
+| Delete word | `dw` |
+| Delete line | `dd` |
+| Yank (copy) line | `yy` |
+| Paste | `p` |
+| Visual select | `v` + motion |
+| Go to line 10 | `:10` |
+| Search forward | `/pattern` |
+| Search backward | `?pattern` |
+| Next match | `n` |
+| Previous match | `N` |
+| Undo | `u` |
+| Redo | `Ctrl+R` |
+
+Standard motions (`h/j/k/l`, `w/b/e`, `0/$`, `gg/G`), operators (`d`, `c`, `y`), and count prefixes (`3dd`, `5j`) all work as expected. Text objects like `ciw` (change inner word) and `di"` (delete inside quotes) are supported.
+
+<Tip>
+Use `:w` as a quick way to execute queries without switching to the mouse.
+</Tip>
 
 ## Editor Settings
 

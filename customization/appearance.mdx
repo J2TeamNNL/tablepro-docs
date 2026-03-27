@@ -23,14 +23,14 @@ Configure how TablePro looks in **Settings** > **Appearance**.
 
 ## Theme Engine
 
-TablePro ships with 9 built-in themes and supports custom themes. You can also install community themes from the plugin registry. Each theme controls all visual aspects of the app: editor syntax colors, data grid colors, sidebar and toolbar styling, UI element colors, fonts, spacing, and layout tokens.
+TablePro ships with 9 built-in themes and supports custom themes. Community themes are available from the plugin registry. Each theme controls editor syntax colors, data grid colors, sidebar/toolbar styling, fonts, spacing, and layout tokens.
 
 ### Theme Editor Layout
 
 The Appearance tab is a split view with two panels:
 
-- **Left panel** (sidebar list): Up to three sections: "Built-in", "Registry", and "Custom". Each row shows a 72x45 color thumbnail, the theme name, and a source label. Select a theme to activate it and edit it in the right panel.
-- **Right panel** (editor): Displays the selected theme's name and a segmented picker with three tabs: Fonts, Colors, and Layout.
+- **Left panel**: Sections for "Built-in", "Registry", and "Custom". Each row shows a color thumbnail, theme name, and source label. Select a theme to activate and edit it.
+- **Right panel**: Three tabs: Fonts, Colors, and Layout.
 
 At the bottom of the sidebar, an action bar provides:
 
@@ -56,9 +56,7 @@ At the bottom of the sidebar, an action bar provides:
 
 ### Theme Appearance Mode
 
-Each theme has a fixed `appearance` property: `light`, `dark`, or `auto`. When you activate a theme, TablePro sets `NSApp.appearance` to match. A light theme forces light chrome across the entire app; a dark theme forces dark chrome; `auto` follows the system setting.
-
-You pick one active theme at a time. There is no separate "light theme" and "dark theme" assignment.
+Each theme has a fixed `appearance` property: `light`, `dark`, or `auto`. Activating a theme sets `NSApp.appearance` to match. One active theme at a time; there is no separate light/dark assignment.
 
 {/* Screenshot: Side-by-side light and dark themes */}
 <Frame caption="Light vs Dark theme">
@@ -76,17 +74,15 @@ You pick one active theme at a time. There is no separate "light theme" and "dar
 
 ## Customizing Themes
 
-Select a theme and edit directly. For built-in themes, you can always edit fonts, and you can modify colors/layout by duplicating first.
-
-Built-in themes auto-duplicate when you make changes, preserving the original.
+Select a theme and edit directly. Built-in themes auto-duplicate when you change colors or layout, preserving the original. Font changes apply without duplication.
 
 ## Import, Export & Registry
 
-Export custom themes as JSON. Import themes from files or install from the plugin registry (**Settings > Plugins > Browse**, filter by Themes). Registry themes are read-only — duplicate to customize.
+Export custom themes as JSON. Import from files or install from the plugin registry (**Settings > Plugins > Browse**, filter by Themes). Registry themes are read-only; duplicate to customize.
 
 ## Connection Colors
 
-Assign colors to connections for visual organization:
+Color-code connections for quick identification:
 
 | Color | Suggested Use |
 |-------|---------------|

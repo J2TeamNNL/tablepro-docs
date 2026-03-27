@@ -133,7 +133,7 @@ Also available from the **TablePro** menu > **Check for Updates...**.
 |---------|---------|-------------|
 | **Share anonymous usage data** | On | Sends anonymous stats (OS version, architecture, locale, database types) every 24 hours |
 
-Fully anonymous: no personal information, queries, or database content is transmitted. Toggle off at any time.
+No personal information, queries, or database content is transmitted. Toggle off at any time.
 
 {/* Screenshot: General settings panel */}
 <Frame caption="General settings">
@@ -158,7 +158,7 @@ Fully anonymous: no personal information, queries, or database content is transm
 | **Font family** | System Mono | System Mono, SF Mono, Menlo, Monaco, Courier New | Monospace font for data grid cells |
 | **Font size** | 13 pt | 10-18 pt | Text size in data grid cells |
 
-The font setting affects all data grid cells, including NULL placeholders and cell editing overlays. A live preview is shown in the settings panel.
+Affects all data grid cells, including NULL placeholders and cell editing overlays. A live preview is shown in the settings panel.
 
 <Tip>
 The data grid font is independent of the SQL editor font. You can use different fonts and sizes for each.
@@ -291,9 +291,9 @@ Enable this for single-tab browsing, similar to TablePlus's default behavior.
 |---------|---------|-------------|
 | **Enable preview tabs** | On | Single-clicking a table opens a temporary tab that gets replaced on next click |
 
-When enabled, single-clicking a table in the sidebar opens a preview tab. The preview tab is replaced when you click a different table. Double-clicking a table or interacting with the preview tab (sorting, filtering, editing) makes it permanent.
+Single-clicking a table opens a preview tab that gets replaced on next click. Double-clicking or interacting with the tab (sorting, filtering, editing) makes it permanent.
 
-Preview tabs show "Preview" in the window subtitle and are not persisted across app restarts.
+Preview tabs show "Preview" in the subtitle and are not persisted across restarts.
 
 ## Keyboard Settings
 
@@ -383,7 +383,7 @@ Manage database driver plugins from the **Plugins** tab in Settings.
 
 ### Installed Plugins
 
-The **Installed** tab shows plugins in a split-view: list on the left, details on the right. Each row shows the plugin's version, capability, and whether it's built-in or user-installed. Filter by name using the search field above the list.
+Split-view: plugin list on the left, details on the right. Each row shows version, capability, and source (built-in or user-installed). Filter by name using the search field.
 
 TablePro ships with 3 built-in database driver plugins (MySQL, PostgreSQL, SQLite) and 3 built-in export plugins (CSV, JSON, SQL). Additional plugins are available from the plugin registry and can be installed from the Browse tab or downloaded automatically when you select a database type:
 
@@ -399,15 +399,15 @@ TablePro ships with 3 built-in database driver plugins (MySQL, PostgreSQL, SQLit
 | DuckDB | DuckDB | -- | Registry |
 | Oracle | Oracle | 1521 | Registry |
 
-Select a plugin to enable or disable it using the toggle in the detail pane. Disabled plugins hide their database type from the connection dialog and prevent connections to that database type.
+Toggle plugins on/off in the detail pane. Disabled plugins hide their database type from the connection dialog.
 
 ### Plugin Details
 
-Select a plugin in the list to view its details in the right pane: version, bundle ID, supported capabilities, database type, and default port. Driver plugins can provide custom settings panels that appear in this detail view.
+Select a plugin to view version, bundle ID, capabilities, database type, and default port. Driver plugins can provide custom settings panels in this view.
 
 ### Browse plugins
 
-The **Browse** tab uses the same split-view. Each row shows version, author, download count, and install status. Filter by name or category using the controls above the list. Click a plugin for full details, or hit the Install button right from the list.
+The **Browse** tab uses the same split-view. Each row shows version, author, download count, and install status. Filter by name or category. Click a plugin for details, or install directly from the list.
 
 ### Installing Third-Party Plugins
 
@@ -423,7 +423,7 @@ Only install plugins from sources you trust. TablePro checks the code signature 
 
 ### Uninstalling Plugins
 
-Select a user-installed plugin and click the **-** button below the list, or use the **Uninstall** button in the detail pane. Built-in plugins cannot be uninstalled, only disabled.
+Select a user-installed plugin and click **-**, or use **Uninstall** in the detail pane. Built-in plugins can only be disabled, not uninstalled.
 
 ### Advanced Settings
 
@@ -514,7 +514,7 @@ Deactivating frees up the activation slot for use on a different machine.
 
 ### Offline Use
 
-TablePro validates your license locally using a cryptographic signature. No internet needed for day-to-day use after activation. The app re-validates with the server every 7 days.
+License validation is local (cryptographic signature). No internet needed after activation. Re-validates with the server every 7 days.
 
 {/* Screenshot: License settings */}
 <Frame caption="License activation and management">

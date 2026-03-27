@@ -87,19 +87,7 @@ To edit a cell:
 
 ### Date/Time Picker
 
-Editing a date, datetime, timestamp, or time column opens a native date picker popover instead of a plain text field. The picker adapts to the column type:
-
-| Column Type | Picker Elements |
-|-------------|----------------|
-| `DATE` | Year, month, day |
-| `DATETIME` / `TIMESTAMP` | Year, month, day, hour, minute, second |
-| `TIME` | Hour, minute, second |
-
-The picker handles common database date formats and outputs values in standard format (`YYYY-MM-DD HH:MM:SS`). Use the stepper controls or type directly in the picker fields.
-
-<Tip>
-The date picker automatically parses the existing cell value. If it cannot be parsed, it defaults to the current date/time.
-</Tip>
+Date, datetime, timestamp, and time columns open a native date picker instead of a text field. The picker adapts to the column type (`DATE`: year/month/day, `DATETIME`/`TIMESTAMP`: adds hour/minute/second, `TIME`: hour/minute/second only). Outputs in `YYYY-MM-DD HH:MM:SS` format. If the existing value cannot be parsed, it defaults to now.
 
 {/* Screenshot: Date picker for editing date columns */}
 <Frame caption="Date picker for editing date columns">
@@ -117,16 +105,7 @@ The date picker automatically parses the existing cell value. If it cannot be pa
 
 ### Foreign Key Lookup
 
-Editing a foreign key column opens a searchable dropdown showing valid values from the referenced table:
-
-- The dropdown shows both the FK value and a descriptive text column (e.g., `1 — John Doe`)
-- Type in the search field to filter values
-- Single-click to highlight; double-click or press `Enter` to commit
-- The popover auto-detects the best display column from the referenced table
-
-<Tip>
-Foreign key lookups fetch up to 1,000 values from the referenced table. For tables with more values, use the search field to narrow results.
-</Tip>
+Foreign key columns open a searchable dropdown with values from the referenced table (e.g., `1 — John Doe`). Type to filter, double-click or press `Enter` to commit. Fetches up to 1,000 values; use the search field to narrow larger sets.
 
 {/* Screenshot: Foreign key lookup with search */}
 <Frame caption="Foreign key lookup with search">
@@ -144,23 +123,13 @@ Foreign key lookups fetch up to 1,000 values from the referenced table. For tabl
 
 ### Boolean Cell Editor
 
-Double-clicking a BOOLEAN, BIT, or TINYINT(1) cell opens a checkbox popover for quick true/false toggling:
-
-- **Checkbox**: Click to toggle between true and false
-- **OK/Cancel**: Click **OK** or press `Enter` to commit; click **Cancel** or press `Escape` to discard
-- **Nullable columns**: A third indeterminate state represents NULL
-
-Database-specific behavior:
+BOOLEAN, BIT, and TINYINT(1) cells open a checkbox popover. Click to toggle, `Enter` to commit, `Escape` to cancel. Nullable columns support a third indeterminate state (NULL).
 
 | Database | Column Types | Values |
 |----------|-------------|--------|
 | MySQL/MariaDB | `TINYINT(1)`, `BIT(1)` | `0` / `1` |
 | PostgreSQL | `BOOLEAN` | `TRUE` / `FALSE` |
 | SQLite | `INTEGER` | `0` / `1` |
-
-<Tip>
-For nullable boolean columns, the checkbox supports three states: checked (true), unchecked (false), and indeterminate (NULL).
-</Tip>
 
 {/* Screenshot: Boolean cell checkbox editor */}
 <Frame caption="Boolean cell checkbox editor">
@@ -178,21 +147,13 @@ For nullable boolean columns, the checkbox supports three states: checked (true)
 
 ### ENUM Column Editor
 
-Double-clicking an ENUM cell opens a searchable dropdown with all allowed values:
-
-- **Search field**: Type to filter the list
-- **NULL option**: Shown at the top for nullable columns (displayed in italic)
-- **Current value**: Highlighted in the accent color
-- Single-click a value to select and commit immediately
-- Press `Escape` to cancel
-
-Works across all supported databases:
+ENUM cells open a searchable dropdown. Click a value to select and commit. Nullable columns show a NULL option at the top.
 
 | Database | ENUM Source |
 |----------|------------|
-| MySQL/MariaDB | Native `ENUM` type from column definition |
-| PostgreSQL | User-defined enum types (via `pg_enum` catalog) |
-| SQLite | `CHECK(column IN ('val1','val2'))` constraints |
+| MySQL/MariaDB | Native `ENUM` type |
+| PostgreSQL | User-defined enum types (`pg_enum`) |
+| SQLite | `CHECK(column IN (...))` constraints |
 
 {/* Screenshot: ENUM value selector */}
 <Frame caption="ENUM value selector">
@@ -210,15 +171,10 @@ Works across all supported databases:
 
 ### SET Column Editor
 
-Double-clicking a SET cell (MySQL/MariaDB) opens a checkbox popover:
-
-- Each allowed value is shown as a checkbox
-- Currently selected values are pre-checked (parsed from the comma-separated cell value)
-- Click **OK** or press `Enter` to commit the selected values (joined with commas)
-- Click **Cancel** or press `Escape` to discard changes
+SET cells (MySQL/MariaDB) open a checkbox popover. Check/uncheck values, then press `Enter` to commit or `Escape` to cancel.
 
 <Tip>
-If ENUM/SET values are not available (e.g., from a complex query result rather than a direct table browse), the cell falls back to inline text editing.
+If ENUM/SET metadata is unavailable (e.g., from a complex query), the cell falls back to inline text editing.
 </Tip>
 
 {/* Screenshot: SET value multi-select editor */}
@@ -237,16 +193,7 @@ If ENUM/SET values are not available (e.g., from a complex query result rather t
 
 ### JSON Editor
 
-Editing a JSON or JSONB cell opens a dedicated JSON editor popover:
-
-- **Real-time validation**: Shows whether the JSON is valid as you type
-- **Save/Cancel**: Explicit buttons to commit or discard changes
-
-The editor validates JSON before saving. Invalid JSON triggers a confirmation dialog before the value is saved.
-
-<Tip>
-JSON values are automatically compacted (minified) when saved to the database.
-</Tip>
+JSON/JSONB cells open a dedicated editor popover with real-time validation. Invalid JSON triggers a confirmation before saving. Values are minified on save.
 
 {/* Screenshot: JSON editor with validation */}
 <Frame caption="JSON editor with validation">
@@ -264,26 +211,15 @@ JSON values are automatically compacted (minified) when saved to the database.
 
 ### Hex Editor (BLOB/Binary)
 
-Double-clicking a BLOB, BINARY, or VARBINARY cell opens a hex editor popover:
-
-- **Hex dump display**: Read-only view showing offset, hex bytes, and ASCII representation
-- **Editable hex input**: Space-separated hex bytes (e.g., `48 65 6C 6C 6F`) for editing
-- **Live validation**: Byte count updates as you type, invalid hex is flagged in red
-- **Save/Cancel**: Explicit buttons to commit or discard changes
-
-BLOB values display as compact hex (`0x48656C6C6F...`) in the grid. The right sidebar also provides a hex editor for the selected cell.
+BLOB, BINARY, and VARBINARY cells open a hex editor popover. Edit as space-separated hex bytes (e.g., `48 65 6C 6C 6F`). Live validation flags invalid input in red. The Cell Inspector sidebar also provides hex editing.
 
 <Note>
-For BLOBs larger than 10 KB, the editable hex is truncated and read-only. Use an external hex editor for large binary data.
+BLOBs larger than 10 KB are read-only. Use an external hex editor for large binary data.
 </Note>
 
 ### Multi-Row Editing
 
-Operate on multiple rows at once:
-
-- **Select multiple rows**: Click row numbers while holding `Cmd` (non-contiguous) or `Shift` (range)
-- **Delete multiple rows**: Select rows, then click **Delete** or press the `Delete` key
-- **Multi-row operations**: Use toolbar buttons to act on the current selection
+Select multiple rows with `Cmd+click` (non-contiguous) or `Shift+click` (range) on row numbers. Press `Delete` to remove selected rows.
 
 {/* Screenshot: Multiple rows selected for editing */}
 <Frame caption="Multiple rows selected for editing">
@@ -349,32 +285,14 @@ The Cell Inspector is a right sidebar panel showing detailed information about t
 
 ### Row Details Mode
 
-When a row is selected, the Cell Inspector shows all column values for that row:
-
-- **Searchable column list**: Find a column by typing in the search field
-- **Column name and data type**: Each entry shows the column name alongside its data type
-- **Full cell value**: Values display without truncation
-- **Multi-line text editing**: TEXT/VARCHAR columns get a multi-line text area for editing long values
-- **Read-only indicator**: Non-editable cells are marked as read-only
-
-Edit values directly in the inspector. Changes are queued just like inline grid edits and are not applied until you commit.
+When a row is selected, the inspector shows all column values with full (untruncated) content. Search columns by name. TEXT/VARCHAR columns get a multi-line editor. Edit values here; changes are queued like inline edits.
 
 ### Table Info Mode
 
-When no row is selected, the Cell Inspector shows table metadata:
-
-| Metadata | Description |
-|----------|-------------|
-| Table name | Name of the current table |
-| Row count | Total number of rows |
-| Storage size | Disk space used by the table |
-| Creation date | When the table was created |
-| Engine | Storage engine (e.g., InnoDB, MyISAM) |
-| Charset | Character set of the table |
-| Collation | Collation used for sorting |
+When no row is selected, the inspector shows table metadata: name, row count, storage size, creation date, engine, charset, and collation.
 
 <Note>
-Connections with Safe Mode set to Read-Only and complex query results are not editable. Editing is disabled in the Cell Inspector for those contexts. See [Safe Mode](/features/safe-mode) for details.
+Read-Only Safe Mode connections and complex query results are not editable. See [Safe Mode](/features/safe-mode).
 </Note>
 
 ## Keyboard Navigation
@@ -427,30 +345,17 @@ NULL values show as styled "NULL" text (customizable in **Settings** > **Data Gr
 
 ## MongoDB Collections
 
-MongoDB collections have some differences from SQL databases in the data grid.
+### Schema and Display
 
-### Document Schema
+MongoDB has no fixed schema. TablePro infers columns by sampling up to 500 documents. Missing fields show as NULL. The `_id` column is read-only; delete and re-insert to change it.
 
-MongoDB collections have no fixed schema. TablePro infers column structure by sampling up to 500 documents. If documents vary in shape, some columns show NULL for documents missing those fields.
-
-### Immutable _id Column
-
-The `_id` column cannot be edited. MongoDB does not allow modifying `_id` on existing documents. To change a document's `_id`, delete and re-insert it.
-
-### BSON Type Display
-
-MongoDB BSON types are displayed with appropriate formatting:
-- **ObjectId**: Shown as `ObjectId("...")`
-- **Date**: Formatted as ISO 8601 datetime
-- **Binary**: Shown as `BinData(subtype, "base64...")`
-- **Decimal128**: Displayed as decimal string
-- **DBRef**: Shown as `DBRef("collection", id)`
+BSON types display as: `ObjectId("...")`, ISO 8601 dates, `BinData(subtype, "base64...")`, decimal strings, `DBRef("collection", id)`.
 
 ### MQL Statement Preview
 
-When you make changes (insert, update, delete) in the data grid, the preview shows MongoDB shell commands instead of SQL:
-- Inserts generate `db.collection.insertMany([...])`
-- Updates generate `db.collection.updateOne({filter}, {$set: {...}})`
-- Deletes generate `db.collection.deleteMany({_id: {$in: [...]}})`
+Changes preview as MongoDB shell commands:
+- Inserts: `db.collection.insertMany([...])`
+- Updates: `db.collection.updateOne({filter}, {$set: {...}})`
+- Deletes: `db.collection.deleteMany({_id: {$in: [...]}})`
 
 

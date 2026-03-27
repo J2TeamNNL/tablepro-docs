@@ -5,11 +5,70 @@ description: Save frequently used queries with optional keyword shortcuts for au
 
 # SQL Favorites
 
-Save queries you run often as favorites. Organize them in folders, assign keyword shortcuts, and insert them from the sidebar or type a keyword to expand via autocomplete.
+Save queries you run often. Organize them in folders, assign keyword shortcuts, and expand them inline via autocomplete.
 
-Right-click in the editor or Query History and pick **Save as Favorite**, or click **+ New Favorite** in the Favorites sidebar. Enter a name, optional autocomplete keyword, SQL, and scope (global or per-connection).
+## Creating a Favorite
 
-Switch to the **Favorites** tab to browse saved queries. Organize with folders (right-click to manage). Double-click a favorite to insert it, or right-click to edit, copy, run, move, or delete. Assign a unique keyword to expand as an autocomplete suggestion. Global favorites visible in all connections; connection-scoped only in that connection.
+Three ways to save a favorite:
+
+- **From the editor**: Right-click selected SQL > **Save as Favorite**
+- **From query history**: Right-click an entry > **Save as Favorite**
+- **From the sidebar**: Click **+ New Favorite** in the Favorites tab
+
+Enter a name, the SQL text, and optionally a keyword and scope.
+
+{/* Screenshot: Save as Favorite dialog */}
+<Frame caption="Creating a new SQL favorite">
+  <img
+    className="block dark:hidden"
+    src="/images/sql-favorite-create.png"
+    alt="Creating a new SQL favorite"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/sql-favorite-create-dark.png"
+    alt="Creating a new SQL favorite"
+  />
+</Frame>
+
+## Keyword Expansion
+
+Assign a unique keyword to a favorite (e.g., `selall`). Type the keyword in the editor and it appears as an autocomplete suggestion. Select it to insert the full SQL.
+
+Keywords must be unique across all favorites in the same scope.
+
+{/* Screenshot: Keyword expansion in autocomplete */}
+<Frame caption="Keyword expansion in the editor autocomplete">
+  <img
+    className="block dark:hidden"
+    src="/images/sql-favorite-keyword.png"
+    alt="Keyword expansion in autocomplete"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/sql-favorite-keyword-dark.png"
+    alt="Keyword expansion in autocomplete"
+  />
+</Frame>
+
+## Browsing and Managing Favorites
+
+Switch to the **Favorites** tab in the sidebar to browse saved queries. Double-click a favorite to insert it into the editor. Right-click to edit, copy, run, move, or delete.
+
+## Folders
+
+Organize favorites into folders. Right-click in the Favorites sidebar to create, rename, or delete folders. Drag favorites between folders.
+
+## Scope
+
+Each favorite is either **global** or **connection-scoped**:
+
+| Scope | Behavior |
+|-------|----------|
+| **Global** | Visible in all connections |
+| **Connection** | Visible only in the connection where it was created |
+
+Set the scope when creating or editing a favorite.
 
 ## Storage
 
