@@ -4,6 +4,32 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="March 29, 2026" description="v0.26.0">
+  ### New Features
+
+  - **SQL File Management**: Open, save, and save-as for SQL files with native macOS title bar integration
+  - **BigQuery Support**: Google BigQuery analytics database via REST API (plugin)
+  - **AI Kill Switch**: Global toggle to disable all AI features (Settings > AI)
+  - **Column Reordering**: Drag to reorder columns in the Structure tab (MySQL/MariaDB)
+  - **Nested Groups**: Hierarchical connection groups up to 3 levels deep
+  - **Safety Dialogs**: Confirmation prompts for deep link queries, connection imports, and pre-connect scripts
+
+  ### Improvements
+
+  - JSON fields in Row Details sidebar now display in a scrollable monospaced text area
+  - Removed query history sync from iCloud Sync (history stays local-only)
+
+  ### Bug Fixes
+
+  - SQL editor not auto-focused on new tab and cursor missing after tab switch
+  - Long lines not scrollable horizontally in the SQL editor
+  - Home and End keys not moving cursor in the SQL editor
+  - SSH profile lost after app restart when iCloud Sync enabled
+  - MariaDB JSON columns showing as hex dumps instead of JSON text
+  - MongoDB Atlas TLS certificate verification failure
+  - ENUM/SET dropdown chevron buttons not showing on first table open
+</Update>
+
 <Update label="March 27, 2026" description="v0.25.0">
   ### New Features
 
