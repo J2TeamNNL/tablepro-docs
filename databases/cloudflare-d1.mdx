@@ -213,10 +213,10 @@ D1 uses SQLite's SQL syntax. Key points:
 
 ## Known Limitations
 
-- No persistent connections — each query is an independent HTTP request with no session state
-- No multi-statement transactions — each SQL statement auto-commits independently
-- No schema editing UI — use SQL in the query editor for ALTER TABLE
-- 10 GB database limit per D1 database — shard for larger datasets
-- API rate limits apply — TablePro shows rate limit errors with retry timing
-- No bulk import through the plugin — use `wrangler d1 execute` with SQL files
-- No custom SSL/SSH — D1 is HTTPS-only via Cloudflare API
+- No persistent connections: each query is an independent HTTP request with no session state
+- No multi-statement transactions: each SQL statement auto-commits independently
+- No schema editing UI: use SQL in the query editor for ALTER TABLE
+- 10 GB database limit per D1 database. Shard for larger datasets
+- API rate limits apply. TablePro shows rate limit errors with retry timing
+- No bulk import through the plugin: use `wrangler d1 execute` with SQL files
+- No custom SSL/SSH: D1 is HTTPS-only via Cloudflare API

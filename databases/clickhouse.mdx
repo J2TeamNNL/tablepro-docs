@@ -210,5 +210,5 @@ ORDER BY sum(bytes_on_disk) DESC;
 
 - No foreign keys or multi-statement transactions
 - No auto-increment; primary key and sorting key are immutable after creation
-- UPDATE/DELETE run as asynchronous background mutations via `ALTER TABLE` — check progress with `SELECT * FROM system.mutations WHERE is_done = 0`
+- UPDATE/DELETE run as asynchronous background mutations via `ALTER TABLE`. Check progress with `SELECT * FROM system.mutations WHERE is_done = 0`
 - Designed for batch inserts, not single-row writes

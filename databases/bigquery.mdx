@@ -31,7 +31,7 @@ gcloud auth application-default login --project=my-project
 6. After approving, TablePro receives the token automatically
 
 <Warning>
-OAuth tokens are session-only — you'll need to re-authorize after disconnecting. For persistent auth, use Application Default Credentials instead.
+OAuth tokens are session-only. You'll need to re-authorize after disconnecting. For persistent auth, use Application Default Credentials instead.
 </Warning>
 
 ## Connection Settings
@@ -120,6 +120,6 @@ Minimum roles:
 - No SSH tunneling (HTTPS only to BigQuery API)
 - No transactions
 - STRUCT/ARRAY columns excluded from UPDATE/DELETE WHERE clauses
-- Deep pagination (large OFFSET) scans from start — use filters to narrow results
+- Deep pagination (large OFFSET) scans from start. Use filters to narrow results
 - No streaming inserts
 - OAuth tokens are session-only (re-authorize after disconnect)

@@ -237,7 +237,7 @@ rss: true
 <Update label="March 14, 2026" description="v0.18.0">
   ### New Features
 
-  - **Theme Engine**: 4 built-in themes (Default Light/Dark, Dracula, Nord) with full color, font, and layout customization — import/export themes as JSON
+  - **Theme Engine**: 4 built-in themes (Default Light/Dark, Dracula, Nord) with full color, font, and layout customization. Import/export themes as JSON
   - **Theme Registry**: Browse, install, and update community themes from the plugin registry
   - **Cassandra & ScyllaDB Support**: Connect to Cassandra and ScyllaDB databases via a downloadable plugin
   - **SSH Two-Factor Authentication**: TOTP support with auto-generate and prompt modes for SSH connections
@@ -251,7 +251,7 @@ rss: true
 
   ### Improvements
 
-  - MSSQL, MongoDB, Redis, XLSX export, MQL export, and SQL import extracted into downloadable plugins — MySQL, PostgreSQL, SQLite, CSV, JSON, and SQL export remain built-in
+  - MSSQL, MongoDB, Redis, XLSX export, MQL export, and SQL import extracted into downloadable plugins. MySQL, PostgreSQL, SQLite, CSV, JSON, and SQL export remain built-in
   - Redesigned Plugins settings with master-detail layout and download counts
   - All database-specific behavior now driven by plugin metadata instead of hardcoded switches, enabling third-party database plugins
   - Connection form fields, sidebar labels, and SQL dialect features are now fully plugin-driven
@@ -308,9 +308,9 @@ rss: true
 <Update label="March 9, 2026" description="v0.16.0">
   ### New Features
 
-  - **Plugin System**: All 8 database drivers and 5 export formats extracted into `.tableplugin` bundles loaded at runtime — enables third-party plugins
+  - **Plugin System**: All 8 database drivers and 5 export formats extracted into `.tableplugin` bundles loaded at runtime. Enables third-party plugins
   - **Plugin Marketplace**: Browse, search, and install plugins from the GitHub-hosted registry with checksum verification
-  - **Settings > Plugins**: Manage installed plugins — enable/disable, install from file or marketplace, view details
+  - **Settings > Plugins**: Manage installed plugins: enable/disable, install from file or marketplace, view details
   - **ClickHouse Support**: Query ClickHouse databases with progress tracking, EXPLAIN variants, TLS/HTTPS, server-side cancellation, and Parts view
   - **Startup Commands**: Run custom SQL after connecting (e.g., `SET time_zone`) via Connection > Advanced tab
   - **Chinese Simplified Localization**: Full zh-Hans translation for the entire app UI
@@ -331,9 +331,9 @@ rss: true
   ### New Features
 
   - **Oracle Database Support**: Connect to Oracle databases via OCI (Oracle Call Interface)
-  - **Database URL Scheme**: Open connections directly from terminal with `open "mysql://user@host/db" -a TablePro` — supports MySQL, PostgreSQL, SQLite, MongoDB, Redis, MSSQL, and Oracle
+  - **Database URL Scheme**: Open connections directly from terminal with `open "mysql://user@host/db" -a TablePro`. Supports MySQL, PostgreSQL, SQLite, MongoDB, Redis, MSSQL, and Oracle
   - **SSH Agent Authentication**: Use SSH Agent for tunnel authentication, compatible with 1Password SSH Agent, Secretive, and ssh-agent
-  - **Multi-Jump SSH**: Chain multiple SSH hops (ProxyJump) to reach databases through bastion hosts — configure jump hosts in the connection form or import from `~/.ssh/config`
+  - **Multi-Jump SSH**: Chain multiple SSH hops (ProxyJump) to reach databases through bastion hosts. Configure jump hosts in the connection form or import from `~/.ssh/config`
 
   ### Improvements
 
@@ -461,19 +461,19 @@ rss: true
 <Update label="February 28, 2026" description="v0.9.2">
   ### Bug Fixes
 
-  - Fixed app bundle not ad-hoc signed — signing step was unreachable when no dylibs were bundled
+  - Fixed app bundle not ad-hoc signed. Signing step was unreachable when no dylibs were bundled
 </Update>
 
 <Update label="February 28, 2026" description="v0.9.1">
   ### Bug Fixes
 
-  - Fixed Sparkle auto-update failing with "improperly signed" error — release ZIPs now preserve framework symlinks and include proper ad-hoc code signatures
+  - Fixed Sparkle auto-update failing with "improperly signed" error. Release ZIPs now preserve framework symlinks and include proper ad-hoc code signatures
 </Update>
 
 <Update label="February 28, 2026" description="v0.9.0">
   ### New Features
 
-  - **Vim Mode for SQL Editor**: Full Vim keybindings with Normal/Insert/Visual modes, motions (`w`, `b`, `e`, `^`, `_`), operators, and `:w`/`:q` commands — toggle in Editor Settings
+  - **Vim Mode for SQL Editor**: Full Vim keybindings with Normal/Insert/Visual modes, motions (`w`, `b`, `e`, `^`, `_`), operators, and `:w`/`:q` commands. Toggle in Editor Settings
   - **PostgreSQL Schema Switching**: Browse and switch between schemas (`public`, `auth`, custom schemas) via ⌘K database switcher
 
   ### Improvements
@@ -493,23 +493,23 @@ rss: true
   - Fixed event monitor and memory leaks in SQL editor lifecycle
   - Fixed unbounded memory growth from tab registry, sorted row cache, and schema provider retention
   - Fixed background tabs retaining full result data indefinitely
-  - Fixed crash on macOS 14.x caused by missing libpq symbol — now uses vendored static libraries
+  - Fixed crash on macOS 14.x caused by missing libpq symbol. Now uses vendored static libraries
   - Fixed duplicate tabs when inserting SQL from AI Chat or History with multiple windows open
   - Fixed various coordinator lifecycle issues (teardown, destroy, cancellation)
   - Fixed DataGridView unnecessary column reconfiguration on every version bump
-  - Fixed ConnectionHealthMonitor slow failure detection — now supports immediate health checks
+  - Fixed ConnectionHealthMonitor slow failure detection. Now supports immediate health checks
 </Update>
 
 <Update label="February 27, 2026" description="v0.8.0">
   ### New Features
 
-  - **Native macOS Window Tabs**: The tab bar is now rendered by macOS itself — identical to Finder, Safari, and Xcode tabs with automatic dark/light mode support, drag-to-reorder, and "Merge All Windows" for free
-  - **Independent Tab Windows**: Each tab is a full independent window with its own sidebar, editor, and state — no more shared state between tabs
+  - **Native macOS Window Tabs**: The tab bar is now rendered by macOS itself. Identical to Finder, Safari, and Xcode tabs with automatic dark/light mode support, drag-to-reorder, and "Merge All Windows" for free
+  - **Independent Tab Windows**: Each tab is a full independent window with its own sidebar, editor, and state. No more shared state between tabs
 
   ### Improvements
 
   - **Tab Switching Performance**: Schema is now cached per connection so new native tabs reuse the already-loaded schema instead of re-fetching from the database (saves 500ms–2s per tab)
-  - **Background Schema Loading**: Schema loads concurrently — table data appears immediately while autocomplete schema loads in the background
+  - **Background Schema Loading**: Schema loads concurrently. Table data appears immediately while autocomplete schema loads in the background
   - **Sidebar MVVM Refactor**: Sidebar table list migrated to a testable `SidebarViewModel` architecture with extracted `TableRowView` and context menu components
   - Window title updates dynamically after in-place navigation (sidebar click, FK navigation)
   - 10+ SwiftUI rendering optimizations to prevent O(N) view cascades across windows
@@ -520,7 +520,7 @@ rss: true
   - Fixed sidebar active state flash when clicking a table that opens in a new native window tab
   - Fixed sidebar losing active state when opening a second table in a new native window tab
   - Fixed sidebar not refreshing after switching databases via Cmd+K
-  - Fixed Cmd+W in empty state doing nothing — now closes the connection window and disconnects
+  - Fixed Cmd+W in empty state doing nothing. Now closes the connection window and disconnects
   - Fixed Cmd+K database switch flooding all windows with error alerts
   - Fixed clicking a table in the sidebar replacing the current tab instead of opening a new one
   - Fixed Cmd+W on any tab disconnecting the entire session
@@ -532,8 +532,8 @@ rss: true
 <Update label="February 25, 2026" description="v0.7.0">
   ### New Features
 
-  - **Combined Search & Filters**: Quick search and filter rows now work together — when both are active, conditions are combined with AND for precise data discovery
-  - **Foreign Key Navigation**: FK columns display a clickable arrow icon in each cell — click to jump directly to the referenced table, pre-filtered to the related row
+  - **Combined Search & Filters**: Quick search and filter rows now work together. When both are active, conditions are combined with AND for precise data discovery
+  - **Foreign Key Navigation**: FK columns display a clickable arrow icon in each cell. Click to jump directly to the referenced table, pre-filtered to the related row
 
   ### Improvements
 
@@ -600,7 +600,7 @@ rss: true
 <Update label="February 22, 2026" description="v0.6.0">
   ### New Features
 
-  - **Inline AI Suggestions**: Ghost text completions in the SQL editor — triggers automatically on typing pause, Tab to accept, Escape to dismiss
+  - **Inline AI Suggestions**: Ghost text completions in the SQL editor. Triggers automatically on typing pause, Tab to accept, Escape to dismiss
   - **Schema-Aware Completions**: Inline suggestions use actual table and column names from your connected database (cached with 30s TTL)
   - **VoiceOver Accessibility**: Added accessibility labels to data grid, filter panel, toolbar buttons, editor tab bar, and sidebar controls
 
@@ -608,7 +608,7 @@ rss: true
 
   - Migrated notification observers to async sequences for modern Swift concurrency
   - Migrated tab state persistence from UserDefaults to file-based storage in Application Support for faster app launch
-  - Refactored menu and toolbar commands to `@FocusedObject` pattern — direct method calls instead of global notifications
+  - Refactored menu and toolbar commands to `@FocusedObject` pattern. Direct method calls instead of global notifications
   - Redesigned connection form with tab-based layout (General / SSH Tunnel / SSL/TLS / Advanced)
   - Revamped connection form UI to native macOS grouped form style with automatic label alignment
   - SQLite connections now only show relevant tabs (General and Advanced)
@@ -616,17 +616,17 @@ rss: true
 
   ### Bug Fixes
 
-  - Fixed thread safety race condition in SQLite driver — serialized all handle access with a dedicated actor
-  - Fixed SwiftUI sheet presentation reliability — consolidated multiple `.sheet` modifiers into a single `.sheet(item:)`
-  - Fixed SSH tunnel setup blocking the UI — replaced synchronous process waiting with async port probing
+  - Fixed thread safety race condition in SQLite driver. Serialized all handle access with a dedicated actor
+  - Fixed SwiftUI sheet presentation reliability. Consolidated multiple `.sheet` modifiers into a single `.sheet(item:)`
+  - Fixed SSH tunnel setup blocking the UI. Replaced synchronous process waiting with async port probing
   - Fixed potential deadlocks in MySQL and PostgreSQL connection cleanup
   - SQL editor now respects the macOS accessibility text size preference with live updates
   - Fixed retain cycle in update checker and leaked observer in SQL editor coordinator
-  - Eliminated tab switching delay — kept NSViews alive across switches, moved I/O to background threads
+  - Eliminated tab switching delay. Kept NSViews alive across switches, moved I/O to background threads
   - Reduced tab-switch CPU spikes from 40-60% to ~10-20% by eliminating redundant data grid reloads
-  - Table open now shows data instantly — metadata loads in the background without blocking the grid
+  - Table open now shows data instantly. Metadata loads in the background without blocking the grid
   - Eliminated 20-80ms overhead when clicking an already-open table in the sidebar
-  - Fixed Keychain writes silently failing — return values are now checked and logged
+  - Fixed Keychain writes silently failing. Return values are now checked and logged
   - Added proper service identifiers to all Keychain queries to prevent collisions with other apps
   - Fixed leaked async tasks in import dialog and AI provider settings
 </Update>
@@ -634,13 +634,13 @@ rss: true
 <Update label="February 19, 2026" description="v0.5.0">
   ### New Features
 
-  - **AI Chat Panel**: Right-side panel for AI-assisted SQL queries with multi-provider support (Claude, OpenAI, OpenRouter, Ollama, custom endpoints) — includes schema-aware context, markdown rendering, and code blocks with Copy/Insert to Editor buttons
+  - **AI Chat Panel**: Right-side panel for AI-assisted SQL queries with multi-provider support (Claude, OpenAI, OpenRouter, Ollama, custom endpoints). Includes schema-aware context, markdown rendering, and code blocks with Copy/Insert to Editor buttons
   - **AI Provider Settings**: Configure multiple AI providers in Settings > AI with API key management, endpoint configuration, model selection, and connection testing
   - **AI Feature Routing**: Map AI features (Chat, Explain Query, Fix Error, Inline Suggestions) to specific providers and models
   - **Per-Connection AI Policy**: Control AI access per connection (Always Allow, Ask Each Time, Never) in the connection form
   - **Keyboard Shortcut Customization**: Rebind any menu shortcut in Settings > Keyboard via press-to-record UI with conflict detection and "Reset to Defaults"
   - **Structure View Undo/Redo**: Full undo/redo support (⌘Z / ⇧⌘Z) for all column, index, and foreign key operations in the structure editor
-  - **Structure View Type Picker**: Database-specific type picker popover — searchable, grouped by category, supports freeform input for parametric types like `VARCHAR(255)`
+  - **Structure View Type Picker**: Database-specific type picker popover: searchable, grouped by category, supports freeform input for parametric types like `VARCHAR(255)`
   - **Structure View Dropdowns**: YES/NO dropdown menus for Nullable, Auto Inc, and Unique columns
   - **Tab Reuse Setting**: Opt-in option in Settings > Tabs to reuse clean table tabs when clicking a new table in the sidebar
   - **Switch Connection Shortcut**: ⌘⌥C to quickly open the connection switcher popover
@@ -652,13 +652,13 @@ rss: true
   - Replaced AppKit history panel (5 files) with single pure SwiftUI `HistoryPanelView`
   - Replaced `ExportTableOutlineView` (757 lines) with SwiftUI `ExportTableTreeView` (~146 lines)
   - Replaced `KeyEventHandler` NSViewRepresentable with native `.onKeyPress()` modifiers
-  - Improved layout architecture — eliminated KVO observation hacks and recursive view tree traversal
+  - Improved layout architecture. Eliminated KVO observation hacks and recursive view tree traversal
   - Structure tab grid columns now auto-size to fit content on data load
   - SQL autocomplete now uses 50ms debounce and optimized fuzzy matching
 
   ### Bug Fixes
 
-  - Fixed structure view undo/redo not working — undo-delete no longer duplicates rows, and undoing deletion of unsaved items works correctly
+  - Fixed structure view undo/redo not working. Undo-delete no longer duplicates rows, and undoing deletion of unsaved items works correctly
   - Fixed structure view save button remaining enabled when validation errors exist
   - Fixed structure view incorrectly handling multi-column foreign keys and column renames on MySQL/MariaDB
   - Fixed PostgreSQL DDL tab missing constraints and primary key detection in structure grid
@@ -740,11 +740,11 @@ rss: true
   - **Explain Query**: New button in the SQL editor toolbar and menu item (⌥⌘E) for viewing query execution plans
   - **Connection Switcher**: Quick-switch popover for active and saved connections directly from the toolbar
   - **Date/Time Picker**: Dedicated date picker popover for editing date, datetime, timestamp, and time columns in the data grid
-  - **Read-Only Mode**: Connection-level read-only toggle with toolbar badge and full UI enforcement — disables editing, row operations, and save changes
+  - **Read-Only Mode**: Connection-level read-only toggle with toolbar badge and full UI enforcement. Disables editing, row operations, and save changes
   - **Query Timeout**: Configurable execution timeout in Settings > General (default 60s, 0 = no limit) with per-driver enforcement via `statement_timeout` (PostgreSQL), `max_execution_time` (MySQL), `max_statement_time` (MariaDB), and `sqlite3_busy_timeout` (SQLite)
   - **Foreign Key Lookup**: Searchable dropdown for FK columns showing values from the referenced table with both ID and descriptive display column
   - **JSON Column Editor**: Popover editor for JSON/JSONB columns with pretty-print formatting, compact mode, real-time validation, and explicit save/cancel buttons
-  - **Excel Export**: Export to `.xlsx` format with a lightweight pure-Swift OOXML writer — supports shared strings deduplication, bold headers, numeric type detection, and multi-table export to separate worksheets
+  - **Excel Export**: Export to `.xlsx` format with a lightweight pure-Swift OOXML writer. Supports shared strings deduplication, bold headers, numeric type detection, and multi-table export to separate worksheets
   - **View Management**: Create View (opens SQL editor with template), Edit View Definition (fetches existing definition), and Drop View from sidebar context menu
 
   ### Bug Fixes
@@ -771,7 +771,7 @@ rss: true
   - **Improved Filter Panel**: Redesigned filter UI for a better experience
   - **SwiftUI Tab Bar**: New pure SwiftUI editor tab bar replacing the AppKit implementation
   - **GPL v3 License**: Project is now licensed under the GNU General Public License v3
-  - **Auto-Update**: In-app updates via Sparkle 2 with EdDSA signing — check for updates from the TablePro menu or Settings > General
+  - **Auto-Update**: In-app updates via Sparkle 2 with EdDSA signing. Check for updates from the TablePro menu or Settings > General
 
   ### Bug Fixes
 
@@ -788,7 +788,7 @@ rss: true
 </Update>
 
 <Update label="February 8, 2026" description="v0.1.0">
-  The first public release of TablePro — a native macOS database client built with SwiftUI and AppKit.
+  The first public release of TablePro: a native macOS database client built with SwiftUI and AppKit.
 
   ### Features
 

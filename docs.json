@@ -41,6 +41,9 @@
               "databases/cassandra",
               "databases/dynamodb",
               "databases/mssql",
+              "databases/duckdb",
+              "databases/cloudflare-d1",
+              "databases/bigquery",
               "databases/ssh-tunneling"
             ]
           },
