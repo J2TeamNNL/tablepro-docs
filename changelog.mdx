@@ -4,6 +4,12 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="April 1, 2026" description="v0.27.1">
+  ### Bug Fixes
+
+  - Fixed table queries being incorrectly prefixed with the connection username as a schema name on non-schema databases (MySQL, MariaDB, ClickHouse, Redis, etc.), causing "Table 'username.table' doesn't exist" errors when opening a second table tab
+</Update>
+
 <Update label="March 31, 2026" description="v0.27.0">
   ### New Features
 
