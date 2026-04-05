@@ -4,6 +4,21 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="April 5, 2026" description="v0.27.4">
+  ### New Features
+
+  - **Cloudflare D1 Batch Queries**: Execute multi-statement SQL via REST API
+  - **Cloudflare D1 Schema Editing**: CREATE TABLE, ADD/DROP COLUMN, CREATE/DROP INDEX
+
+  ### Bug Fixes
+
+  - Fixed multi-statement SQL execution failing on Cloudflare D1, ClickHouse, and other drivers without transaction support
+
+  ### Improvements
+
+  - Switched to Apple-standard `xcodebuild archive` + `exportArchive` build pipeline with dSYM collection
+</Update>
+
 <Update label="April 3, 2026" description="v0.27.3">
   ### New Features
 
