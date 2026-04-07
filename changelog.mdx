@@ -4,6 +4,23 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="April 7, 2026" description="v0.28.0">
+  ### New Features
+
+  - **Smart Value Detection**: Auto-render UUIDs in BINARY(16) columns and timestamps in integer columns
+  - **Display As Override**: Per-column format override via column header context menu
+  - **iOS Safe Mode**: Off, Confirm Writes, or Read-Only per connection
+  - **iOS FK Navigation**: Tap to preview referenced row from foreign key columns
+  - **iOS Syntax Highlighting**: SQL keywords, strings, numbers, comments colored in query editor
+
+  ### Bug Fixes
+
+  - Fixed excessive idle ping traffic from orphaned monitor tasks
+  - Fixed Cmd+W save not persisting data grid changes
+  - Fixed window sizing, selection highlight, and connection switcher errors
+  - Moved file loading off main thread, replaced timing hacks with signals
+</Update>
+
 <Update label="April 6, 2026" description="v0.27.5">
   ### New Features
 
