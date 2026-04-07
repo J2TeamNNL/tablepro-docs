@@ -234,11 +234,9 @@ Larger page sizes use more memory but show more data at once.
 
 | Setting | Default | Description |
 |---------|---------|-------------|
-| **Smart value detection** | On | Auto-detect UUIDs in binary columns and Unix timestamps in integer columns |
+| **Smart value detection** | On | Auto-render UUIDs in binary columns and Unix timestamps in integer columns |
 
-When enabled, columns matching known patterns (e.g., `BINARY(16)` named `user_uuid`, `BIGINT` named `created_at`) display formatted values instead of raw data. See [Data Grid - Smart Value Detection](/features/data-grid#smart-value-detection) for details.
-
-Per-column overrides via the column header context menu still work regardless of this setting.
+See [Data Grid - Smart Value Detection](/features/data-grid#smart-value-detection). Per-column overrides via column header right-click work regardless of this setting.
 
 ### Auto-Show Inspector
 

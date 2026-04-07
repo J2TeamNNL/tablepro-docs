@@ -340,29 +340,15 @@ Large result sets are paginated. Configure page size in **Settings** > **Data Gr
 
 ## Smart Value Detection
 
-TablePro auto-detects common value patterns and renders them in a readable format:
+Auto-renders UUIDs and Unix timestamps in the grid when column type and name match:
 
-| Storage Type | Column Name Pattern | Displayed As |
-|-------------|-------------------|-------------|
-| `BINARY(16)` | Contains `uuid`, `guid`, or ends with `_id` | `550e8400-e29b-41d4-a716-446655440000` |
-| `CHAR(32)`, `VARCHAR(36)` | Contains `uuid` or `guid` | UUID with hyphens inserted |
-| `INT`, `BIGINT` | Ends with `_at`, `_time`, `_timestamp`, or equals `created`/`updated`/`modified` | Human-readable date (e.g., `2025-01-15 10:30:00`) |
+| Column Type | Name Contains | Display |
+|------------|--------------|---------|
+| `BINARY(16)` | `uuid`, `guid`, `_id` | `550e8400-e29b-41d4-a716-446655440000` |
+| `CHAR(32)`, `VARCHAR(36)` | `uuid`, `guid` | UUID with hyphens |
+| `INT`, `BIGINT` | `_at`, `_time`, `_timestamp`, `created`, `updated` | `2025-01-15 10:30:00` |
 
-Detection requires both a matching column type and column name. Millisecond timestamps (values > 10 billion) are handled automatically.
-
-### Per-Column Display Override
-
-Right-click any column header and select **Display As** to override the display format:
-
-- **Raw Value** - show the original database value
-- **UUID** - render binary/text as a UUID string (available for BINARY, CHAR, VARCHAR columns)
-- **Unix Timestamp (seconds)** / **Unix Timestamp (milliseconds)** - render integers as dates (available for INT, BIGINT columns)
-
-Overrides are saved per connection and table, so they persist across sessions.
-
-<Tip>
-Disable auto-detection globally in **Settings** > **Data Grid** > **Smart value detection**. Manual per-column overrides still work when auto-detection is off.
-</Tip>
+Right-click a column header > **Display As** to override per column. Overrides persist per connection and table. Toggle auto-detection in **Settings** > **Data Grid** > **Smart value detection**.
 
 ## NULL Values and Display
 
