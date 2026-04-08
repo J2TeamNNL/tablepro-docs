@@ -51,6 +51,7 @@
             "group": "Features",
             "pages": [
               "features/sql-editor",
+              "features/explain-visualization",
               "features/data-grid",
               "features/autocomplete",
               "features/table-structure",
