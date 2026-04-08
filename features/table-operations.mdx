@@ -1,11 +1,11 @@
 ---
 title: Table Operations
-description: Drop, truncate, duplicate tables, create views, and switch databases from the sidebar
+description: Drop, truncate, maintenance, create views, and switch databases from the sidebar
 ---
 
 # Table Operations
 
-Right-click tables in the sidebar to drop, truncate, or duplicate them. Create and manage views. Switch between databases on the same connection.
+Right-click tables in the sidebar to drop, truncate, run maintenance, or manage views. Switch between databases on the same connection.
 
 ## Drop Table
 
@@ -62,6 +62,24 @@ Truncate is faster than `DELETE FROM table` because it skips per-row delete logs
     alt="Truncate table confirmation with options"
   />
 </Frame>
+
+## Maintenance
+
+Right-click a table > **Maintenance** to run database maintenance operations. A confirmation sheet shows operation options and a SQL preview before executing.
+
+| Database | Operations |
+|----------|-----------|
+| PostgreSQL | VACUUM, ANALYZE, REINDEX, CLUSTER |
+| MySQL/MariaDB | OPTIMIZE TABLE, ANALYZE TABLE, CHECK TABLE, REPAIR TABLE |
+| SQLite | VACUUM, ANALYZE, REINDEX, Integrity Check |
+
+PostgreSQL VACUUM has options for FULL (rewrites the table, blocks access), ANALYZE (updates statistics), and VERBOSE (prints progress).
+
+MySQL CHECK TABLE supports check modes: QUICK, FAST, MEDIUM, EXTENDED, CHANGED.
+
+<Note>
+Maintenance is disabled in read-only safe mode. Databases without maintenance support (Redis, MongoDB, etc.) do not show this submenu.
+</Note>
 
 ## Batch Operations
 
