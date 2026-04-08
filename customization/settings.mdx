@@ -210,6 +210,14 @@ Options:
 Larger page sizes use more memory but show more data at once.
 </Note>
 
+### Row Count Estimation
+
+| Setting | Options | Default |
+|---------|---------|---------|
+| Count rows if estimate less than | 1,000 / 10,000 / 100,000 / 1,000,000 / Always count | 100,000 |
+
+Tables above this threshold show an estimated count (`~3,000,000 rows`) from database statistics instead of running `COUNT(*)`. Useful for large PostgreSQL tables where `COUNT(*)` requires a full table scan.
+
 <Note>
 **Validation ranges:**
 - **Page Size**: 10 -- 100,000 rows (values outside this range are clamped)
