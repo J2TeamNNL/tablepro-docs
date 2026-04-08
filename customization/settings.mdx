@@ -210,6 +210,16 @@ Options:
 Larger page sizes use more memory but show more data at once.
 </Note>
 
+### Row Count Estimation
+
+| Setting | Options | Default |
+|---------|---------|---------|
+| Count rows if estimate less than | 1,000 / 10,000 / 100,000 / 1,000,000 / Always count | 100,000 |
+
+Controls when TablePro runs an exact `COUNT(*)` query to get the total row count. Tables with an estimated row count above this threshold use the database's built-in statistics instead (shown with a `~` prefix, e.g. "~3,000,000 rows").
+
+This avoids slow `COUNT(*)` queries on large PostgreSQL tables, where counting requires a full table scan due to MVCC. MySQL and other databases that provide fast exact counts are less affected.
+
 <Note>
 **Validation ranges:**
 - **Page Size**: 10 -- 100,000 rows (values outside this range are clamped)
