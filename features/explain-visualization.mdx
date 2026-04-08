@@ -7,11 +7,19 @@ description: View query execution plans as diagrams, trees, or raw output
 
 See how your database executes a query. Click **Explain** in the query editor toolbar to get the execution plan.
 
-PostgreSQL connections show a dropdown with **EXPLAIN** (estimated plan) and **EXPLAIN ANALYZE** (runs the query and shows actual timing).
+PostgreSQL shows a dropdown with **EXPLAIN** (estimated plan) and **EXPLAIN ANALYZE** (runs the query and shows actual timing). MySQL, MariaDB, SQLite, and other databases show a single Explain button.
 
-{/* Screenshot: EXPLAIN diagram view with color-coded nodes */}
 <Frame caption="EXPLAIN diagram view">
-  <img src="/images/explain-diagram.png" alt="EXPLAIN diagram view" />
+  <img
+    className="block dark:hidden"
+    src="/images/explain-diagram-light.png"
+    alt="EXPLAIN diagram view"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/explain-diagram-dark.png"
+    alt="EXPLAIN diagram view"
+  />
 </Frame>
 
 ## View Modes
@@ -20,24 +28,34 @@ Toggle between three views using the segmented control above the results:
 
 **Diagram** shows the plan as boxes connected by arrows, top to bottom. Nodes are color-coded by cost: green (cheap) to red (expensive). Click a node to see full details in a popover. Zoom controls are in the bottom-right corner.
 
-{/* Screenshot: EXPLAIN tree view with detail panel */}
 <Frame caption="EXPLAIN tree view">
-  <img src="/images/explain-tree.png" alt="EXPLAIN tree view" />
+  <img
+    className="block dark:hidden"
+    src="/images/explain-tree-light.png"
+    alt="EXPLAIN tree view"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/explain-tree-dark.png"
+    alt="EXPLAIN tree view"
+  />
 </Frame>
 
 **Tree** shows the plan as an expandable outline list. Click a row to see its properties in the detail panel below. Cost and row estimates are shown on the right side of each row.
 
-**Raw** shows the original EXPLAIN output as text (JSON for PostgreSQL/MySQL, plain text for others).
+**Raw** shows the original EXPLAIN output as text (JSON for PostgreSQL and MySQL, plain text for others).
 
 ## Database Support
 
-| Database | Format | EXPLAIN ANALYZE |
-|----------|--------|-----------------|
-| PostgreSQL | JSON (parsed into tree) | Yes |
-| MySQL/MariaDB | JSON (parsed into tree) | No (MariaDB incompatible) |
-| SQLite | Query plan columns | No |
+| Database | Format | Variants |
+|----------|--------|----------|
+| PostgreSQL | JSON (parsed into diagram/tree) | EXPLAIN, EXPLAIN ANALYZE |
+| MySQL/MariaDB | JSON (parsed into diagram/tree) | EXPLAIN |
+| SQLite | EXPLAIN QUERY PLAN (parsed into tree) | Explain |
 | ClickHouse | Indented text | Plan, Pipeline, AST, Syntax, Estimate |
-| DuckDB | Indented text | No |
+| DuckDB | Indented text | Explain |
+| Cloudflare D1 | EXPLAIN QUERY PLAN | Query Plan |
+| BigQuery | Dry run cost estimate | Dry Run |
 
 ## Plan Details
 
