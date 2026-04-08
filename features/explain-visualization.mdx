@@ -1,0 +1,46 @@
+---
+title: EXPLAIN Visualization
+description: View query execution plans as diagrams, trees, or raw output
+---
+
+# EXPLAIN Visualization
+
+See how your database executes a query. Click **Explain** in the query editor toolbar to get the execution plan.
+
+PostgreSQL connections show a dropdown with **EXPLAIN** (estimated plan) and **EXPLAIN ANALYZE** (runs the query and shows actual timing).
+
+## View Modes
+
+Toggle between three views using the segmented control above the results:
+
+**Diagram** shows the plan as boxes connected by arrows, top to bottom. Nodes are color-coded by cost: green (cheap) to red (expensive). Click a node to see full details in a popover. Zoom controls are in the bottom-right corner.
+
+**Tree** shows the plan as an expandable outline list. Click a row to see its properties in the detail panel below. Cost and row estimates are shown on the right side of each row.
+
+**Raw** shows the original EXPLAIN output as text (JSON for PostgreSQL/MySQL, plain text for others).
+
+## Database Support
+
+| Database | Format | EXPLAIN ANALYZE |
+|----------|--------|-----------------|
+| PostgreSQL | JSON (parsed into tree) | Yes |
+| MySQL/MariaDB | JSON (parsed into tree) | No (MariaDB incompatible) |
+| SQLite | Query plan columns | No |
+| ClickHouse | Indented text | Plan, Pipeline, AST, Syntax, Estimate |
+| DuckDB | Indented text | No |
+
+## Plan Details
+
+Each node in the plan shows:
+
+- **Operation**: Seq Scan, Index Scan, Hash Join, Nested Loop, Sort, etc.
+- **Table**: which table the operation accesses
+- **Cost**: startup and total cost estimates (PostgreSQL format: 0.00..45.18)
+- **Rows**: estimated number of rows
+- **Actual time**: real execution time per node (EXPLAIN ANALYZE only)
+
+Click a node to see all properties including join type, index name, filter conditions, and sort keys.
+
+<Note>
+EXPLAIN does not execute the query. EXPLAIN ANALYZE does execute it, so avoid using ANALYZE on slow queries in production.
+</Note>
