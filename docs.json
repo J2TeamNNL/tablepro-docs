@@ -52,6 +52,7 @@
             "pages": [
               "features/sql-editor",
               "features/explain-visualization",
+              "features/er-diagram",
               "features/data-grid",
               "features/autocomplete",
               "features/table-structure",
