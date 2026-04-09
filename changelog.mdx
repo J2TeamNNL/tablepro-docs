@@ -4,6 +4,24 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="April 9, 2026" description="v0.29.0">
+  ### New Features
+
+  - **Maintenance Tools**: VACUUM, ANALYZE, OPTIMIZE, REINDEX, CHECK TABLE, and more via table context menu
+  - **EXPLAIN Visualization**: Diagram, tree, and raw views for query execution plans (PostgreSQL, MySQL)
+
+  ### Bug Fixes
+
+  - Fixed cross-schema foreign key preview, edit, and navigation for PostgreSQL and MySQL (#644)
+  - Fixed macOS HIG compliance: system colors, accessibility labels, theme tokens, localization
+  - Fixed idle ping spin loop caused by exhausted AsyncStream iterator (#618)
+  - Skip exact row count for large tables — use database statistics estimate (#519)
+
+  ### Improvements
+
+  - Theme font pickers now list all installed monospaced fonts dynamically
+</Update>
+
 <Update label="April 7, 2026" description="v0.28.0">
   ### New Features
 
