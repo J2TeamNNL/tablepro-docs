@@ -4,6 +4,24 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="April 12, 2026" description="v0.31.0">
+  ### New Features
+
+  - **Server Dashboard**: Monitor active sessions, server metrics, and slow queries with configurable auto-refresh (PostgreSQL, MySQL, MSSQL, ClickHouse, DuckDB, SQLite)
+  - **Handoff**: Continue database work across Mac and iPhone/iPad
+  - **Create Database Options**: Database-specific charset/encoding options (encoding + LC_COLLATE for PostgreSQL, charset + collation for MySQL, name-only for others)
+
+  ### Improvements
+
+  - Sidebar table loading refactored for faster, race-free database switching
+  - iOS: full-text search in data browser, state restoration across app lifecycle, iPad keyboard shortcuts
+
+  ### Bug Fixes
+
+  - Fixed SSH tunnel failing with `~/.ssh/config` profiles: added `Include` directive support, token expansion, multi-word `Host` filtering (#672)
+  - Fixed Create Database dialog showing MySQL options for all database types
+</Update>
+
 <Update label="April 10, 2026" description="v0.30.1">
   ### New Features
 
