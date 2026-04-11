@@ -5,8 +5,6 @@ description: Swift conventions, SwiftLint/SwiftFormat rules, naming, access cont
 
 # Code Style Guide
 
-These conventions keep TablePro's codebase consistent and readable.
-
 ## Tools
 
 | Tool | Purpose | Config File |
@@ -30,15 +28,7 @@ swiftformat .
 swiftformat --lint .
 ```
 
-<Tip>
-Run these before committing. SwiftLint also runs automatically during Xcode builds.
-</Tip>
-
-## Architecture Principles
-
-**Separation of Concerns**: Logic in viewmodels, presentation in views.
-**Value Types First**: Use `struct` for data, `class` for shared state.
-**Immutability**: Default to `let`; use `var` only when mutation is needed.
+SwiftLint also runs automatically during Xcode builds.
 
 ## Naming Conventions
 
@@ -104,7 +94,7 @@ let result = try await driver.executeParameterized(query: "SELECT * FROM users W
 
 ### Braces
 
-K&R style -- opening brace on same line:
+K&R style: opening brace on same line:
 
 ```swift
 // Good
@@ -189,7 +179,7 @@ Never force unwrap. Use `if let`, `guard let`, or `as?` for safe optional handli
 
 ## SwiftUI Patterns
 
-Use @StateObject for viewmodels, @State for local state. Order property wrappers: Environment, StateObject, State, Binding, regular properties. Extract large views into subviews.
+Use `@State` for local state, `@Observable` for viewmodels (Swift 5.9+). Order property wrappers: Environment, State, Binding, regular properties. Extract large views into subviews.
 
 ## Limits
 

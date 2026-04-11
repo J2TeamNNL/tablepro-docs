@@ -28,13 +28,7 @@ Every tab is an independent workspace with its own SQL content, results, paginat
 | **Query Tab** | Document icon | Write and execute custom SQL |
 | **Table Tab** | Table icon (blue) | Browse table data with pagination and filtering |
 
-**Query tabs** start with an empty editor. Type SQL and press `Cmd+Enter` to execute.
-
-**Table tabs** open when you click a table in the sidebar. They provide server-side pagination, inline editing with change tracking, structure view, and filter support.
-
-<Tip>
-Table tabs are editable by default. Query tabs are read-only unless the query is a simple `SELECT * FROM table` statement.
-</Tip>
+Change tracking is available in table tabs by default. Query tabs support change tracking only for simple `SELECT * FROM table` results.
 
 ### Smart Tab Reuse
 
@@ -150,13 +144,9 @@ Right-click a tab > **Duplicate Tab**. The copy opens immediately after the orig
 
 ## Per-Tab Change Tracking
 
-Each tab maintains its own pending changes. You can have edits in multiple tabs simultaneously without interference. Switching tabs saves and restores each tab's change state.
+Each tab maintains its own pending changes. Switching tabs saves and restores each tab's change state.
 
 ## Tab Persistence
-
-### Last Query Memory
-
-TablePro remembers the last query text for each connection. Even if you close all tabs, the last query restores when you create a new tab.
 
 ### What Is Persisted
 
@@ -174,10 +164,6 @@ Tab state auto-saves 500ms after any change. On reconnect, TablePro restores you
 ### Table Tabs (Server-Side)
 
 Table tabs use SQL `LIMIT` and `OFFSET`. Only the current page loads from the database. Page navigation triggers a new query. Configure page size in **Settings** > **Data Grid**.
-
-<Tip>
-Server-side pagination is memory efficient. Only the visible page is kept in memory, even for tables with millions of rows.
-</Tip>
 
 {/* Screenshot: Server-side pagination in a table tab */}
 <Frame caption="Server-side pagination in a table tab">

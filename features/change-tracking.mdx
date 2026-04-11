@@ -31,11 +31,7 @@ TablePro tracks three types of data changes: cell edits, row insertions, and row
 
 ### Editing Cells
 
-To edit an existing cell:
-
-1. Double-click the cell
-2. Enter the new value
-3. Press `Enter` to confirm or `Escape` to cancel
+Double-click any cell to edit (see [Data Grid](/features/data-grid)). Changes queue immediately.
 
 {/* Screenshot: Modified cell highlighted in the data grid */}
 <Frame caption="Modified cells are highlighted">
@@ -82,13 +78,7 @@ Edits to cells in a new row are folded into the insertion, not tracked as separa
 
 ### Deleting Rows
 
-To delete rows:
-
-1. Select one or more rows in the data grid
-2. Press the `Delete` key or click the delete button
-3. Deleted rows are marked with a strikethrough indicator
-
-Deleted rows stay visible until you commit or discard.
+Select rows and press `Delete`. Deleted rows show a strikethrough indicator and stay visible until commit or discard.
 
 {/* Screenshot: Deleted row with deletion indicator */}
 <Frame caption="Deleted row">
@@ -128,7 +118,7 @@ UPDATE statements require a primary key on the table. If no primary key is defin
 
 ### Discarding Changes
 
-Click **Discard** to revert all pending changes. Modified cells return to their original values, inserted rows are removed, and deleted rows are unmarked. This also clears the undo/redo stack.
+Click **Discard** to revert all pending changes and clear the undo/redo stack.
 
 ### Previewing Data SQL
 
@@ -208,20 +198,7 @@ Table structure changes (columns, indexes, foreign keys) use the same queue-base
 
 Before applying schema changes, preview the generated SQL:
 
-<Steps>
-  <Step title="Make Changes">
-    Add, modify, or delete columns, indexes, or foreign keys in the Structure tab
-  </Step>
-  <Step title="Click Commit">
-    Click the Commit button or press `Cmd+S`
-  </Step>
-  <Step title="Review SQL">
-    A preview sheet shows all ALTER TABLE statements that will execute
-  </Step>
-  <Step title="Apply or Cancel">
-    Click **Apply Changes** to execute, or **Cancel** to go back and adjust
-  </Step>
-</Steps>
+Make your changes in the Structure tab, then click **Commit** (`Cmd+S`). A preview sheet shows the ALTER TABLE statements. Click **Apply Changes** to execute or **Cancel** to go back.
 
 {/* Screenshot: Schema preview sheet showing ALTER TABLE statements */}
 <Frame caption="Schema change preview with generated SQL">

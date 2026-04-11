@@ -24,16 +24,6 @@ Write and run SQL with tree-sitter-powered syntax highlighting, schema-aware aut
 
 ## Writing Queries
 
-### Single Query
-
-Write and execute a single query:
-
-```sql
-SELECT * FROM users WHERE active = true;
-```
-
-Press `Cmd+Enter` to execute.
-
 ### Multiple Queries
 
 Separate multiple queries with semicolons:
@@ -54,8 +44,6 @@ Select text and press `Cmd+Enter` to run only the selection. Multiple statements
 - The error identifies which statement failed (e.g., "Statement 3/5 failed: ...")
 - The last `SELECT` result appears in the data grid
 - Each statement is recorded individually in query history
-
-Good for running migrations or batches of related statements:
 
 ```sql
 DROP TABLE IF EXISTS users;
@@ -80,7 +68,7 @@ SELECT * FROM users;
 
 ## Autocomplete
 
-Autocomplete appears as you type. Use arrow keys to navigate, `Enter`/`Tab` to accept, `Escape` to dismiss.
+Autocomplete appears as you type. See [Autocomplete](/features/autocomplete) for details.
 
 {/* Screenshot: Autocomplete popup showing table and column suggestions */}
 <Frame caption="SQL autocomplete">
@@ -218,24 +206,6 @@ ORDER BY order_count DESC;
   />
 </Frame>
 
-### Error Handling
-
-Errors appear below the editor with the error message and relevant line number.
-
-{/* Screenshot: Query error message display */}
-<Frame caption="Query error message">
-  <img
-    className="block dark:hidden"
-    src="/images/query-error.png"
-    alt="Query error"
-  />
-  <img
-    className="hidden dark:block"
-    src="/images/query-error-dark.png"
-    alt="Query error"
-  />
-</Frame>
-
 ## Vim Mode
 
 Enable Vim keybindings in **Settings** > **Editor** > **Vim mode**. Supports Normal, Insert, Visual, and Command-line modes.
@@ -264,7 +234,7 @@ Key mappings:
 Standard motions (`h/j/k/l`, `w/b/e`, `0/$`, `gg/G`), operators (`d`, `c`, `y`), and count prefixes (`3dd`, `5j`) all work as expected. Text objects like `ciw` (change inner word) and `di"` (delete inside quotes) are supported.
 
 <Tip>
-Use `:w` as a quick way to execute queries without switching to the mouse.
+Use `:w` to execute queries.
 </Tip>
 
 ## Editor Settings

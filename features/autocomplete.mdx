@@ -21,20 +21,7 @@ Autocomplete analyzes your cursor position, the SQL syntax context, referenced t
   />
 </Frame>
 
-## How Autocomplete Works
-
-The autocomplete engine analyzes four things:
-
-1. **Your current position** in the query
-2. **SQL syntax context** (SELECT, FROM, WHERE, etc.)
-3. **Referenced tables** and their aliases
-4. **Your database schema** (tables, columns, functions)
-
-Suggestions are filtered to what makes sense at the cursor.
-
-## Triggering Autocomplete
-
-Autocomplete appears automatically as you type (after 1-2 characters, after `.` for column access, or after keywords like SELECT/FROM/JOIN). Press `Escape` to dismiss or continue typing to filter suggestions.
+Suggestions appear after 2 characters, after `.` for column access, or after keywords like SELECT/FROM/JOIN. 50ms debounce keeps typing smooth. Press `Escape` to dismiss.
 
 ## Completion Types
 
@@ -61,15 +48,6 @@ SELECT * FROM users WHERE name LIKE '%test%' ORD|  -- Suggests: ORDER
     alt="Keyword suggestions"
   />
 </Frame>
-
-**Suggested keywords include**:
-
-| Category | Keywords |
-|----------|----------|
-| Statements | SELECT, INSERT, UPDATE, DELETE, CREATE, ALTER, DROP |
-| Clauses | FROM, WHERE, JOIN, ON, GROUP BY, ORDER BY, HAVING, LIMIT |
-| Operators | AND, OR, NOT, IN, LIKE, BETWEEN, IS NULL, EXISTS |
-| Joins | INNER JOIN, LEFT JOIN, RIGHT JOIN, CROSS JOIN |
 
 ### Table Names
 
@@ -140,16 +118,6 @@ SELECT COUNT(|  -- Suggests columns and *
 WHERE date_column > |  -- Suggests: NOW(), CURRENT_DATE, etc.
 ```
 
-**Common function suggestions**:
-
-| Category | Functions |
-|----------|-----------|
-| Aggregate | COUNT, SUM, AVG, MAX, MIN |
-| String | CONCAT, SUBSTRING, UPPER, LOWER, TRIM |
-| Date | NOW, CURRENT_DATE, DATE_FORMAT, DATEADD |
-| Math | ROUND, ABS, CEIL, FLOOR |
-| Conditional | COALESCE, NULLIF, CASE, IF |
-
 {/* Screenshot: SQL function suggestions */}
 <Frame caption="SQL function suggestions">
   <img
@@ -177,13 +145,9 @@ SELECT * FROM public.|  -- Suggests tables in public schema
 
 Suggestions adapt to SQL context: after SELECT, shows columns and aggregate functions; after FROM/JOIN, shows table names; after WHERE, shows columns and operators; after ON (JOIN), shows columns from both tables; after GROUP BY/ORDER BY, shows relevant columns and modifiers.
 
-## Using Completions
-
-Use arrow keys to navigate, `Enter` or `Tab` to accept, `Escape` to dismiss. Continue typing to filter suggestions; accepted suggestions replace the typed prefix and move the cursor to the end.
-
 ## Schema Caching
 
-On connection, TablePro fetches and caches all table and column information. If you make schema changes, right-click the connection and select **Refresh**, or disconnect and reconnect. Schema changes made in TablePro (via Structure tab) are auto-reflected.
+On connection, TablePro fetches and caches all table and column information. If you make schema changes externally, right-click the connection and select **Refresh**, or disconnect and reconnect.
 
 ## Performance
 
