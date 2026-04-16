@@ -4,6 +4,39 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="April 16, 2026" description="v0.32.0">
+  ### New Features
+
+  - **In-App Tab Bar**: Replace native macOS window tabs with a custom tab bar for instant switching (was 600ms+ per tab). Includes drag reorder, pinned tabs, dirty indicators, and context menus.
+  - **Reopen Closed Tab**: Press Cmd+Shift+T to reopen the last closed tab (up to 20 in history). Shortcut is remappable in Settings.
+  - **Pinned Tabs**: Pin important tabs to prevent accidental close. Pinned tabs always appear at the left side, survive Close Others and Close All.
+  - **MRU Tab Selection**: Closing a tab now selects the most recently active tab, matching browser behavior.
+
+  ### Improvements
+
+  - Tab content preserved across switches — no view destruction or recreation
+  - Deeplinks and Handoff route to in-app tabs instead of creating duplicate windows
+  - Connection state persisted incrementally on connect/disconnect (survives force quit)
+  - OpenSSL updated to 3.4.3 (CVE-2025-9230, CVE-2025-9231)
+  - Memory pressure monitoring now reactive via DispatchSource
+
+  ### Bug Fixes
+
+  - Fix raw SQL injection via external URL scheme deeplinks — now requires user confirmation
+  - Fix MySQL prepared statements silently truncating columns larger than 64KB
+  - Fix MSSQL error messages misattributed when multiple connections open simultaneously
+  - Fix BigQuery filter injection via unescaped column names and unvalidated operators
+  - Fix app quitting without warning when tabs have unsaved edits
+  - Fix connection list corruption risk from non-atomic UserDefaults writes
+  - Fix stale user-installed plugins silently rejected with no UI feedback
+  - Fix SSL mode picker showing misleading "Required" instead of "Required (skip verify)"
+  - Fix plugin load blocking main thread on first connection after launch
+
+  ### Security
+
+  - SHA-256 checksum verification added to FreeTDS, Cassandra, and DuckDB build scripts
+</Update>
+
 <Update label="April 14, 2026" description="v0.31.5">
   ### Improvements
 
