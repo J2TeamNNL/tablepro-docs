@@ -4,19 +4,15 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="April 17, 2026" description="v0.32.1">
+  ### Changed
+
+  - Revert in-app tab bar refactor to restore native macOS window tabs (stability)
+</Update>
+
 <Update label="April 16, 2026" description="v0.32.0">
-  ### New Features
-
-  - **In-App Tab Bar**: Replace native macOS window tabs with a custom tab bar for instant switching (was 600ms+ per tab). Includes drag reorder, pinned tabs, dirty indicators, and context menus.
-  - **Reopen Closed Tab**: Press Cmd+Shift+T to reopen the last closed tab (up to 20 in history). Shortcut is remappable in Settings.
-  - **Pinned Tabs**: Pin important tabs to prevent accidental close. Pinned tabs always appear at the left side, survive Close Others and Close All.
-  - **MRU Tab Selection**: Closing a tab now selects the most recently active tab, matching browser behavior.
-
   ### Improvements
 
-  - Tab content preserved across switches — no view destruction or recreation
-  - Deeplinks and Handoff route to in-app tabs instead of creating duplicate windows
-  - Connection state persisted incrementally on connect/disconnect (survives force quit)
   - OpenSSL updated to 3.4.3 (CVE-2025-9230, CVE-2025-9231)
   - Memory pressure monitoring now reactive via DispatchSource
 
