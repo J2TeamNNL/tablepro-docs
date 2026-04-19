@@ -4,6 +4,52 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="April 19, 2026" description="v0.33.0">
+  ### New Features
+
+  - **Cancel Query**: Stop a running query from the toolbar or with `Cmd+.`
+  - **Execute All**: Run all statements in the editor with `Cmd+Shift+Enter`
+  - **Drop Database**: Drop databases from the switcher via context menu, toolbar, or Delete key
+  - **Query Result Limit**: Configurable row limit in Data Grid preferences
+  - **Structure Tab**: Search, sort, count badges, PK column, DDL view with highlighting, Copy As (CSV/JSON/SQL), dropdown pickers, destructive change confirmation
+  - **Structure Tab**: Charset/collation (MySQL), index prefix length, partial indexes (PostgreSQL), cross-schema FK, schema changes in query history
+  - **ClickHouse Parts**: Optimize table, drop/detach partition actions
+  - **Streaming Export**: Export query results directly from database with no memory limit
+  - **Import Error Handling**: Stop and Rollback, Stop and Commit, or Skip and Continue
+  - **Handoff**: Resume work across devices via NSUserActivity
+
+  ### Improvements
+
+  - Query tabs now load rows progressively (default 10,000) with Load More and Fetch All
+  - Main editor window rewritten on AppKit for faster tab opens and correct lifecycle
+  - Toolbar layout follows Apple HIG (sidebar left, connection center, view actions right)
+  - Export engine rewritten with streaming row fetch, macOS system progress, and atomic file writes
+  - SQL import parser rewritten with DELIMITER support, MySQL conditional/hash comments, and async decompression
+
+  ### Bug Fixes
+
+  - Fix selection highlight not covering the last line on Cmd+A
+  - Fix Cmd+W closing the connection window instead of clearing to empty state
+  - Fix ER Diagram and Server Dashboard replacing the current tab instead of opening a new one
+  - Fix welcome window stealing focus on connect
+  - Fix toolbar empty on second tab, menu shortcuts disabled after toolbar click
+  - Fix AI chat freeze with large queries or results in the system prompt
+  - Fix AI chat panel not updating when switching connections
+  - Fix schema not restored on reconnect for PostgreSQL, Redshift, and BigQuery
+  - Fix database lost after auto-reconnect
+  - Fix database switch closing windows before confirming success
+  - Fix Redis database selection not persisted across sessions
+  - Fix SSH jumphost lost after disconnect or app restart
+  - Fix password appearing missing when Keychain is locked after reboot
+  - Fix import rollback reporting and FK checks not restored after failure
+  - Fix JSON export coercing leading-zero strings to integers
+  - Fix XLSX export not splitting tables exceeding 1,048,576 rows
+  - Fix CSV formula injection guard to OWASP-standard prefixes
+  - Fix MQL export not validating JSON values
+  - Fix SQL export gzip compression blocking and not cancellable
+  - Fix export progress bar not reaching 100%
+</Update>
+
 <Update label="April 17, 2026" description="v0.32.1">
   ### Changed
 
