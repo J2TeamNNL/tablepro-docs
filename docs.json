@@ -75,6 +75,7 @@
               "features/deep-links",
               "features/safe-mode",
               "features/connection-sharing",
+              "features/terminal",
               "features/icloud-sync",
               "features/ssh-profiles"
             ]
