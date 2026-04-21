@@ -132,9 +132,9 @@
           "icon": "download"
         },
         {
-          "anchor": "Community",
-          "href": "https://www.facebook.com/groups/tablepro",
-          "icon": "facebook"
+          "anchor": "Discord",
+          "href": "https://discord.gg/hCNmUUbnD4",
+          "icon": "discord"
         },
         {
           "anchor": "Telegram",
@@ -175,7 +175,7 @@
   "footer": {
     "socials": {
       "github": "https://github.com/TableProApp/TablePro",
-      "facebook": "https://www.facebook.com/groups/tablepro",
+      "discord": "https://discord.gg/hCNmUUbnD4",
       "telegram": "https://t.me/tablepro_app"
     }
   },
