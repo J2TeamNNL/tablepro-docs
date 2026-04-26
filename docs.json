@@ -87,6 +87,7 @@
                 "group": "Editor & Data",
                 "pages": [
                   "features/sql-editor",
+                  "features/query-parameters",
                   "features/data-grid",
                   "features/table-structure",
                   "features/table-operations",

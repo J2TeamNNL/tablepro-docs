@@ -104,6 +104,16 @@ Keywords are context-sensitive:
 - After `FROM`: `JOIN`, `LEFT JOIN`, `INNER JOIN`, `WHERE`
 - After `WHERE`: `AND`, `OR`, `NOT`, `IN`, `LIKE`, `BETWEEN`
 
+## Query Parameters
+
+Use `:name` placeholders to parameterize queries. Press `Cmd+Enter` to open the parameter panel, fill values, then `Cmd+Enter` again to execute with native prepared statement binding.
+
+```sql
+SELECT * FROM users WHERE id = :user_id AND status = :status;
+```
+
+See [Query Parameters](/features/query-parameters) for the full guide.
+
 ## Query Execution
 
 ### Running Queries
