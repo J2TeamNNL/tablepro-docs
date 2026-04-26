@@ -1,11 +1,11 @@
 ---
 title: Query Parameters
-description: Named parameter placeholders with an inline value panel, type picker, and native prepared statement binding
+description: Use :name placeholders in SQL queries, fill values in a panel, execute with prepared statements
 ---
 
 # Query Parameters
 
-Write `:name` placeholders in your SQL, fill values in an inline panel, and execute with native prepared statement binding. Parameter values persist across tab switches and app restarts.
+Instead of editing your SQL every time you want to test a different value, use `:name` placeholders. TablePro detects them, shows a panel for entering values, and executes using prepared statements.
 
 {/* Screenshot: Query parameter panel with filled values */}
 <Frame caption="Query parameter panel">
@@ -33,103 +33,74 @@ WHERE customer_id = :customer_id
   AND created_at > :since;
 ```
 
-Press `Cmd+Enter`. The parameter panel appears between the toolbar and the editor with fields for each detected parameter. Fill in values, then press `Cmd+Enter` again to execute.
+Press `Cmd+Enter`. A panel appears with a field for each parameter. Fill in values, press `Cmd+Enter` again. Done.
 
-The same flow works with **Execute All** (`Cmd+Shift+Enter`) for multi-statement scripts.
+Works with **Execute All** (`Cmd+Shift+Enter`) too.
 
-## Parameter Panel
+## The Panel
 
-Each parameter row has four controls:
+Each row has:
 
-| Control | Description |
+| Control | What it does |
 |---------|-------------|
-| **Name** | The parameter name from your query (read-only) |
-| **Value** | Text field for the value |
+| **Name** | Shows the parameter name from your query |
+| **Value** | Where you type the value |
 | **Type** | String, Integer, Decimal, Date, or Boolean |
-| **NULL** | Checkbox to bind NULL instead of the text value |
+| **NULL** | Check this to bind NULL |
 
-**Clear All** resets all value fields. Close the panel with the X button. The panel reappears automatically on the next execute if the query still contains parameters.
+**Clear All** empties all value fields. The X button hides the panel. It comes back on the next execute if the query still has parameters.
 
-## How It Works
+## What Gets Detected
 
-1. The editor scans for `:name` tokens outside string literals, comments, and PostgreSQL `::` casts
-2. Detected names are shown in the panel. Existing values are preserved when the query changes: new parameters get empty fields, removed parameters disappear, matching names keep their values
-3. On execute, `:name` placeholders are converted to the database's native style (`?` for MySQL/SQLite, `$1`/`$2` for PostgreSQL) and bound via prepared statements
+`:name` is detected when `name` starts with a letter or underscore. These are ignored:
+
+| Pattern | Why it's ignored |
+|---------|-----------------|
+| `':name'` | Inside a string |
+| `-- :name` | Inside a comment |
+| `/* :name */` | Inside a block comment |
+| `col::integer` | PostgreSQL type cast |
+| `$$ :name $$` | Dollar-quoted string |
+| `:123` | Starts with a digit |
+
+If the same name appears twice (`:id = :id`), both get the same value.
+
+## How Binding Works
+
+TablePro converts your `:name` placeholders to the database's native format before executing:
+
+- MySQL, SQLite: `?` placeholders via `mysql_stmt_bind_param` / `sqlite3_bind_text`
+- PostgreSQL: `$1`, `$2` via `PQexecParams`
+- DuckDB: `$1`, `$2` via prepared statements
+- ClickHouse, SQL Server, others: client-side substitution with proper escaping
 
 <Tip>
-Parameters use native prepared statement binding at the C library level, not string interpolation. This prevents SQL injection and handles quoting automatically.
+This is real prepared statement binding, not string replacement. Quoting and SQL injection are handled for you.
 </Tip>
 
-## Supported Syntax
+## Values Stick Around
 
-The scanner detects `:name` where `name` starts with a letter or underscore and contains letters, digits, or underscores.
+Parameter values are saved with the tab. They survive tab switches, app restarts, and show up in [query history](/features/query-history).
 
-| Pattern | Detected | Reason |
-|---------|----------|--------|
-| `:user_id` | Yes | Valid named parameter |
-| `:status` | Yes | Valid named parameter |
-| `':name'` | No | Inside a string literal |
-| `-- :name` | No | Inside a line comment |
-| `/* :name */` | No | Inside a block comment |
-| `col::integer` | No | PostgreSQL type cast |
-| `$$ :name $$` | No | Inside a dollar-quoted string |
-| `:123` | No | Name must start with a letter or underscore |
+When you edit the query and change parameter names, new names get empty fields and old ones disappear. Names that still match keep their values.
 
-Duplicate names (`:id = :id`) map to the same value field. Each occurrence binds the same value.
+## Multiple Statements
 
-## Type Picker
-
-The type determines how the value is passed to the database driver:
-
-| Type | Binding behavior |
-|------|-----------------|
-| **String** | Bound as text (default) |
-| **Integer** | Bound as text, validated by the driver |
-| **Decimal** | Bound as text, validated by the driver |
-| **Date** | Bound as text in your database's date format |
-| **Boolean** | Bound as `true` or `false` |
-| **NULL** | Binds NULL regardless of the value field |
-
-## Persistence
-
-Parameter values are saved with the tab:
-
-- **Tab switching**: values are preserved when you switch between tabs
-- **App restart**: values are restored from disk when the tab is reopened
-- **Query history**: parameter values are recorded alongside the query
-
-## Multi-Statement Queries
-
-Each statement is scanned independently. A multi-statement script shares one parameter panel with all unique parameter names across all statements. On execute, each statement binds only the parameters it references.
+For multi-statement scripts, all unique parameter names across all statements appear in one panel. Each statement only binds the parameters it uses.
 
 ```sql
 INSERT INTO users (id, name) VALUES (:id, :name);
 SELECT * FROM users WHERE id = :id;
 ```
 
-Both statements share the `:id` parameter. The INSERT also uses `:name`.
+Both use `:id`. Only the INSERT uses `:name`.
 
 ## Safe Mode
 
-Parameterized queries respect [Safe Mode](/features/safe-mode) settings. Dangerous queries (DROP, DELETE without WHERE, TRUNCATE) still require confirmation when safe mode is enabled.
+Parameterized queries still go through [safe mode](/features/safe-mode) checks. DROP, DELETE without WHERE, and TRUNCATE still ask for confirmation.
 
 ## Settings
 
-Toggle query parameters in **Settings** > **Editor** > **Query parameters (:name syntax)**. Enabled by default.
+**Settings** > **Editor** > **Query parameters (:name syntax)**. On by default.
 
-When disabled, `:name` tokens are sent to the database as-is (no detection, no panel, no conversion).
-
-## Database Support
-
-Query parameters work with all databases that support prepared statements:
-
-| Database | Native binding |
-|----------|---------------|
-| MySQL / MariaDB | `?` placeholders via `mysql_stmt_bind_param` |
-| PostgreSQL / Redshift | `$1`, `$2` via `PQexecParams` |
-| SQLite / LibSQL | `?` placeholders via `sqlite3_bind_text` |
-| DuckDB | `$1`, `$2` via prepared statements |
-| Cloudflare D1 | `?` placeholders |
-| ClickHouse | Client-side substitution |
-| SQL Server | Client-side substitution |
-| Others | Client-side substitution with proper escaping |
+Turn it off if you don't want parameter detection (`:name` will be sent to the database as-is).

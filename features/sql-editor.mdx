@@ -106,13 +106,13 @@ Keywords are context-sensitive:
 
 ## Query Parameters
 
-Use `:name` placeholders to parameterize queries. Press `Cmd+Enter` to open the parameter panel, fill values, then `Cmd+Enter` again to execute with native prepared statement binding.
+Use `:name` placeholders instead of hardcoding values. Press `Cmd+Enter`, fill in the parameter panel, execute again. Values are bound via prepared statements.
 
 ```sql
 SELECT * FROM users WHERE id = :user_id AND status = :status;
 ```
 
-See [Query Parameters](/features/query-parameters) for the full guide.
+See [Query Parameters](/features/query-parameters) for details.
 
 ## Query Execution
 
