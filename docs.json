@@ -17,11 +17,6 @@
     "twitter:card": "summary_large_image",
     "twitter:image": "https://tablepro.app/og.png"
   },
-  "api": {
-    "playground": {
-      "display": "interactive"
-    }
-  },
   "navigation": {
     "tabs": [
       {
@@ -160,20 +155,6 @@
               "customization/appearance",
               "customization/editor-settings"
             ]
-          }
-        ]
-      },
-      {
-        "tab": "API",
-        "groups": [
-          {
-            "group": "API reference",
-            "pages": ["api/overview"]
-          },
-          {
-            "group": "License",
-            "icon": "key",
-            "pages": ["api/activate", "api/validate", "api/deactivate"]
           }
         ]
       },
