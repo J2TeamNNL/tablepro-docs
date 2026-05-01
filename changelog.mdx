@@ -4,6 +4,55 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="May 1, 2026" description="v0.37.0">
+  ### New Features
+
+  - **External API**: Connect Raycast, Cursor, Claude Desktop, and other MCP clients to TablePro. URL scheme, stdio MCP transport via `tablepro-mcp` CLI, pairing flow with PKCE code exchange, activity log with 90-day retention
+  - **Per-Connection External Access**: New connection setting (`blocked`, `readOnly`, `readWrite`). Bounds external client reach to the minimum of token scope and connection access level
+  - **New MCP Tools**: `list_recent_tabs`, `search_query_history`, `open_connection_window`, `open_table_tab`, `focus_query_tab`
+  - **PostgreSQL ICU Collation**: Provider picker in Create Database for PG 15+. ICU locale list comes from `pg_collation`; SQL emission is version-aware
+  - **Multi-Cell Paste**: Paste TSV data from the clipboard into the grid starting from the focused cell, grouped as a single undo
+  - **Rich Copy**: Copy rows writes TSV, HTML table, and plain text to the clipboard for richer paste in spreadsheet apps
+  - **Connection URL Parsing**: SSH `user:password@host` split, `safeModeLevel` from TablePlus URLs, case-insensitive query params, multi-host URLs
+
+  ### Improvements
+
+  - Click a focused cell to start editing without a second click
+  - Shift+Tab navigates to the previous cell in the data grid
+  - Data grid focus ring follows the system accent color and contrast settings
+  - Data grid column headers announce sort direction and multi-sort priority to VoiceOver; cells expose row and column index ranges
+  - Result truncation banner replaces Load More on user query tabs. Status bar shows "Showing N rows (truncated)" with a Fetch All button. Table-tab pagination unchanged
+  - MCP server lazy-starts on first external request. Manual enable in Settings is no longer required
+  - Settings tab renamed from "MCP" to "Integrations" with sections for connected clients, activity log, and pairing
+  - Activity log gained an Export button that writes the current filtered list to CSV
+  - SSH Private Key auth resolves keys from `~/.ssh/config` and default locations (`id_ed25519`, `id_rsa`, `id_ecdsa`) when no explicit key path is set
+  - AI provider settings allow manually entering a model name when the provider does not return one
+  - Query history records SSH password, Redis database index, MongoDB auth params, and multi-host details on Connection URL export
+  - Create Database dialog is now driver-driven. Engines that do not support creation hide the Create button instead of failing on click
+  - Data grid undo/redo uses the window's UndoManager, unifying Cmd+Z across editor and grid
+  - OpenSSL shared as dylib across app and plugins, saving ~15MB in bundle size
+
+  ### Bug Fixes
+
+  - SELECT queries with a user-written LIMIT now return the requested row count. Previously the query engine stripped the user's LIMIT and substituted its own cap, so `LIMIT 10` could return up to 10,000 rows. Affected SQLite, DuckDB, LibSQL, ClickHouse, Redshift, CloudflareD1, and the MCP query path
+  - Crash on macOS 26 when opening SQL Preview
+  - New tab from the empty "no tabs open" state replaces the placeholder instead of opening a separate window-tab
+  - File associations for `.sql`, `.sqlite`, `.duckdb` now appear correctly in Finder's Open With menu
+  - PostgreSQL Create Database failed with `new collation incompatible with template database` on glibc-initialized servers
+  - Redshift Create Database emitted PostgreSQL `LC_COLLATE` syntax which is invalid Redshift grammar
+  - Connection form `usePrivateKey=true` from URL no longer disables Test/Create buttons
+  - Native Search Field focus regression when clearing text
+  - Persist group and connection deletions before firing the sync notification, fixing a race that could re-upload deleted records via iCloud
+  - SSH agent and `IdentityAgent` socket paths now expand `~` so 1Password and similar agents work when configured with `~/...` paths
+
+  ### Breaking Changes
+
+  - `tablepro://connect/<name>/...` deep links removed. Replace with UUID-keyed paths from "Copy Connection Deep Link" in the sidebar context menu. User-saved bookmarks must be regenerated
+  - MCP server data directory moved from `~/Library/Application Support/com.TablePro/` to `~/Library/Application Support/TablePro/`. Existing tokens, audit log, and handshake files are not migrated. Re-pair external clients after upgrading. Delete the old directory with `rm -rf ~/Library/Application\ Support/com.TablePro`
+  - Separately distributed plugins (Oracle, DuckDB, MSSQL, MongoDB, BigQuery, LibSQL, Cassandra, Etcd, CloudflareD1, DynamoDB) require update before use. PluginKit ABI bumped to 9
+  - Settings renamed: `enforceQueryResultLimit` is now `truncateQueryResults`, `queryResultLimit` is now `queryResultRowCap`. Custom values revert to default on first launch after upgrade
+</Update>
+
 <Update label="April 27, 2026" description="v0.36.0">
   ### New Features
 
