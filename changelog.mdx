@@ -4,6 +4,45 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="May 4, 2026" description="v0.38.0">
+  ### New Features
+
+  - **Check for Updates in Welcome Window**: New link next to the version number triggers Sparkle without leaving the screen
+  - **Integrations Activity Window**: Dedicated, resizable window for the MCP activity log and connected clients (Window menu). Sidebar split between Activity Log and Connected Clients, with native search, filter, refresh, and export. Position and size remembered across launches
+  - **Sample Database**: Chinook SQLite database bundled with the app. Open from the welcome screen with one click; reset via File menu
+  - **Connection String Detection**: Paste a `postgres://`, `mysql://`, `redis://`, or `mongodb://` URL into the connection form to auto-fill host, port, user, password, and database
+  - **SSH Config Aliases**: SSH tunnel resolves host aliases from `~/.ssh/config`. Type an alias like `aia-bastion` in the SSH host field and it works the same as `ssh aia-bastion` in a terminal. Supports glob patterns, `Match` directives, `ProxyJump`, hostname canonicalization, and `Include`. Live: edit `~/.ssh/config` and the next connection picks it up
+  - **Oracle 10G Authentication**: Accounts whose `password_versions` includes a 10G hash now connect successfully, matching DBeaver/JDBC/sqlplus
+  - **Oracle Test Connection Diagnostics**: Failed auth opens a focused diagnostic sheet with copy-able info, suggested actions, and a link to file an issue
+  - **MCP Protocol 2025-11-25**: Server now supports protocol versions `2025-06-18` and `2025-11-25`. Clients on the latest spec no longer downgrade. Includes structured tool output (`structuredContent`), tool annotations, completions capability, and streaming progress notifications
+
+  ### Improvements
+
+  - **Welcome Window Polished to macOS HIG**: Subtle drop shadow on the app icon, dynamic text styles, "Sponsor" button removed, "Create connection" uses the bordered control style, toolbar icons (+ / new group) gain a hover background and proper hit targets, window background uses native vibrancy
+  - **Settings > Integrations Flattened**: Now a flat preferences pane per macOS HIG. Configuration only (server toggle, status, port, row limits, query timeout, tokens, network options); activity moved to the new Integrations Activity window, setup snippets to a "Connect a Client…" sheet
+  - **MCP Idle Timeout Raised**: From 5 to 15 minutes, fewer reconnects during slow workflows
+  - **Sync Passwords Toggle**: Now shows a caption explaining the toggle only affects new saves. Existing passwords keep their current sync state until you re-save them
+  - **Keychain Hardening**: Non-syncing keychain items use `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`, keeping local-only secrets out of unencrypted device backups
+
+  ### Bug Fixes
+
+  - **Welcome / Connection / Feedback Window Position**: Windows now remember position and size across launches. Previously they always reopened centered because frame autosave was never set on the underlying NSWindow
+  - **Saved Passwords Disappearing**: Saved connection passwords no longer disappear after quitting and relaunching the app. Removed the destructive legacy-keychain migration that was deleting credentials on sandboxed macOS configurations
+  - **Cmd+Z Cell Background**: Undo after editing a cell no longer leaves the yellow "modified" highlight in place
+  - **Tab Switching Burst Lag**: Rapid Cmd+Number presses no longer queue tail animations after key release. AppKit tab switches are now applied synchronously
+  - **Oracle Type Coverage**: TIMESTAMP variants, INTERVAL DAY TO SECOND, INTERVAL YEAR TO MONTH, DATE, RAW, and BLOB columns render through typed decoders instead of garbled text. INTERVAL YEAR TO MONTH and BFILE columns no longer crash on row fetch. Unknown types display `<unsupported: type>` instead of crashing
+  - **Oracle 23ai Handshake**: Connections to 23ai cloud and containerized deployments no longer fail with `uncleanShutdown` mid-handshake
+  - **Plugin Re-install Prompt**: Connecting to a downloadable database type after the plugin is disabled or uninstalled now reopens the install prompt instead of failing
+  - **Redshift Schemas for Non-Admin Users**: Schema switcher no longer shows an empty list. Now reads from `pg_namespace` filtered by `has_schema_privilege`, matching what the user can actually use
+  - **MCP SSE Stream**: GET `/mcp` now opens a real Server-Sent Events stream. Previously the connection was closed immediately and `notifications/progress` events were dropped
+  - **MCP Concurrent Tool Calls**: No longer serialize at the dispatcher loop, each exchange dispatches in its own child task
+  - **MCP Session Recovery**: Stale `Mcp-Session-Id` after idle timeout returns a proper JSON-RPC `Session not found` envelope with HTTP 404, letting clients re-initialize cleanly instead of hanging until a 4-minute timeout
+
+  ### Removed
+
+  - **`useSSHConfig` toggle**: Per-connection toggle removed. `~/.ssh/config` is always consulted at connection time; explicit form values still take precedence over ssh config defaults
+</Update>
+
 <Update label="May 1, 2026" description="v0.37.0">
   ### New Features
 
