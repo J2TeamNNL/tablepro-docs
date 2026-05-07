@@ -4,11 +4,16 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
-<Update label="May 7, 2026" description="v0.39.0">
+<Update label="May 8, 2026" description="v0.39.0">
   ### New Features
 
-  - **Linked SQL Folders**: Point TablePro at a folder of `.sql` files for two-way sync with Favorites. Edit in TablePro or your editor; changes flow both ways. Frontmatter sets `@name`, `@keyword`, and `@description`; save-time conflicts show a side-by-side diff. Free.
-  - **Database Type Chooser**: New Connection now opens a categorised, searchable sheet listing every supported driver (Relational, Document, Key-Value, Analytical, Wide-Column, Cloud Native, Coordination & Config). Editing an existing connection skips the chooser
+  - **AI Chat Tool Calling**: The assistant can look up your database on demand. Read-only tools (`list_tables`, `describe_table`, `get_table_ddl`, etc.) auto-run; write and destructive ops show inline approval pills (Run / Always for this connection / Cancel). Works with Anthropic, OpenAI, OpenRouter, Gemini, Ollama, GitHub Copilot, and custom OpenAI-compatible endpoints. Ask / Edit / Agent mode picker controls which tools the model sees. Safe mode still gates execution
+  - **AI Chat `@` Mentions**: Attach Schema, a Table, the Current Query, recent Query Results, or a saved SQL query as chips. Type `@` in the composer or pick from the menu
+  - **AI Chat Slash Commands**: Built-in `/explain`, `/optimize`, `/fix`, `/help`, plus user-defined commands in Settings -> AI -> Custom Slash Commands with `{{query}}`, `{{schema}}`, `{{database}}`, `{{body}}` placeholders
+  - **AI Chat Per-Connection Rules**: Add custom guidance about table conventions, PII columns, and naming in the connection's AI Rules tab; the assistant sees it on every chat turn
+  - **AI Chat Panel Redesign**: Composer-focused chat tab with inline model picker and per-turn model attribution
+  - **Linked SQL Folders**: Point TablePro at a folder of `.sql` files for two-way sync with Favorites. Edit in TablePro or your editor; changes flow both ways. Frontmatter sets `@name`, `@keyword`, and `@description`; save-time conflicts show a side-by-side diff. Free
+  - **Database Type Chooser**: New Connection opens a categorised, searchable sheet listing every supported driver (Relational, Document, Key-Value, Analytical, Wide-Column, Cloud Native, Coordination & Config)
   - **Free XLSX Export**: Excel export no longer requires Pro
   - **Free Safe Mode**: Touch ID, Full, and Read Only Safe Mode levels no longer require Pro
 
@@ -19,7 +24,8 @@ rss: true
   - **Connection-Scoped Favorites**: Opening a second tab on the same connection no longer reloads the favorites tree or flashes a spinner. Selection persists across windows
   - **Connection Form Redesign**: Rebuilt around macOS HIG sidebar navigation (General, SSH Tunnel, SSL/TLS, Customization, Advanced). Cancel, Save, and Save & Connect live in the native window toolbar; Test Connection inline
   - **Connection URL Import**: Moved into the database type chooser; paste a URL there instead of inside the form
-  - **HIG Polish**: Hero icons scale with system text size, search fields use native `NSSearchField`, validation banners use the standard warning convention, and form sheets switch to grouped Form layouts
+  - **AI Chat Opt-In Context**: New installs no longer auto-include schema, current query, and query results in every prompt; attach via `@` when you want them. Existing users keep their current settings
+  - **HIG Polish**: Hero icons scale with system text size, search fields use native `NSSearchField`, validation banners use the standard warning convention, form sheets switch to grouped Form layouts
   - **Native Windows**: Welcome, Connection Form, and Integrations Activity now use SwiftUI scenes, fixing an assertion crash and restoring Integrations Activity at next launch
   - **ER Diagram Accessibility**: Diagram nodes scale with system text size
   - **Terminology**: "Read-Only" / "Read-Write" renamed to "Read Only" / "Read & Write" to match macOS HIG
@@ -29,8 +35,15 @@ rss: true
   - **Schema Switching on SQL Server / Oracle**: Cmd+K Quick Switcher schema selection no longer silently ignored
   - **iOS MySQL Crash**: Fixed `EXC_BREAKPOINT` when opening some MySQL tables
   - **iOS Local Network**: Connections to `.local` hostnames and local-network addresses (10.x, 192.168.x, link-local, IPv6 ULA) no longer time out silently
+  - **iOS Row List Crash**: Data browser and query result lists no longer crash with "Index out of range" when rows shrink mid-update (#1094)
+  - **iOS Port Validation**: Out-of-range port for MySQL, PostgreSQL, or Redis reports a readable error instead of crashing (#1094)
   - **MariaDB Install Prompt**: New connection chooser no longer falsely prompts to install built-in lazy drivers
   - **IME Editor Jump**: SQL editor no longer jumps to the end after committing Chinese, Japanese, or Korean words like "测试" (#1012)
+  - **MongoDB SRV Port**: Connection strings strip the port from the host per the URI spec (#1101)
+  - **Cmd+T Focus Flash**: New tabs no longer flash focus back to the previous tab
+  - **Cmd+X No Selection**: Cuts the current line, matching VS Code, Sublime, and Xcode (#1075)
+  - **Cmd+A Trailing Newline**: Selecting all on a query ending with a newline highlights every line (#1075)
+  - **Editor Window State**: Windows remember size, position, and zoom across launches
   - **Personal Team Builds**: External-contributor builds on personal Apple Developer teams now work without an iCloud entitlement (#1020)
   - **SSH Auth Errors**: Auth-failure alerts now point at the actual cause (wrong password, wrong verification code, rejected key) (#1005)
   - **TOTP Rotation**: Codes that crossed a 30-second rotation boundary are no longer rejected
@@ -43,7 +56,15 @@ rss: true
   - **Toolbar Database Name**: No longer empty after relaunch when the last-used database is restored
   - **Cmd+K Database Switch**: Switching databases no longer reverts in Cmd+T, query history, AI prompts, or several tab-creation paths (#1043)
   - **AI Provider Test**: No longer shows `unsupported URL` while editing a draft endpoint
-  - **Data Grid Header Inset**: Column headers now align with result-cell horizontal inset
+  - **Connection Form Coordinator**: No longer rebuilds on every parent re-render (#1102)
+  - **AI Chat Composer**: IME safety, visible scroll bar, and Shift+Return for newline (#1100)
+  - **AI Chat Tool Limit**: Roundtrip limit raised from 5 to 10 (#1096)
+  - **AI Chat Rules Persistence**: Per-connection rules persist through `StoredConnection` and CloudKit sync (#1098)
+  - **AI Chat Retry Button**: Hidden for non-recoverable errors (auth failure, deprecated model, invalid endpoint)
+  - **AI Chat Code Blocks**: Render with syntax highlighting and Insert even when the language tag is missing
+  - **AI Chat Insert**: Stays enabled when the chat panel has focus instead of the editor
+  - **MCP Errors**: Surface a readable message via `LocalizedError` (#1095)
+  - **Data Grid Header Inset**: Column headers align with result-cell horizontal inset
   - **Toolbar Status Inset**: Connection status keeps its left inset when no connection tag is shown
 </Update>
 
