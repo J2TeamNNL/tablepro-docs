@@ -4,6 +4,12 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="May 8, 2026" description="v0.39.1">
+  ### Bug Fixes
+
+  - **Launch Failure on 0.39.0**: App failed to open with "The application can't be opened" / errno 163. Production entitlements shipped a literal `$(AppIdentifierPrefix)` placeholder for the keychain access group because `codesign --entitlements` does not expand Xcode build variables. Reverted to the hardcoded team prefix (#1104)
+</Update>
+
 <Update label="May 8, 2026" description="v0.39.0">
   ### New Features
 
