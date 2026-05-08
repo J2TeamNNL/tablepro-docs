@@ -1,6 +1,6 @@
 ---
 title: MCP Clients
-description: Connect Claude Desktop, Claude Code, Cursor, Cline, Continue, Zed, Windsurf, Goose, and custom clients to TablePro over stdio
+description: Connect Claude Desktop, Claude Code, Cursor, VS Code, Cline, Continue, Zed, Windsurf, Antigravity, Goose, and custom clients to TablePro over stdio
 ---
 
 # MCP Clients
@@ -64,6 +64,23 @@ Edit `~/.cursor/mcp.json` for global access, or `.cursor/mcp.json` in the projec
 ```
 
 Restart Cursor. The TablePro tools appear under `@mcp` in chat.
+
+## VS Code
+
+VS Code has native MCP support (1.99+). Open the Command Palette and run **MCP: Open User Configuration** to edit the user-level `mcp.json`, or create `.vscode/mcp.json` in your workspace for project-scoped access. Note: the top-level key is `servers`, not `mcpServers`:
+
+```json
+{
+  "servers": {
+    "tablepro": {
+      "type": "stdio",
+      "command": "/Applications/TablePro.app/Contents/MacOS/tablepro-mcp"
+    }
+  }
+}
+```
+
+Save the file. Open Copilot Chat in agent mode and confirm the TablePro tools appear in the tools picker.
 
 ## Cline
 
@@ -129,6 +146,22 @@ Edit `~/.codeium/windsurf/mcp_config.json`. From inside Windsurf, click the MCP 
 ```
 
 Restart the Cascade panel. TablePro's tools appear in the tool picker.
+
+## Antigravity
+
+Antigravity is Google's agentic IDE. Open a chat, click the `...` menu in the top-right of the chat panel, choose **MCP Servers > Manage MCP Servers**, then click **View raw config**. That opens `~/.gemini/antigravity/mcp_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "tablepro": {
+      "command": "/Applications/TablePro.app/Contents/MacOS/tablepro-mcp"
+    }
+  }
+}
+```
+
+Save the file, return to **Manage MCP Servers**, and click **Refresh**. The TablePro entry should turn green with its tools listed.
 
 ## Goose
 
