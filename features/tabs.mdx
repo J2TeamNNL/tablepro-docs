@@ -161,6 +161,14 @@ Each tab maintains its own pending changes. Switching tabs saves and restores ea
 
 Tab state auto-saves 500ms after any change. On reconnect, TablePro restores your tabs and re-executes table queries.
 
+### Multi-Window Restoration
+
+If you had several editor windows open with their own tab groups, TablePro restores every window on next launch. Earlier versions kept tabs from one window and dropped the rest.
+
+### Window Size, Position, and Zoom
+
+Each editor window remembers its frame and zoom across launches. Reopen a connection and the window comes back at the same size, position, and zoom state. The first window opens at 1200x800 centered on the active screen.
+
 ## Pagination
 
 ### Table Tabs (Server-Side)

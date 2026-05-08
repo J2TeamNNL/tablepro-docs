@@ -78,6 +78,8 @@ mongodb://user:password@host:27017/database?authSource=admin
 mongodb+srv://user:password@cluster.mongodb.net/database
 ```
 
+The `mongodb+srv://` scheme resolves hosts through DNS SRV records and does not allow a port. If you paste an SRV URL that includes one (for example `cluster.mongodb.net:27017`), TablePro strips it before connecting. The plain `mongodb://` scheme keeps any port you provide.
+
 See [Connection URL Reference](/databases/connection-urls) for all parameters.
 
 ## Features
