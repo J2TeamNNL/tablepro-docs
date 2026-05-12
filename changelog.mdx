@@ -4,6 +4,32 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="May 12, 2026" description="v0.40.2">
+  ### New Features
+
+  - **Set Value SQL Presets**: Right-click a date, datetime, or timestamp cell to insert `CURRENT_DATE`, `CURRENT_TIME`, `NOW()`, or `CURRENT_TIMESTAMP`, filtered by column type
+  - **Import from Other App on Welcome Screen**: One-click button on the welcome left pane to import connections from TablePlus, Sequel Ace, or DBeaver
+
+  ### Improvements
+
+  - **Row Numbers Continue Across Pages**: The `#` column reads `1001-2000` on page 2 instead of restarting at 1, and auto-sizes so long numbers no longer clip
+  - **Foreign Key Preview Follows Selection**: Press Space on an FK cell, then arrow up or down — the popover slides to the next row and refreshes its content
+  - **Inline Editor for Date Cells**: Double-click a `DATE`, `DATETIME`, or `TIMESTAMP` cell to type a new value directly; the popover date picker is removed
+  - **Inline Connecting State**: The connection window shows the connecting state with a Cancel button instead of an empty sidebar
+
+  ### Bug Fixes
+
+  - Closing the connection window during a slow connect no longer leaves a stuck "Connecting…" window or a stray failure alert (#1185)
+  - Cmd+Z while editing a cell now undoes typing in the editor; pressing it after dismissing no longer crashes
+  - Cmd+Z right after Add Row no longer leaves a stranded editor over the removed row
+  - Editing a NULL cell and dismissing without typing no longer flips the value to an empty string
+  - Double-clicking another cell while editing no longer drops pending changes or stalls the new editor
+  - Double-clicking an enum, set, or boolean cell now opens the inline text editor; the chevron still opens the picker
+  - Chevron-accessory cells (enum, boolean, JSON, blob) no longer truncate short values that fit the full width
+  - DATE columns no longer render a phantom `00:00:00` time suffix
+  - Adding a new row no longer renders the row on top of the auto-opened editor mid-animation
+</Update>
+
 <Update label="May 12, 2026" description="v0.40.1">
   ### Improvements
 
