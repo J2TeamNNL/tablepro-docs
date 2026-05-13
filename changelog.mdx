@@ -4,6 +4,19 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="May 13, 2026" description="v0.40.3">
+  ### Bug Fixes
+
+  - **AI Chat**: Scrolling stays smooth on long conversations and stream completion no longer briefly hides the chat (#1239)
+  - **AI Chat**: Starting a new conversation no longer carries context from the previous one
+  - **PostgreSQL**: Connecting to servers older than 9.3 no longer fails on schema load (#1240)
+  - **MySQL**: EXPLAIN now offers a plain variant that works on every version
+  - **MSSQL**: Editing a view on SQL Server 2014 or earlier no longer fails with a syntax error
+  - **Cassandra**: Connecting to a 2.x server now shows a clear unsupported-version message instead of failing on sidebar load
+  - **MongoDB**: Connecting to servers older than 3.4 no longer fails on the database listing
+  - **ClickHouse**: The index sidebar no longer fails on versions older than 19.17
+</Update>
+
 <Update label="May 12, 2026" description="v0.40.2">
   ### New Features
 
