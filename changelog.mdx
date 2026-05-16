@@ -4,6 +4,44 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="May 16, 2026" description="v0.42.0">
+  ### New Features
+
+  - **CockroachDB**: Connect over the PostgreSQL wire protocol, with a Connection Options field for libpq routing such as CockroachDB Cloud cluster names (#1226)
+  - **AI Chat OpenAI Responses API**: GPT-5 and Codex models now use the Responses API. Reasoning shows in a collapsible Thinking panel, with a reasoning-effort picker (Minimal to Extra High), a curated model picker, strict tool schemas by default, and image input via paste or drop (HEIC, TIFF, and BMP convert to PNG or JPEG; EXIF and GPS are stripped before sending) (#1112)
+  - **AI Chat Claude Extended Thinking**: Opus 4.7, Sonnet 4.6, and Haiku 4.5 now show reasoning in the same Thinking panel (#1112)
+  - **iOS SQL Server**: Connect to SQL Server over TDS 7.4. Data browser, search, filter, and pagination all use SQL Server syntax
+  - **iOS Sync Controls**: Settings > Sync shows last sync time, with Sync Now and Refresh from iCloud to re-download missing connections, groups, and tags
+  - **Default Row Sort**: Settings > Data Grid lets you open every table sorted by primary key or first column. Click any column header to override (#1284)
+
+  ### Improvements
+
+  - **Database Switcher Popover**: The toolbar database chip now opens a popover with an active-row checkmark, search, Refresh, and an engine-aware New Database footer. ⌘N and ⌘R bind globally inside the popover
+  - **Native New / Drop Database Dialogs**: Both flows use the native sheet and confirmation dialogs instead of custom sheets
+
+  ### Bug Fixes
+
+  - **AI Chat Gemini and DeepSeek**: Gemini tool calls no longer fail with 400, `thoughtSignature` round-trips after tool runs, and DeepSeek V4 thinking is captured across turns
+  - **AI Chat GitHub Copilot**: Tool registration accepts optional fields instead of failing with "Expected string"
+  - **MySQL and MariaDB BIT Columns**: `BIT(N)` values display as decimal numbers instead of raw bytes that rendered as control characters in the grid (#1272)
+  - **Structure Tab Refresh**: ⌘R now picks up external schema changes on the Columns, DDL, and ClickHouse Parts sub-tabs immediately (#1281)
+  - **Query Editor Autocomplete**: Enter and ⌘+Enter work after accepting a suggestion; double-clicking a suggestion no longer closes the window; renamed columns appear after Refresh (#1278)
+  - **HTTP Query Timeouts**: ClickHouse, BigQuery, CloudflareD1, LibSQL, Etcd, and DynamoDB long-running queries now honor Settings > Query timeout instead of cutting off at 30 seconds (#1267)
+  - **MongoDB Username Field**: The connection form shows the Username field for auth-optional engines, so connections to auth-enabled servers stop failing with "requires authentication"
+  - **MongoDB Multi-Host Editor**: Deleting a host keeps the list interactive instead of freezing until focus is lost and regained (#1293)
+  - **SQL Import**: PostgreSQL dollar-quoted function bodies parse correctly, and statements are no longer dropped when the database is slower than the parser (#1264)
+  - **SQL Export**: Views, materialized views, and foreign tables emit the matching `DROP` so re-import no longer fails with "is not a table" (#1264)
+  - **iOS Data Persistence**: Connections, groups, and tags survive TestFlight and App Store updates
+
+  ### Security
+
+  - **AI Chat Destructive Operation Confirmation**: `DROP`, `TRUNCATE`, and `ALTER...DROP` always prompt for approval. Silent mode and Always Allow no longer bypass the check
+
+  ### Notes
+
+  - **Report an Issue Removed**: The Help menu item now opens GitHub Issues in the browser instead of a built-in panel
+</Update>
+
 <Update label="May 13, 2026" description="v0.41.0">
   ### New Features
 
