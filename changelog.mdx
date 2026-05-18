@@ -4,6 +4,38 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="May 18, 2026" description="v0.43.0">
+  ### New Features
+
+  - **Beekeeper Studio Import**: Bring connections over from Beekeeper Studio, including encrypted passwords and SSH bastion hosts
+  - **Schema Picker in Sidebar**: New picker at the bottom of the Tables sidebar to switch the active schema (#1296)
+  - **Inline Enum Picker**: Edit ENUM and SET columns via a dropdown on MySQL, MariaDB, PostgreSQL, ClickHouse, DuckDB, and MongoDB JSON-schema enums (#1283)
+  - **CSV/TSV Inspector**: Open, edit, filter, sort, and re-shape CSV files with undo/redo and auto-reload on external changes; large files stream from disk (#1259)
+  - **iOS SQL Server**: Connect to SQL Server over TDS 7.4 from iOS, with schema browsing, data browser, search, filter, and transactions
+  - **iOS Sync Controls**: Settings > Sync now shows last sync time with Sync Now and Refresh from iCloud actions
+
+  ### Improvements
+
+  - **Native SSL Defaults**: New PostgreSQL, MySQL, MariaDB, SQL Server, Redshift, and CockroachDB connections default to Preferred SSL mode, matching the native client library defaults. Hosted databases like AWS RDS and Cloud SQL work out of the box
+  - **MySQL/MariaDB 2-Pass Connect**: Preferred mode tries TLS first and falls back to plaintext only on SSL handshake errors. Auth and network errors are not retried
+  - **Per-Engine SSL Guidance**: The SSL pane shows engine-specific advice and warns inline when the driver has no TLS fallback for Preferred mode
+  - **Structured SSL Error Messages**: Connection failures caused by SSL handshake errors now name the cause and recommend an SSL Mode to switch to. Credentials are redacted from the raw driver response
+  - **Filter Rows Enum Dropdown**: Filter operators `=` and `!=` show an enum dropdown on enum columns (#1283)
+
+  ### Bug Fixes
+
+  - **PostgreSQL Hosted Connections**: AWS RDS, Cloud SQL, Azure, and other hosted Postgres no longer fail with "no pg_hba.conf entry for host" (#1298)
+  - **Oracle SSL Respected**: SSL/TCPS settings from the SSL pane now wire through to OracleNIO; previously every Oracle connection was plain TCP
+  - **Cassandra SSL Respected**: SSL settings from the SSL pane now reach the driver; previously every Cassandra connection was plain TCP
+  - **MySQL Hosted TLS**: Cloud SQL, Azure Database, and other hosted MySQL servers that require TLS no longer fail under Preferred mode
+  - **ClickHouse Plain HTTP via DNS**: ClickHouse and other HTTP-based drivers can now connect to plain-HTTP servers addressed by hostname (#1316)
+  - **Import App Detection**: TablePlus, Sequel Ace, and DBeaver are now picked up via LaunchServices before they have been opened (#1305)
+  - **TablePlus Password Import**: Reads passwords from the keychain correctly instead of returning empty
+  - **Port Number Locale**: Ports no longer render with a thousand separator on locales that use a dot as a digit separator
+  - **New Query Tab Focus**: Cmd+T no longer jumps focus back to the previous table tab on SQLite and other file-based databases (#1313)
+  - **File-Based Sidebar Flash**: SQLite and DuckDB sidebars no longer flash on window focus; external changes are picked up via the file watcher instead
+</Update>
+
 <Update label="May 16, 2026" description="v0.42.0">
   ### New Features
 
