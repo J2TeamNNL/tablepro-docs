@@ -4,6 +4,29 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="May 20, 2026" description="v0.43.1">
+  ### New Features
+
+  - **Copy Column Values**: Right-click a column header to copy all its loaded values (#1325)
+  - **More Copy Formats**: The row "Copy as" submenu adds CSV, CSV with Headers, Markdown table, and an IN clause for `WHERE id IN (...)` lookups (#1325)
+  - **Read-Only Cell Viewer**: Double-click or press Return on a read-only result cell to open a selectable text viewer. JSON columns open a viewer popover and BLOB columns open the hex viewer (#1336)
+
+  ### Improvements
+
+  - **Plugins Recover on Their Own**: A plugin that fails to load no longer interrupts launch with an alert. The app posts a notification and lists rejected plugins in Settings > Plugins with Update Now and Remove buttons, and they auto-update from the registry in the background (#1322)
+  - **Right Plugin Binary**: The app installs the plugin binary built for its own version, even when the registry holds binaries for other versions (#1322)
+  - **Deferred Plugin Updates**: A plugin update that arrives while a connection is open installs when you close the connection or quit, instead of being blocked
+  - **Plugin Status at a Glance**: Settings > Plugins shows a badge with the count of rejected plugins and available updates, connections with a failed driver show a yellow warning triangle, and the connection form shows an inline Update Plugin banner
+  - **Copy and Filter Shortcuts**: `Cmd+C` copies the focused cell when one row is selected and a cell has focus, otherwise the selected row(s) as TSV; `Cmd+Shift+C` always copies row(s) as TSV. `Cmd+F` toggles the filter panel on a table and opens Find in the SQL editor, replacing the old `Cmd+Shift+F` filter shortcut (#1332)
+
+  ### Bug Fixes
+
+  - **PluginKit Version Errors**: Fixes the recurring "Plugin was built with PluginKit version N, but version M is required" error after app updates. Rejected plugins now recover without manual steps (#1322)
+  - **DuckDB Types and Schemas**: Spatial `GEOMETRY` renders as WKT, `HUGEINT` and `UHUGEINT` keep full precision and handle negatives, streaming results respect the row cap and render `TIMESTAMPTZ`/`TIMETZ`/`GEOMETRY`, ENUMs resolve in non-`main` schemas, BC years show a leading minus, and schema reads handle apostrophes and concurrent switches (#1324)
+  - **Open SQLite from Finder**: `.db`, `.db3`, `.s3db`, `.sl3`, and `.sqlitedb` files open in TablePro from Finder (#1327)
+  - **DynamoDB SSO**: Connections work with `sso-session` profiles right after `aws sso login`, with no extra AWS CLI command (#1333)
+</Update>
+
 <Update label="May 18, 2026" description="v0.43.0">
   ### New Features
 
