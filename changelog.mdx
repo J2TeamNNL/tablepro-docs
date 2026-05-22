@@ -9,6 +9,10 @@ rss: true
 
   - **Skip Heavy Columns**: Hiding a column now also drops it from the query, so tables with one heavy column load faster. The primary key is always fetched so editing still works
 
+  ### Removed
+
+  - **Embedded Terminal**: The built-in database CLI terminal has been removed. Use your system terminal for command-line access to your databases.
+
   ### Bug Fixes
 
   - **Plugin Crash on Open**: Opening a connection no longer crashes when its database plugin is older than the app; outdated plugins update automatically (#1371)
