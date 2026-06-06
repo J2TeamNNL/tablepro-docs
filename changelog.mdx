@@ -26,6 +26,7 @@ rss: true
 
   ### Bug Fixes
 
+  - Accepting an autocomplete suggestion replaces the whole typed word instead of leaving part of it behind (#1601)
   - MongoDB: connecting to Atlas no longer fails with TLS internal error (-9838) (#1599)
   - DuckDB: the plugin runs DuckDB 1.5.2 again after a rollback to 1.5.0
   - Query results appear as soon as rows return; metadata loads in the background, removing a multi-second wait on slow remote databases (#1574)
