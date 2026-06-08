@@ -4,6 +4,28 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="June 9, 2026" description="v0.50.0">
+  ### New Features
+
+  - **Cursor as an AI provider**: Use a Cursor API key or sign in with the Cursor CLI to run AI chat and inline suggestions (#1624)
+  - **Sign in with ChatGPT**: Run AI chat and inline suggestions without an API key; existing Codex CLI logins can be imported (#1617)
+  - **libSQL / Turso local files**: Open a local libSQL database file and work with it offline, transactions included (#1607)
+
+  ### Bug Fixes
+
+  - Default row sort now applies to the first table opened after launch (#1603)
+  - The query editor no longer erases characters or drops focus while typing, most visible on macOS 15 (#1608)
+  - The autocomplete popup filters in place instead of closing and reopening on each keystroke (#1608)
+  - Syntax highlighting no longer disappears after formatting a query (#1612)
+  - Clicking an already-open table switches to its tab instead of opening a duplicate (#1613)
+  - MongoDB connects over an SSH or Cloudflare tunnel instead of failing with connection refused (#1621)
+  - Oracle connections with native network encryption no longer crash on a server error; the real ORA error is shown and the connection keeps working (#483)
+  - DBeaver connections import from any edition, based on your DBeaver data rather than which app is installed (#1628)
+  - Cancelling a SQLite query no longer races a disconnect (#1610)
+  - The GitHub Copilot provider no longer shows a Max output tokens field it ignores or leaves a stray model ID field behind
+  - A plugin updated in Settings stays marked Installed instead of showing the Update button again
+</Update>
+
 <Update label="June 6, 2026" description="v0.49.1">
   ### Bug Fixes
 
