@@ -4,6 +4,53 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="June 13, 2026" description="v0.51.0">
+  ### New Features
+
+  - **BigQuery datasets**: Switch, create, and drop datasets from the toolbar, Cmd+K switcher, and File menu (#509)
+  - **Quick Switcher upgrades**: Search saved queries, scope results with Cmd+1 to Cmd+4 and a recent-items view, open a table in a new tab with Option+Return, and right-click a result to open its structure or copy the name or query
+  - **Session restore on launch**: TablePro reopens your last session by default, bringing back each tab's sort, page, cursor position, and column widths plus the active database and schema. Tabs autosave every 30 seconds and recover after a crash (#1673)
+  - **`.psql` and `.pgsql` files**: Open in the SQL editor like `.sql` (#1641)
+
+  ### Improvements
+
+  - The Quick Switcher opens as a Spotlight-style floating panel (Liquid Glass on macOS 26), highlights matched characters, and ranks the items you use most
+  - The sidebar filter, database switcher, and connection switcher use the same fuzzy matching, so `upv` finds `user_profile_view`
+  - Redis connections filter with a key-pattern search and a key-type scope, matched server-side across the whole keyspace
+  - Container names match each database: Dataset for BigQuery, Keyspace for Cassandra and ScyllaDB (#509)
+  - Refresh (Cmd+R) acts only on the focused window's connection, and holding it no longer queues a backlog of refreshes
+  - The inspector panel resizes freely by dragging its divider
+  - Switching PostgreSQL schemas sets the search path to just the selected schema (#1662)
+
+  ### Bug Fixes
+
+  - PostgreSQL and Redshift autocomplete now completes tables and columns from schemas other than the selected one (#1668)
+  - Favorite keywords work again; deleting a connection also removes its saved queries, folders, and per-table filters
+  - Keyword and SQL keyword autocomplete work in editors without a connection
+  - PostgreSQL databases without a "public" schema load tables from the first available schema (#1662)
+  - Switching schemas no longer closes open tabs or discards unsaved SQL (#1669)
+  - Creating a table turns the Create Table tab into the new table's tab and updates the sidebar, and Cmd+S creates the table (#1664)
+  - Format Query can be undone with Cmd+Z and formats only the selection when one is active (#1645, #1656)
+  - Foreign key jump arrows survive sorting, filtering, and paginating, and PostgreSQL foreign keys are read from the system catalogs
+  - Sorting a query result no longer overwrites the SQL editor or an open `.sql` file (#1645)
+  - iCloud Sync between the iPhone and Mac apps uses the Production CloudKit environment
+  - Exports no longer fail mid-table on servers with a statement time limit (#1633)
+  - Refreshing a table reloads its data even when a previous load is still running (#1637)
+  - Cmd+R on a table reloads its rows instead of failing with a query error
+  - SQL autocomplete suggests tables after JOIN across multi-join and multi-clause queries (#1646)
+  - Large SQL scripts no longer freeze the editor; above 2 MB it suspends syntax highlighting and inline AI so typing and scrolling stay responsive (#1652)
+  - Opening a query from history in the Quick Switcher loads the full query instead of a 100-character preview
+
+  ### Security
+
+  - Imported connections from a deep link or shared file can no longer carry a pre-connect script that runs a shell command
+  - External database links ask for confirmation before connecting, and a password in the link is never saved to the Keychain
+  - MCP tools enforce each connection's access level, AI policy, and token scope, and the MCP server requires a paired token by default
+  - An installed plugin's code signature is re-checked right before it loads, so the binary cannot be swapped after the first check
+  - MongoDB filter values in the Contains, Not Contains, Starts With, Ends With, and Regex operators can no longer inject query operators
+  - On iOS, TLS certificates are validated for verify SSL modes, copied values stay on the device, and the home screen widget no longer stores database host and port on disk
+</Update>
+
 <Update label="June 9, 2026" description="v0.50.0">
   ### New Features
 
