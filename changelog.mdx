@@ -4,6 +4,35 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="June 19, 2026" description="v0.52.0">
+  ### New Features
+
+  - **Triggers**: The table structure view has a Triggers tab for MySQL, MariaDB, PostgreSQL, SQLite, SQL Server, Oracle, libSQL, and Cloudflare D1, with a filter field, sortable columns, and a read-only view of each trigger's definition. You can create, edit, and drop triggers from the tab (#1695)
+  - **Traditional Chinese**: Added 繁體中文 in Settings > General
+  - **Add row button**: The table status bar has an Add button that inserts a new row at the end of the grid and starts editing it
+  - **DuckDB remote (experimental)**: Connect to a remote DuckDB server over the Quack protocol. Pick Remote (Quack) in the connection form and enter the host, port, and token. Needs DuckDB 1.5.3 or later (#1716)
+
+  ### Improvements
+
+  - Selecting a Redis namespace in the sidebar now filters the open view to that prefix with paging, instead of opening a separate tab (#1701)
+
+  ### Bug Fixes
+
+  - SQL autocomplete now suggests columns for a derived-table or CTE alias (#1697)
+  - Redis entries no longer disappear after the connection sits idle (#1701)
+  - Redis key browsing now lists and pages through every key in a database or namespace, instead of only the first batch (#1701)
+  - A dropped Redis connection now reconnects on the next command and replays auth and the selected database (#1701)
+  - DuckDB VARIANT columns now show their value as text instead of an empty cell
+  - A new database group now appears in the connection list right away instead of only after restarting the app (#1704)
+  - The SQL formatter keeps nested indentation for UNION, INTERSECT, and EXCEPT inside a subquery, and puts the closing parenthesis on its own line (#1698)
+  - Toolbar button tooltips now show each action's real keyboard shortcut and follow your custom bindings (#1694)
+  - Deleting a table from the sidebar now removes it from the tree right away on multi-database servers like MySQL and PostgreSQL (#1714)
+  - The row detail panel no longer stays blank when a table is opened in a second tab
+  - The sidebar filter now stays put when you open another tab
+  - Fixed a crash when browsing the database tree on servers with many schemas, such as PostgreSQL
+  - Reopening the app no longer shows a "Not connected to database" error when it restores a table tab on a connection that is still reconnecting, such as one over SSH
+</Update>
+
 <Update label="June 16, 2026" description="v0.51.1">
   ### New Features
 
