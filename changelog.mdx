@@ -4,6 +4,30 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="June 22, 2026" description="v0.52.1">
+  ### New Features
+
+  - **Import and export connections on iPhone**: Open a .tablepro file from Files or AirDrop, or use Import Connections in the list menu. Export from the list menu. Passwords are left out by default; include them by setting a passphrase that encrypts the file
+  - Encrypted files prompt for the passphrase on import, and you choose how to handle duplicates
+
+  ### Improvements
+
+  - Drag-selecting many columns in a wide result set scrolls smoothly instead of lagging
+  - Scrolling large result sets uses less CPU
+  - Typing in the sidebar table search stays responsive on databases with thousands of tables
+  - The welcome sidebar stays responsive with many connections and nested groups
+  - Autocomplete stays snappy on wide SELECT clauses with hundreds of columns
+  - The connection Export Options dialog keeps a steady size when you turn on Include Credentials, and saves through the standard macOS save dialog
+
+  ### Bug Fixes
+
+  - SQL autocomplete no longer stops appearing until the app is relaunched; it stays available after switching query tabs and windows (#1731)
+  - Oracle connections no longer crash the app when the server sends a message the driver cannot decode; the query fails with a clear error and reconnects (#483)
+  - MongoDB TLS handshake failures now report the actual cause instead of always blaming a cipher or protocol mismatch (#1418)
+  - The External Clients access level no longer reverts to Read Only after saving and reopening a connection, so MCP clients keep the write access you granted (#1730)
+  - Typing fast with the autocomplete window open no longer stalls each keystroke
+</Update>
+
 <Update label="June 19, 2026" description="v0.52.0">
   ### New Features
 
