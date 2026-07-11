@@ -60,6 +60,7 @@
                 "pages": [
                   "databases/sqlite",
                   "databases/duckdb",
+                  "databases/beancount",
                   "databases/libsql"
                 ]
               },
