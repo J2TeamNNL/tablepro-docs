@@ -1,0 +1,68 @@
+---
+title: "Users & Roles"
+description: "Manage database users, roles, and privileges without writing GRANT statements by hand."
+---
+
+TablePro can manage the users and roles on a server and the privileges they hold. Changes are staged, so nothing reaches the server until you review the SQL and apply it.
+
+Available on **MySQL**, **MariaDB**, and **PostgreSQL** connections. Open it from **View > Users & Roles**. The command is disabled on connections whose driver does not support it.
+
+## The layout
+
+The tab has three panes:
+
+- **Users and roles** on the left. Filter, sort, and select an account. **+** and **-** below the list create and drop accounts.
+- **Objects** in the middle: the server, its databases, and, as you expand them, schemas, tables, and columns. The **Privileges** column tells you what the selected account has on each object without having to click it.
+- **Privileges** on the right: the privileges that can actually be granted on the object you selected, grouped into Data, Structure, Administration, and Dynamic.
+
+Select several objects of the same kind to grant a privilege on all of them at once.
+
+## Effective privileges
+
+A checkbox tells you what is granted **directly** on that object. The **Effective** column tells you where access actually comes from:
+
+- **Inherited from `role`** means the account holds the privilege through a role it is a member of. PostgreSQL roles are followed transitively. If the account has `NOINHERIT`, the privilege only applies after `SET ROLE`, and TablePro says so.
+- **Granted on `object`** means a privilege on a parent object already covers this one. This is engine-specific: on MySQL a database-level grant covers the tables inside it, while on PostgreSQL it does not. TablePro asks the driver rather than guessing.
+
+This is the difference between "this box is unchecked" and "this user cannot do this". They are not the same thing, and the column exists to keep them apart.
+
+## Granting and revoking
+
+Toggling a checkbox stages a change. The account, the object, and the privilege each show that they have unsaved edits, so a change is findable even in a server with hundreds of tables.
+
+**Review & Apply** shows the exact statements. Statements that remove access are listed too. You can copy the SQL, open it in a query editor, or run it.
+
+Changes are always a diff. Unchecking a box you just checked cancels out instead of generating a redundant `REVOKE`, and a privilege that was grantable to others stays grantable.
+
+Changes run through the same safeguards as any other write: a read-only connection blocks them, and Safe Mode asks for confirmation or authentication as configured.
+
+<Warning>
+If a change would remove access for the account your connection is using, TablePro warns you in the review sheet before the SQL runs. It does not block the change, since revoking your own admin privileges can be deliberate.
+</Warning>
+
+## Refreshing while you have unsaved changes
+
+Press ⌘R at any time. TablePro re-reads the server and keeps your staged changes on top of it. If another DBA already made a change you had staged, that change quietly disappears from your diff because there is nothing left to do.
+
+## Dropping an account
+
+Select it and press ⌫, or use **-**, or the context menu. The drop is staged and struck through, and ⌘Z undoes it. Nothing runs until you apply.
+
+On PostgreSQL, a role that owns objects cannot simply be dropped. TablePro detects this and asks whether to reassign the owned objects to another role or drop them, generating `REASSIGN OWNED` or `DROP OWNED` alongside the `DROP ROLE`.
+
+<Note>
+`REASSIGN OWNED` and `DROP OWNED` only affect the database you are connected to, plus shared objects. A role that owns objects in several databases needs the same step run in each. This is a PostgreSQL behaviour, not a TablePro limitation.
+</Note>
+
+## What PostgreSQL cannot show you
+
+PostgreSQL stores schema, table, and column privileges per database and cannot read them for a database it is not connected to. Those databases still appear, still show their cluster-wide database-level grants, and are marked as not browsable. They are never shown as though the account had no privileges there.
+
+MySQL has no such restriction.
+
+## What is not covered
+
+- Editing `WITH GRANT OPTION`. It is displayed, and never silently removed, but it is not editable.
+- `ALTER DEFAULT PRIVILEGES` and `GRANT ... ON ALL TABLES IN SCHEMA`.
+- MySQL 8 roles. MySQL accounts are managed as users.
+- Renaming an account.
