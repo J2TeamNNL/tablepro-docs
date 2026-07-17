@@ -5,12 +5,13 @@ description: Every settings tab, its controls, and their defaults.
 
 # Settings
 
-Open with `Cmd+,`. Settings are grouped into eight tabs.
+Open with `Cmd+,`. Settings are grouped into nine tabs.
 
 <CardGroup cols={2}>
-  <Card title="General" icon="gear" href="/customization/settings#general">Language, startup, tabs, sidebar, query timeout, history, updates, reset.</Card>
+  <Card title="General" icon="gear" href="/customization/settings#general">Language, startup, tabs, sidebar, query timeout, updates, reset.</Card>
   <Card title="Appearance" icon="palette" href="/customization/appearance">Appearance mode, themes, per-theme fonts and colors.</Card>
-  <Card title="Editor" icon="code" href="/customization/editor-settings">SQL editor, Vim mode, JSON viewer, data grid, pagination.</Card>
+  <Card title="Editor" icon="code" href="/customization/editor-settings">SQL editor, Vim mode, line numbers, query parameters.</Card>
+  <Card title="Data" icon="table" href="/customization/data-settings">Data grid, pagination, result cap, JSON viewer, query history, saved customizations.</Card>
   <Card title="Keyboard" icon="keyboard" href="/features/keyboard-shortcuts#customizing-shortcuts">Custom shortcuts.</Card>
   <Card title="AI" icon="sparkles" href="/customization/settings#ai">Providers, inline suggestions, context, slash commands.</Card>
   <Card title="Integrations" icon="network-wired" href="/customization/settings#integrations">MCP server, tokens, remote access, activity.</Card>
@@ -50,6 +51,7 @@ Reopened tabs restore their SQL, cursor position, sort, filters, page, and colum
 | Setting | Default | Description |
 |---------|---------|-------------|
 | **Show recent tables** | Off | Adds a Recent section at the top of the sidebar with the last 10 tables opened per connection and database |
+| **Show object comments** | On | Shows database object comments next to tables in the sidebar and in grid column headers |
 | **Default layout for new connections** | List | List or Tree, for servers that support a database tree. Switch the current connection from the **View** menu |
 
 ### Query Execution
@@ -69,15 +71,6 @@ Enforcement happens at the database level where supported:
 | Oracle | Client-side: the connection is closed, and the next query reconnects and restores the current schema |
 
 **No limit** raises the HTTP transport ceiling to 1 hour.
-
-### Query History
-
-| Setting | Default | Description |
-|---------|---------|-------------|
-| **Maximum entries** | 10,000 | 100 to 10,000, or Unlimited |
-| **Keep entries for** | 90 days | 7 days to 1 year, or Forever |
-| **Auto cleanup on startup** | On | Remove old entries automatically |
-| **Clear History...** | - | Wipe all history after confirmation |
 
 ### Command Line
 

@@ -24,7 +24,7 @@ JSON mode shows the rows as a JSON array, with **Text** and **Tree** views. Sele
 
 Click a header to cycle through ascending, descending, and off. `Shift`-click another header to add it to the sort, so you can order by several columns at once. Sort re-runs the query with `ORDER BY` appended, replacing any existing one.
 
-To sort on open, set **Settings > Editor > Default row sort** to **Primary key** or **First column** (default is **No sorting**). A click on any header still overrides it.
+To sort on open, set **Settings > Data > Default row sort** to **Primary key** or **First column** (default is **No sorting**). A click on any header still overrides it.
 
 <Note>
 If the sort column can't be ordered on the server (a `BLOB`, `JSON`, or spatial column), the query fails. Pick another column or set the default back to No sorting.
@@ -56,7 +56,7 @@ Column widths, order, and which columns are hidden are remembered per table, sco
 
 ### Display Format
 
-UUIDs and Unix timestamps render in a readable form when the column type and name match (for example a `BINARY(16)` column named `uuid`). Right-click a header and choose **Display As** to set the format per column: Raw Value, UUID, Unix Timestamp (seconds or milliseconds), JSON, or PHP Serialized. See [Cell and Row Viewers](/features/json-viewer) for what each format does. Toggle the automatic detection in **Settings > Editor > Smart value detection**.
+UUIDs and Unix timestamps render in a readable form when the column type and name match (for example a `BINARY(16)` column named `uuid`). Right-click a header and choose **Display As** to set the format per column: Raw Value, UUID, Unix Timestamp (seconds or milliseconds), JSON, or PHP Serialized. See [Cell and Row Viewers](/features/json-viewer) for what each format does. Toggle the automatic detection in **Settings > Data > Smart value detection**.
 
 ## Editing
 
@@ -111,7 +111,7 @@ There is no discard button. Undo your edits, or let the confirmation prompt drop
 
 ## Inspector
 
-Toggle the inspector with `Cmd+Option+I`. With a row selected, it lists every column value with full editors for long text and JSON; see [Cell and Row Viewers](/features/json-viewer) for details. Turn on **Settings > Editor > Auto-show inspector on row select** to open it automatically.
+Toggle the inspector with `Cmd+Option+I`. With a row selected, it lists every column value with full editors for long text and JSON; see [Cell and Row Viewers](/features/json-viewer) for details. Turn on **Settings > Data > Auto-show inspector on row select** to open it automatically.
 
 With no row selected, it shows table statistics: data, index, and total size, row count, average row size, engine, collation, and created and updated dates (fields vary by database).
 
@@ -143,17 +143,17 @@ Copies follow the grid as shown: hidden columns are left out and columns keep th
 
 ## Pagination and Limits
 
-**Table tabs** page through data. The status bar has a rows-per-page menu (5 to 1,000, a custom size, or **All rows**) and First / Previous / Next / Last controls. Click the page indicator (for example `3 / 12`) to type a page number and jump to it. Set the default page size in **Settings > Editor**.
+**Table tabs** page through data. The status bar has a rows-per-page menu (5 to 1,000, a custom size, or **All rows**) and First / Previous / Next / Last controls. Click the page indicator (for example `3 / 12`) to type a page number and jump to it. Set the default page size in **Settings > Data**.
 
-Large tables show an estimated total instead of running a slow `COUNT(*)`. **Settings > Editor > Count rows if estimate less than** sets the threshold below which TablePro counts exactly.
+Large tables show an estimated total instead of running a slow `COUNT(*)`. **Settings > Data > Count rows if estimate less than** sets the threshold below which TablePro counts exactly.
 
-**Query tabs** cap results at 10,000 rows by default. For databases with `LIMIT` syntax, TablePro appends the cap to the statement it sends, so the server stops early; the query text in the editor never changes. A query with its own `LIMIT` or `FETCH FIRST` is sent as written and not capped. When the cap trims a result, the status bar shows **Fetch All** to load the rest (with a confirmation, since large results use a lot of memory). Run one query without the cap via **Execute Without Limit** (`Option+Cmd+Enter`). Adjust the cap in **Settings > Editor** (**Truncate query results**, **Row cap**).
+**Query tabs** cap results at 10,000 rows by default. Your query is sent exactly as you wrote it; TablePro stops reading once it reaches the cap. A query with its own `LIMIT`, `FETCH FIRST`, or `TOP` is not capped. When the cap trims a result, the status bar shows **Fetch All** to load the rest (with a confirmation, since large results use a lot of memory). Run one query without the cap via **Execute Without Limit** (`Option+Cmd+Enter`). Adjust the cap in **Settings > Data** (**Truncate query results**, **Row cap**).
 
 Press `Cmd+.` to cancel a running query or a Fetch All.
 
 ## Display Settings
 
-NULL shows as styled `NULL` text. Set the NULL display, date format, row height, row numbers, and alternate row backgrounds in **Settings > Editor**.
+NULL shows as styled `NULL` text. Set the NULL display, date format, row height, row numbers, and alternate row backgrounds in **Settings > Data**.
 
 ## MongoDB Collections
 

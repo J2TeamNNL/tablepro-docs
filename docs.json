@@ -177,7 +177,8 @@
             "pages": [
               "customization/settings",
               "customization/appearance",
-              "customization/editor-settings"
+              "customization/editor-settings",
+              "customization/data-settings"
             ]
           },
           {
