@@ -4,6 +4,46 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="July 18, 2026" description="v0.58.0">
+  ### New Features
+
+  - **SOCKS5 proxy**: Connect through a SOCKS5 proxy from the connection form's new SOCKS Proxy pane. The proxy resolves the database hostname, so names that only resolve behind it work (#1882)
+  - **Windows Authentication for SQL Server**: Sign in to SQL Server with Kerberos on macOS, using the `kinit` ticket you already have or a Kerberos principal and password. Connect by hostname, not IP address (#1879)
+  - **Teradata**: Teradata as a downloadable native Swift driver. Connect over TD2 or TDNEGO, optionally with TLS, browse databases, tables, and columns, run SQL, edit rows, and create or alter tables (#1867)
+  - **Saved Customizations**: A new Settings section lists the tables where you set column layouts or filters, and lets you reset any or all of them
+  - **iCloud sync for column layouts**: Per-table column layouts (widths, order, and hidden columns) sync across your Macs with iCloud when Settings sync is on
+
+  ### Improvements
+
+  - The sidebar database tree remembers which databases and schemas you expanded, per connection, so reopening a window keeps them open
+  - The query result row cap no longer adds a LIMIT to your SQL. The query runs as written and TablePro stops reading at the cap, so a query with ORDER BY no longer returns different rows than you typed (#1884)
+  - Settings groups the data grid, pagination, result formatting, JSON viewer, query history, and saved customizations under a new Data tab
+
+  ### Bug Fixes
+
+  - The split dividers in Users and Roles, Structure, Server Dashboard, and the SQL editor now show the resize cursor on hover (#1905)
+  - A query with a comment after the closing semicolon, such as `SELECT 1; -- note`, no longer runs as two statements, and a comment-only query does nothing instead of erroring (#1895)
+  - Duplicating a connection no longer drops its Cloudflare Tunnel and Cloud SQL Auth Proxy settings and stored secrets
+  - The tunnel panes now list every conflicting connection method, each with a button to turn it off
+  - Copy as, Delete, and the Edit menu's copy and delete now act on the whole cell-range or column selection, not just the active row (#1898)
+  - Copy as JSON copies the right rows when the grid is sorted or filtered (#1898)
+  - Tables picked in the sidebar are now checked and exported to SQL or MQL instead of being silently skipped (#1897)
+  - ClickHouse queries that return rows now show the grid, including empty results and queries with their own FORMAT clause (#1886)
+  - ClickHouse INSERT statements report the right number of rows affected (#1886)
+  - ClickHouse query exports no longer write an empty file when the query starts with a comment (#1886)
+  - A restored window tab no longer shows a blank name until you switch to it (#1894)
+  - The window title updates right away after saving a query to a file or opening a favorite into the current tab (#1894)
+  - The SQL editor in a new tab keeps keyboard focus instead of losing it after the first few characters (#1885)
+  - Cancelling a SQL Server connection stops right away, and a connection gives up after the login timeout with a clear message that points at the usual Kerberos causes for Windows Authentication (#1889)
+  - MySQL and MariaDB queries ending in ORDER BY now show a server error instead of an empty result (#1884)
+  - The query result row cap no longer returns a single row when set to unlimited (#1884)
+  - SSH tunnels that accept a connection then go quiet now give up after 10 seconds and log the reason (#1883)
+  - Connections are no longer reset when a single session opens several at once through one SSH tunnel (#1883)
+  - The connection form's SSH tunnel Socket Path hint shows the right default per database type, such as `/var/run/mysqld/mysqld.sock` for MySQL and MariaDB (#1902)
+  - Per-column display formats (Display As) are kept per table, so tables with the same name in different databases or schemas no longer share formatting
+  - Reopening a table restores a saved filter's AND/OR match mode instead of resetting it to AND
+</Update>
+
 <Update label="July 15, 2026" description="v0.57.1">
   ### New Features
 
