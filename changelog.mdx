@@ -4,6 +4,27 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="July 21, 2026" description="v0.59.0">
+  ### New Features
+
+  - **Trino**: Trino as a downloadable native Swift driver. Connect with a username and password or a JWT token, optionally over TLS with a custom CA or client certificate, browse catalogs, schemas, tables, and columns, run SQL, edit rows, and create or alter tables (#1906)
+  - **SSH auth: None**: SSH tunnels support None as an auth method, for hosts that handle SSH auth themselves like Tailscale SSH (#1907)
+  - **SSH keyboard-interactive 2FA**: SSH tunnels support keyboard-interactive verification, so a server that needs a private key plus a one-time code now connects. TablePro shows the prompt and you type the code (#1920)
+
+  ### Improvements
+
+  - AI Chat renders Markdown while the assistant reply streams, including open code blocks, instead of waiting for the reply to finish
+
+  ### Bug Fixes
+
+  - Copy as INSERT, UPDATE, JSON, CSV, or Markdown copies only the cells you selected, not the whole row. Copy as UPDATE still keys its WHERE clause on the primary key (#1929)
+  - Windows Authentication (Kerberos) to SQL Server now works on macOS. The bundled driver was built without Kerberos support, so every Windows-auth connect failed (#1918)
+  - MySQL and MariaDB queries no longer fail after about a minute when a longer query timeout is set. The client read timeout now follows the query timeout (#1921)
+  - A dropped MySQL or MariaDB connection no longer re-runs a statement that changes data, so a lost connection can't run an insert or update twice (#1921)
+  - The MongoDB, Oracle, Cassandra, and Elasticsearch plugins install again instead of failing with "Bundle failed to load executable" (#1917)
+  - Plugin install and load failures now name the real cause (wrong architecture, missing dependency, or version incompatibility) instead of a generic error (#1915)
+</Update>
+
 <Update label="July 18, 2026" description="v0.58.0">
   ### New Features
 
