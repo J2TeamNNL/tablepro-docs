@@ -4,6 +4,20 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="July 25, 2026" description="v0.60.1">
+  ### New Features
+
+  - **RDS Endpoint**: AWS IAM connections have an RDS Endpoint field, for when the connection points at a port forward you run yourself and TablePro cannot tell which database is behind it (#1432)
+
+  ### Improvements
+
+  - The AWS profile field on MySQL and PostgreSQL connections now lists the profiles found on disk, like MariaDB already did (#1432)
+
+  ### Bug Fixes
+
+  - AWS IAM authentication now works through a tunnel. The token was signed for the local forward instead of the database endpoint, so RDS rejected every connection made over SSH, Cloudflare, Cloud SQL Auth Proxy, or SOCKS. A tunneled connection also no longer needs the region filled in by hand (#1432)
+</Update>
+
 <Update label="July 24, 2026" description="v0.60.0">
   ### New Features
 
