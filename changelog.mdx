@@ -4,6 +4,24 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="August 5, 2026" description="v0.63.0">
+  ### Improvements
+
+  - **Translations**: Turkish, Vietnamese, Simplified Chinese, and Traditional Chinese now cover the strings that still showed in English
+  - **Claude Agent tradeoffs**: The provider sheet lists what running chat on a Claude subscription costs you, including Anthropic's terms, the limits you share with your other Claude work, and the API key it ignores
+
+  ### Bug Fixes
+
+  - Data grid header: the bottom line no longer cuts through a column comment, a sorted column no longer draws an extra line and divider, and selecting a column highlights the full header height
+  - The New Connection window opens in front of the Welcome window on the first try, and importing a connection URL while one is open no longer discards the pasted URL
+  - Clicking a foreign key arrow in a query tab opens the referenced table in its own tab instead of replacing the query, and keeps the filters and hidden columns you saved for each table
+  - Saving a table structure change with several connections open now runs against the connection, database, and schema the edited table belongs to
+  - Saving on a server that starts sessions read-only no longer fails on MySQL, MariaDB, PostgreSQL, CockroachDB, and Redshift
+  - Changing Safe Mode applies to an open connection instead of waiting for a reconnect, and a read-only error says whether the server or Safe Mode refused the write
+  - The MCP `export_data` tool honours the configured row limits and query timeout, works on SQL Server, Oracle, and Teradata, and shows up in query history
+  - Setting the MCP row limits or query timeout to zero no longer crashes the app, and AI chat no longer crashes on a limit larger than TablePro can count to
+</Update>
+
 <Update label="August 2, 2026" description="v0.62.0">
   ### New Features
 
