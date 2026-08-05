@@ -12,6 +12,9 @@ rss: true
 
   ### Bug Fixes
 
+  - `Cmd+Delete` and `Option+Delete` in the SQL editor delete to the start of the line and the previous word again (#2022)
+  - Refreshing a table no longer fails with "Query cancelled" on every second click, and stopping a query no longer shows a red error, records a failure in history, or cancels the next query you run on MySQL, MariaDB, and Redis (#2021)
+  - Generated columns: SQL export leaves them out of the INSERT statements so the dump imports cleanly, adding or duplicating a row saves, and the data grid shows them as read-only. Covers MySQL, MariaDB, and ClickHouse (#2023)
   - Data grid header: the bottom line no longer cuts through a column comment, a sorted column no longer draws an extra line and divider, and selecting a column highlights the full header height
   - The New Connection window opens in front of the Welcome window on the first try, and importing a connection URL while one is open no longer discards the pasted URL
   - Clicking a foreign key arrow in a query tab opens the referenced table in its own tab instead of replacing the query, and keeps the filters and hidden columns you saved for each table
