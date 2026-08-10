@@ -4,6 +4,56 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="August 10, 2026" description="v0.64.0">
+  ### New Features
+
+  - **Workspace rail**: A rail on the leading edge of the sidebar lists every connection and database you have open, so one click switches to it. It has its own shortcuts and keyboard control (#1282)
+  - **Match Case**: Filter operators can match case on every database that can express it, including MongoDB, Elasticsearch, DynamoDB, and etcd (#2048)
+  - **Disconnect and Reconnect**: End a session without closing its window, from the Database menu, the workspace rail, or the connection list
+  - **Oracle administrative logons**: Connect as SYSDBA or SYSOPER, on Mac and mobile (#2039)
+  - **Oracle on TablePro Mobile**: Browse schemas and tables, run queries, and edit rows, with a Service Name or SID picker (#2033)
+  - **Database menu**: Holds the database and table commands, so each can take a shortcut. Minimize, Zoom, Move Tab to New Window, Show Toolbar, and Customize Toolbar were added too
+  - **Show Object Icons**: Turn sidebar icons off for a plain list of names
+  - **Redshift external schemas**: Spectrum, federated query, cross-database, and datashare schemas now list their tables, marked in the sidebar and opened read-only
+
+  ### Improvements
+
+  - The menu bar is rebuilt on native macOS menus, so every command enables and disables from the state of the window you are using
+  - `Cmd+F` finds in whatever is in front of you: rows in a table tab, text in the SQL editor, the CSV inspector
+  - Connecting fills the window and names the step it is on, and a connection that fails shows the database's own error
+  - Running a query or opening a table replaces whatever that tab was already running, instead of waiting for it to finish
+  - Reopening the last session connects the window you land on first, and the rest when you switch to them
+  - A saved pre-connect script no longer runs when the app reopens a session on its own
+  - Settings opens in a standard preferences window with a toolbar instead of a tab strip
+  - A tab's subtitle names the database it is bound to, and its toolbar repoints only that tab (#2026)
+  - MCP and AI table tools take a `database` argument, so a table in another database can be inspected without changing the app (#2026)
+  - The "Group all connections in one window" setting is gone. Each connection has its own window and tab bar (#1282)
+
+  ### Bug Fixes
+
+  - A tab keeps running against the database it was opened on, so changing database no longer breaks it with a "table doesn't exist" error or writes to the wrong place (#2026)
+  - Menu commands act on the selected row, column, and editor, and stay disabled when they would do nothing
+  - A reconnect brings every window's tabs back, each in the window it was in
+  - Window and tab names follow what the window is showing, in every language, and a name you chose yourself is kept
+  - Tabs are saved before a session ends, and a window that never loaded any tabs no longer deletes them
+  - A cancelled or failed connect leaves the window usable, with Connect and Manage Connections
+  - A connection that could not be reached at launch is reopened next time, and reconnects once the server is up
+  - Opening a connection that already has a window reuses it, and a window opened by an MCP client connects
+  - Row counts refine to an exact count, and stop when you close the window or leave the table (#2059)
+  - Clicking through the sidebar no longer keeps loading tables you have left, or shows the previous table's rows (#2058)
+  - Stop cancels reads only, so it can no longer cut off a save, a discard, or a schema change
+  - A brief SSH tunnel reconnect no longer closes your tabs, and a dead tunnel reports why and offers to retry
+  - The JSON view follows the grid's sort, filters, and hidden columns, and updates with every query
+  - The SQL editor restores your cursor and selection, and keeps autocomplete after a reconnect
+  - AI replies stream smoothly, render Markdown as they arrive, and no longer slow the panel down
+  - Claude, Gemini, and local models no longer fail on thinking and image settings (#2031)
+  - Filters compare text columns as text, match NULL and TRUE literally, and no longer break IS EMPTY (#2029)
+  - Alerts, focus, calendars, number formats, and Reduce Motion follow system conventions
+  - Oracle connections turn on TCP keepalive, so an idle session is less likely to be dropped (#2038)
+  - iPhone and iPad ask for Local Network access only when it is needed (#2040)
+  - Requests to TablePro's own servers require TLS again
+</Update>
+
 <Update label="August 5, 2026" description="v0.63.0">
   ### Improvements
 
