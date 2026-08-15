@@ -4,6 +4,70 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="August 16, 2026" description="v0.65.0">
+  ### New Features
+
+  - **Query History drawer**: History opens as a resizable drawer per connection, groups entries by day and loads in pages, so queries older than the most recent few hundred are reachable for the first time. It remembers its height, its filters and whether it was open
+  - **Query History filters**: Filter by where a query came from (the editor, EXPLAIN runs, table browsing, grid edits, structure changes, imports, AI and MCP clients), by failed queries only, and by time range. Scope it to one connection or search across all of them
+  - **Pause Query History**: Nothing is recorded from any source while it is paused, including row edits, imports and AI clients
+  - **Query plans as result tabs**: A plan opens beside your results instead of replacing them, and can be pinned. MySQL `EXPLAIN FORMAT=TREE` and `EXPLAIN ANALYZE`, plus PGlite, Cloudflare D1, libSQL and Turso, render as a diagram and tree
+  - **Plan diagram controls**: Pinch, two-finger double tap, or Cmd and scroll to zoom, fit to window, and copy or export as PNG. The plan tree has sortable columns, arrow-key navigation and a resizable detail panel. The ER diagram gained the same zoom and scrolling
+  - **PostgreSQL array editor**: Array columns of a simple type, including enum arrays, get a list editor in the grid with one row per element, reordering, and NULL per element (#2095)
+  - **MongoDB autocomplete**: `db.` lists collections, `db.users.` lists driver methods, and inside a query you get field names, nested paths and the operators valid in that spot (#2095)
+  - **PostgreSQL autocomplete**: Enum values are suggested when you compare against an enum column, alongside about 400 built-in functions, the operator set, and multi-word syntax such as `ON CONFLICT DO UPDATE SET` (#2095)
+  - **Syntax problems as you type**: The editor underlines structural mistakes such as an unclosed bracket or comment. A half-written statement is never flagged (#2095)
+  - **Legacy UUID Encoding for MongoDB**: Binary UUIDs written by the Java, C# or Python drivers read as UUIDs instead of hex, and filters, edits and exports write the same bytes back (#2086)
+  - **Multi-select in the sidebar**: Select several databases or schemas and drop, refresh, copy names or export them at once
+  - **Quick Switcher across connections**: Search tables, views, saved queries and recent queries across every open connection
+  - **SSL settings on mobile**: A mode picker plus CA, client certificate and client key for MySQL, PostgreSQL and Redis, from a PEM file, pasted text, or PKCS#12 (#2083)
+
+  ### Improvements
+
+  - Every open connection lives in one window. Picking a connection in the strip switches that window to it, and each connection keeps its scroll position, cursor and half-filled sheets while it waits its turn
+  - Opening a table or query on a connection you already have open adds a tab instead of opening another window. A tab strip appears once a connection holds more than one tab
+  - Closing the last tab leaves the connection open on its empty state, so Close Tab again closes the connection
+  - Clicking a table in the sidebar opens it right away instead of waiting out the double-click interval. Open in New Tab gives you a second copy
+  - Opening a table from the sidebar leaves the keyboard in the sidebar, so you can keep arrowing through tables and watch each one load
+  - The bar at the bottom of the sidebar is gone. New Table and New View are in the Database menu and the right-click menu, switching schema is Database > Schema, and the database filter is View > Filter Databases
+  - The sidebar follows Sidebar icon size in System Settings, with a Row Size override when you want to fit more objects on screen
+  - Window tabs follow your "Prefer tabs when opening documents" setting instead of always forcing tabs
+  - Typing a name in the database tree jumps to the matching object
+  - Dropping a SQL file on a connection window opens it (#2104)
+  - The Settings window can be resized
+
+  ### Bug Fixes
+
+  - The Quick Switcher opens what you searched for. Typing a new search kept the previously highlighted row selected whenever it still matched, so `Return` could open something you had stopped searching for
+  - A query that fails shows the database's error again and is recorded in history. A syntax error left the results area blank with no message at all (#2120)
+  - Query History no longer mixes every connection's queries together, and searching it matches as you type instead of only whole adjacent words
+  - Deleting a connection deletes its query history, drawer filters and saved queries with it
+  - Closing a connection removes it from the strip, ends its session and closes its tunnel, and closing a window disconnects every connection it was showing
+  - Refreshing a database or schema from the sidebar no longer empties it while the refresh runs
+  - Holding an arrow key in the sidebar no longer opens a tab and runs a query for every object it passes
+  - The sidebar object list is a native outline in every layout, so selection, arrow keys and type-to-find work. Favorites is native too, and Team Library entries can be selected for the first time
+  - Cmd-clicking or Shift-arrowing to select several tables no longer opens the table it added
+  - Sidebar and inspector widths are remembered per window again
+  - Switching connection resizes the toolbar to the connection you switched to instead of holding the previous one's width
+  - The drop, truncate, delete and external-link confirmations are standard alerts that default to Cancel, so `Return` no longer drops a table (#2104)
+  - Selected rows and results use the system foreground colour, so labels stay readable under any accent colour and with Increase Contrast on
+  - VoiceOver follows the data grid cell cursor and reports the selected range, and Reduce Motion suppresses the remaining animations
+  - A chained method on a MongoDB aggregation no longer goes missing, and MQL export writes real `ObjectId`, `ISODate` and `BinData` values (#2095, #2086)
+  - Tables you create in an in-memory DuckDB database show up in the sidebar (#2108)
+  - Editing a connection on mobile no longer wipes its SSL settings and per-database options (#2083)
+  - Redis and Valkey ACL users can sign in on mobile
+
+  ### Security
+
+  - Mobile checks the SSH server's host key before sending any credential, and asks you the first time it sees a server. It never checked at all, so anyone intercepting the connection received the SSH password
+  - SQL Server Verify CA and Verify Identity check the certificate for real on Mac, and ClickHouse Verify CA refuses to connect when the CA file cannot be read
+  - libssh2 is patched against CVE-2026-55199, where a malicious SSH server could pin a CPU core before authentication
+  - An import link can no longer make TablePro fetch an AWS credential and send it to the link author's server, and team library connections no longer carry startup SQL or credential-resolution options
+  - A connection's password source no longer runs if the connections file was edited outside TablePro
+  - MySQL and MariaDB connections refuse a server's request to read a local file
+  - An MCP client can no longer reach the history or schema of a connection whose external access was turned off by naming it directly, and the server refuses requests from an Origin that is not allow-listed
+  - Query parameter values are no longer written to the history database, and the history database is protected at rest
+</Update>
+
 <Update label="August 10, 2026" description="v0.64.0">
   ### New Features
 
