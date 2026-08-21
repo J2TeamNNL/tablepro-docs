@@ -7,7 +7,7 @@ TablePro supports Apache Cassandra 3.0+ and ScyllaDB via the CQL native protocol
 
 ## Quick Setup
 
-Click **New Connection**, select **Cassandra** or **ScyllaDB** (both entries use the same driver), enter host, port, and credentials, and connect.
+Click **Create Connection…**, select **Cassandra** or **ScyllaDB** (both entries use the same driver), enter host, port, and credentials, and connect.
 
 Cassandra is a registry plugin. Picking it in the **Choose a Database** sheet prompts to install; connecting to a saved Cassandra connection installs it without asking. You can also install **Cassandra Driver** from **Settings > Plugins > Browse**.
 
@@ -29,7 +29,7 @@ cassandra://user:password@host:9042/keyspace
 scylladb://user:password@host:9042/keyspace
 ```
 
-`cql://` and `scylla://` work too. See [Connection URL Reference](/databases/connection-urls#cassandra--scylladb).
+`cql://` and `scylla://` work too. See [Connection URL Reference](/databases/connection-urls#cassandra-/-scylladb).
 
 ## Example Configurations
 
@@ -105,5 +105,5 @@ CREATE INDEX ON users (email);
 - Materialized views, UDTs, UDFs, and UDAs do not appear in the sidebar. Query `system_schema` tables in the CQL editor instead.
 - Table options (compaction, compression, gc_grace_seconds) and clustering order are not shown in the structure view.
 - DataStax Astra DB is not supported: the driver cannot load a Secure Connect Bundle.
-- Counter columns cannot be set with a plain `UPDATE`. The grid lets you edit one, but the statement it generates is rejected. Use `UPDATE … SET c = c + 1` in the CQL editor instead.
+- Counter columns cannot be set with a plain `UPDATE`. The grid will edit one, but the statement it generates is rejected. Use `UPDATE … SET c = c + 1` in the CQL editor instead.
 - Multi-DC settings are not configurable.
