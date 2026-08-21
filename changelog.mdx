@@ -4,6 +4,136 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="August 21, 2026" description="v0.67.0">
+  ### New Features
+
+  - **Code folding**: Fold statements, table bodies, CTEs, subqueries, `BEGIN` blocks and multi-line comments from the editor gutter. A collapsed region becomes a chip you can hover to peek at, folds are remembered when a tab is reopened, and Fold All, Unfold All and Toggle Fold are in the Query menu. It also works in the DDL and trigger views, the SQL import preview, the AI review sheet, chat code blocks and the JSON cell viewer
+  - **Run one statement at a time**: The statement your cursor is in gets a faint background, and a run button appears in the gutter beside every statement. Both can be turned off in **Settings > Editor** (#2278)
+  - **Statement navigation**: `Ctrl+Cmd+Left` and `Ctrl+Cmd+Right` step between statements, `Ctrl+Cmd+Enter` runs the current one and moves to the next, and `Option+Shift+Up` and `Option+Shift+Down` extend the selection a statement at a time (#2279)
+  - **Named result tabs**: Each result is named after the statement that produced it, using a leading comment when you wrote one. Picking a result moves the editor cursor to the statement behind it (#2280)
+  - **Find in results**: `Cmd+F` on a table tab opens a find bar over the grid. The counter says what it searched, so "3 of 12 on this page" is never mistaken for an answer about the whole table, and Search All Rows turns the term into a server-side filter
+  - **Charts**: Draw query results as native bar, line, area and scatter charts, with a real time axis for date and timestamp columns. The chart keeps its type and axes across a page turn, a sort and a re-run. This is a Starter feature
+  - **Back and Forward**: Step back through the tables you followed a foreign key into, from the toolbar or the View menu on `Ctrl+Cmd+[` and `Ctrl+Cmd+]`. Back restores the filters, sort, page and selected row you left behind, and stands down while a tab holds unsaved edits (#2316)
+  - **Background notifications**: TablePro tells you when a slow query, import, export, backup or row save finishes while you are in another app, and clicking the notification selects the tab that ran it. Configure it in **Settings > Notifications** (#2265)
+  - **Redis Sentinel and Redis Cluster**: Pick a Connection Mode in the connection form. Sentinel follows a failover to the new primary; Cluster reads the shard map, routes each command to the shard that owns its key, and follows MOVED and ASK redirects (#1021)
+  - **MongoDB filters on nested fields**: Filter on paths like `customer.country` or `items.sku`, with **any element** and **same element** matching for fields inside an array, and values compared as the type the field actually holds (#2315)
+  - **DuckDB over data files**: Point a DuckDB connection at a Parquet, CSV, TSV, JSON or NDJSON file. It opens read-only and never writes back
+  - **MCP overhaul**: The server grew from 19 tools to 46, gained prompt templates built from the live schema, argument completion from real table and column names, and change notifications. It speaks the 2026-07-28 protocol revision, with the two previous revisions still supported
+  - **Korean**: Full Korean localization for macOS, iPhone and iPad, with a 한국어 option in General settings (#2219, #2264)
+  - **Third-party plugins**: A plugin signed with an Apple Developer ID installs after you agree to trust that developer by name. Unsigned and ad-hoc signed bundles are still refused
+  - **Execution log**: Every database operation TablePro authorizes is recorded locally, statements stored as digests rather than text, and hash chained so an edited or removed entry can be detected. Nothing leaves the Mac
+  - **Managed Safe Mode**: An administrator can set a minimum Safe Mode level for every connection through a macOS configuration profile
+  - Editor tabs can be dragged to reorder them, with **Move Tab Left** and **Move Tab Right** on each tab's menu
+  - Swipe left on a saved connection in the welcome window to reveal Edit and Delete (#2310)
+  - Double-click a table, or press `Return` on it, to keep its tab instead of reusing the preview tab (#2235)
+  - Execute All Statements is on the Execute button's menu, alongside `Cmd+Shift+Enter` (#2230)
+  - **View > Result View** switches the results pane between Data, Structure, JSON and Chart from the menu bar
+  - **Help > Acknowledgements** lists the 38 open source libraries TablePro ships, with the exact version, license and full license text of each
+
+  ### Improvements
+
+  - The results status bar was rebuilt on one fixed height. The row count sits on the left, the controls keep their place and dim while a table loads instead of vanishing and returning, and Add Row moved to the toolbar
+  - Row counts and number grouping read correctly in every language. One sentence used to be assembled from seven phrases, so English said "1 rows"
+  - An estimated row total is now marked as an estimate, and Last and All rows wait until you run Count Exactly
+  - `Cmd+F` on a table tab opens the find bar. The filter panel keeps `Cmd+Option+F` and its funnel button
+  - Picking a database in the connections strip returns you to the tab you last used in it (#2217)
+  - Two tabs showing same-named objects from different databases carry the database in their names, so `orders` reads as `app.orders` and `staging.orders` (#2217)
+  - Save in the "Do you want to save changes?" prompt now closes what you asked to close once the save lands
+  - A column value filter survives switching result mode and switching tabs (#2251)
+  - The JSON and PHP tree filters both ignore accents, so `cafe` finds `café` (#2204)
+  - The connection form's Browse button offers the file kinds the driver actually opens instead of every file on disk
+  - TablePro is built in the Swift 6 language mode. The Mac app, the iPhone and iPad app, all 31 plugins and the shared packages are now checked for data races by the compiler
+
+  ### Bug Fixes
+
+  - Forward slashes in a nested value are no longer escaped as `\/`, so a path or MQTT topic like `device/state/up/122` reads the way it is stored (#2322)
+  - A MongoDB filter TablePro could not translate quietly matched the whole collection; it now matches nothing. The raw filter row works, and Match Case applies to text fields only (#2315)
+  - **Preview Referenced Row** reads the cell you focused instead of counting columns from the left, and works on SQL Server. On iPhone and iPad it works on SQL Server and Oracle
+  - Import and export result alerts stay on screen instead of closing with the progress sheet behind them (#2314)
+  - A failed import reports its line number, statement and the database's own message instead of only the rollback error (#2314)
+  - An import no longer counts rows it dropped, and Skip and Continue keeps going after an unreadable line in a JSON file
+  - Importing into a new table can be retried after a failure, reusing and clearing the table the failed attempt created
+  - TablePro stays out of the Dock and the app switcher when an MCP client starts it
+  - Deleting a connection you published to the Team Library no longer deletes your own local copy instead, taking its saved passwords with it
+  - Deleting a connection with saved queries always warns that they go with it (#2310)
+  - Connections in a linked folder or the Team Library open on double-click and on `Return`, instead of doing nothing at all
+  - Editing a connection keeps its favorite mark, its place in the list, and the AI tools you had always allowed for it
+  - A column whose cells carry an action button no longer cuts its value short, and Size to Fit measures the loaded page instead of about 30 rows of it (#2303)
+  - 235 Turkish strings that were marked as translated while still holding English text now read in Turkish
+  - Opening an Oracle connection for the first time no longer leaves the object list spinning forever (#2294)
+  - An object list that cannot load says so and offers Retry, instead of retrying silently every 15 seconds with nothing on screen (#2294)
+  - A database type is drawn in one colour everywhere. Two colour tables had drifted apart on 12 of the 23 types they both named
+  - Answering **Save** on the unsaved-changes prompt applies the staged structure edits it was asking about, from any view, and leaves the tab open when the save is refused or rejected
+  - Opening one table in two tabs gives each tab its own structure editor, so an edit staged in one no longer lands in the other
+  - Clicking another table no longer silently discards staged structure edits
+  - A `BEGIN ... END` body runs whole from the editor instead of being split at every semicolon inside it, and a semicolon inside a MySQL `#` comment is no longer read as a statement boundary (#2278)
+  - A failed refresh no longer empties the stored procedure and function lists
+  - Switching to a PostgreSQL database you cannot open now reports the failure and leaves the connection pointing at the database it came from
+  - Plugins installed from the registry are notarized, so Gatekeeper stops blocking them. Installing from a ZIP clears the quarantine flag from the whole bundle
+  - DuckDB lists its databases, schemas, tables and columns on a Mac that cannot reach the internet. Every metadata query used to depend on a function fetched from the extension registry (#2285)
+  - A DuckDB UUID, ENUM, list, struct, map or time zone aware timestamp column no longer crashes TablePro
+  - A DuckDB view opens as a statement you can run, a failed connection releases its file instead of locking it until quit, a mistyped path says the file is missing, and a new DuckDB connection can be saved
+  - Opening a table on Dameng, Oracle, BigQuery, Elasticsearch and etcd no longer puts up a "Switch Failed" alert (#2262)
+  - Switching schema on Dameng, Oracle, BigQuery, Snowflake and Trino re-reads only the routines instead of the whole object list (#2262)
+  - Dameng results are complete instead of stopping at the server's first 32KB batch. A 20,000 row table used to read back as 662 rows with nothing saying anything was missing (#2262)
+  - Dameng tables with a `CLOB` or `BLOB` column read the right columns, rows and values, column comments show up, creating a table with an index or comment works, and connections recover after a query is stopped (#2262)
+  - Redis reports what the server actually answered instead of clearing a refused write from the grid as if it had been saved
+  - `SET key value KEEPTTL` keeps the expiry it asks to keep, and a command whose reply timed out is only re-sent when it provably never reached the server
+  - Redis Cluster routes `OBJECT`, `MEMORY`, `SORT`, `GEORADIUS`, `ZUNIONSTORE` and `ZINTERSTORE` to the right shard on Redis 6
+  - Floating point values show the shortest digits that identify the stored number exactly, so a stored `0.1` no longer reads as `0.10000000000000001`
+  - Editing a MongoDB row keeps each field's stored type, so a decimal is not written back as a double and a 64-bit integer is not narrowed to 32
+  - A nested value too long to show in full is no longer written back or exported as a fragment
+  - Query Insights keeps each aggregate's query text and error inside the selected connection, source and date range (#2268)
+  - A plugin's own connection fields reach the connection form, so Redis gets its Key Separator field and its ElastiCache IAM section back (#1021)
+  - Rows past a driver's row-count estimate are reachable, All rows loads all of them, and changing rows-per-page on any page but the first no longer strands you
+  - Turning a page while Count Exactly is running no longer leaves a spinner that never stops
+  - Editing a cell in a result you clicked back to writes to that result's own table. A tab can hold several results, and an edit on an earlier one used to be saved against the newest
+  - A result whose table TablePro cannot identify no longer looks editable, and running several statements no longer carries the previous run's primary key over to the new table
+  - Rows loaded by Fetch All stay with the result they were loaded for, and switching between results asks before discarding unsaved edits
+  - JSON result mode shows the rows the grid is showing, in the same order, and resolves a selection to that same row. Rows marked for deletion no longer appear there (#2251)
+  - `Cmd+F`, the Filters button and `Cmd+Option+F` behave correctly in JSON result mode, and Add Row, Duplicate Row, Paste and Delete no longer collapse the view to the row they touched (#2244)
+  - Every restored tab keeps the columns you hid, its caret position, its sort and its page number, not just the tab that was in front when you quit
+  - A restored tab reopens on the rows it was showing. The page number used to be saved without the page size it was counted in
+  - Scrolling a result with hundreds of columns is no longer slow. A 500-column table carried about 18,000 live cells and laid all of them out on each frame (#1219)
+  - A column you hid keeps its place in the column order instead of returning at the far right
+  - The date picker on an empty date or timestamp cell starts at your own clock and writes your own time (#2241)
+  - Timestamps written with a space before the offset, or with fractional seconds, follow your chosen date format instead of showing as raw text
+  - **Open in New Tab** opens a second tab for a table that is already open, so you can browse it under two different filters (#2235)
+  - Following a foreign key into a new tab no longer overwrites the filters on a tab already showing that table
+  - Opening a table from the sidebar while the object list is still loading opens it, and opening one from Favorites gives it a tab of its own
+  - Sorting a column keeps working after you hide or show columns, and **Hide All** hides every column of a MongoDB collection (#2234)
+  - MongoDB, Cassandra and Trino connections can name a database, keyspace or catalog in the connection form (#2234)
+  - Opening a `.sql` file that is already open shows its tab instead of replacing what you have typed in it
+  - Table maintenance from the object browser runs against the database the table you picked lives in
+  - A table that exists in two databases can be opened in both, and Server Dashboard, Users & Roles, Query Insights, ER Diagram and a linked SQL file select the tab they already opened (#2217)
+  - Table favorites and saved queries sync through iCloud. Their record types had never been created, so every one was rejected on upload and retried forever
+  - A connection carries its favorite mark, every tag, and its AI rules and always-allowed tools to your other Macs, and an SSH profile with a jump host syncs
+  - Closing a tab holding unsaved cell edits, `.sql` changes, staged structure changes or staged user and role changes asks before discarding them. Cell edits were the worst case, because nothing brought them back
+  - Staged structure changes and a table definition in progress survive switching tabs
+  - Switching connection no longer empties the SQL editor or kills its undo, syntax highlighting, shortcuts and Vim mode for the rest of the tab's life (#2236)
+  - `Cmd+W` closes the Settings and Integrations windows, the JSON and PHP viewers, the connection form and the column inspector
+  - The Settings window is titled after the pane you are on, and refuses to be resized smaller than a pane can draw
+  - The empty Favorites sidebar fits its width on macOS 15 instead of running past both edges
+  - Open Quickly no longer draws a faint rectangular outline around its Liquid Glass surface on macOS 26 and later (#2321)
+  - iOS: a value containing a backslash, a newline or a carriage return is stored as you typed it on PostgreSQL, Redshift, SQL Server, SQLite, DuckDB and Oracle
+  - iOS: Add Row to Table and Add Rows to Table write to the database or schema you picked in Shortcuts, and all three actions are found by searching "TablePro"
+
+  ### Removed
+
+  - MCP remote access. The server binds to this Mac only. Its certificate named only localhost, so no other device could ever have verified it
+
+  ### Security
+
+  - A read-only MCP token can no longer run a statement that writes. A statement TablePro does not recognize is treated as a write, and the ones that reach the filesystem or run a program are refused
+  - A token limited to some connections no longer sees the names, hosts, ports and usernames of the others
+  - Safe Mode asks again for MCP, where every path used to pre-clear the confirmation
+  - With authentication turned off, a local caller is read-only and cannot administer anything
+  - Secrets belonging to separately distributed drivers are stored in the Keychain and stripped from exported connections. Existing values move to the Keychain on the next save
+  - The activity log records which token made each call, stores statements as digests, is hash chained, and is no longer readable by other accounts on the Mac
+  - Repeated bad tokens are rate limited, including requests that carry no credentials at all
+  - A pairing link is checked before it is used and its destination shown before you approve it, and an MCP session identifier is no longer usable as a credential
+</Update>
+
 <Update label="August 19, 2026" description="v0.66.0">
   ### New Features
 
