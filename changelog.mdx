@@ -4,6 +4,17 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="v0.67.1" description="August 22, 2026">
+  ### Bug Fixes
+
+  - **Editor crashes on stale text**: The editor no longer crashes when layout, syntax highlighting, accessibility, an input method, dictation or Look Up reads text that a newer edit had already removed ([#2338](https://github.com/TableProApp/TablePro/issues/2338), [#2339](https://github.com/TableProApp/TablePro/issues/2339), [#2340](https://github.com/TableProApp/TablePro/issues/2340))
+  - A search highlight or diagnostic underline now disappears with the text it marks, instead of staying put or jumping elsewhere in the editor ([#2341](https://github.com/TableProApp/TablePro/issues/2341))
+  - The toolbar no longer sits on "Executing…" after a query ends, so Stop is not the only way back, and the session context buttons no longer empty out for the length of every query ([#2342](https://github.com/TableProApp/TablePro/issues/2342))
+  - A SQLite query that stops early, because the database is locked or the volume returns an error, now says so instead of showing an empty table ([#2355](https://github.com/TableProApp/TablePro/issues/2355))
+  - Stop now ends a SQLite query that is waiting on a database another program has locked, instead of leaving it to wait out the query timeout ([#2363](https://github.com/TableProApp/TablePro/issues/2363))
+  - The XLSX, MQL and SQL Import plugins linked to a documentation page that did not exist. They now point at Import & Export
+</Update>
+
 <Update label="v0.67.0" description="August 21, 2026">
   ### New Features
 
