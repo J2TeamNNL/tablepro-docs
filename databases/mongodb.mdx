@@ -7,7 +7,7 @@ Collections appear as tables in the sidebar. Documents display with top-level fi
 
 MongoDB is a registry plugin. Picking it in the **Choose a Database** sheet prompts to install; connecting to a saved MongoDB connection installs it without asking. You can also install **MongoDB Driver** from **Settings > Plugins > Browse**.
 
-## Quick Setup
+## Quick setup
 
 <Steps>
   <Step title="Create Connection">
@@ -18,7 +18,7 @@ MongoDB is a registry plugin. Picking it in the **Choose a Database** sheet prom
   </Step>
 </Steps>
 
-## Connection Settings
+## Connection settings
 
 | Field | Default | Notes |
 |-------|---------|-------|
@@ -45,7 +45,7 @@ Leaving **Auth Database** empty authenticates against the database in the connec
 
 The **Use SRV Record** toggle in Advanced connects with the `mongodb+srv://` scheme. For hosts ending in `.mongodb.net`, TablePro enables SRV automatically and turns TLS on if the SSL mode is Disabled, since Atlas requires both. An Atlas connection needs only the cluster hostname, username, and password.
 
-## Replica Sets
+## Replica sets
 
 The **Hosts** field accepts multiple `host:port` pairs separated by commas (for example `host1:27017,host2:27017,host3:27017`). TablePro discovers the primary automatically and routes writes there. Set the replica set name in **Advanced**.
 
@@ -55,9 +55,9 @@ You can also paste a multi-host URI directly:
 mongodb://user:pass@host1:27017,host2:27017,host3:27017/db?replicaSet=rs0
 ```
 
-<Note>
+<Warning>
 Over an SSH tunnel TablePro connects to the first host only and drops the rest of the list. Replica set discovery and failover are off for that session.
-</Note>
+</Warning>
 
 ## SSL/TLS
 
@@ -78,7 +78,7 @@ See [Connection URL Reference](/databases/connection-urls) for all parameters.
 
 **Collection Browsing**: Sidebar shows all collections. Click to view documents in the data grid. Top-level fields render as columns, nested objects and arrays as formatted JSON, ObjectIds as strings. The grid schema is inferred by sampling documents.
 
-**Nested Field Filtering**: The filter panel's column picker lists the paths inside a nested object or an array of objects, so `customer.country` and `items.sku` can be filtered directly. A row on a field inside an array chooses between **any element** (dot notation, where two rows may be satisfied by two different array entries) and **same element**, which groups every row set to it into one `$elemMatch` so they must all match one entry. Filter values are compared as the type the field holds, so a range on a date, ObjectId or `NumberDecimal` field is sent as `$date`, `$oid` or `$numberDecimal` rather than as a string that MongoDB's type bracketing would never match. See [Filtering](/features/filtering#nested-fields).
+**Nested Field Filtering**: The filter bar's column picker lists the paths inside a nested object or an array of objects, so `customer.country` and `items.sku` can be filtered directly. A row on a field inside an array chooses between **any element** (dot notation, where two rows may be satisfied by two different array entries) and **same element**, which groups every row set to it into one `$elemMatch` so they must all match one entry. Filter values are compared as the type the field holds, so a range on a date, ObjectId or `NumberDecimal` field is sent as `$date`, `$oid` or `$numberDecimal` rather than as a string that MongoDB's type bracketing would never match. See [Filtering](/features/filtering#nested-fields).
 
 A field whose name contains a literal dot is left out of the picker: MongoDB reads the dot in a query as a path separator, so filtering it would address a different field. Reach it with `$getField` inside `$expr` in a raw filter or a query tab.
 

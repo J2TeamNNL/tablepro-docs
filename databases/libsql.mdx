@@ -3,9 +3,9 @@ title: libSQL / Turso
 description: Connect to Turso cloud databases, self-hosted sqld, or local libSQL files
 ---
 
-TablePro supports libSQL in two modes: remote over the Hrana HTTP protocol (Turso cloud and self-hosted sqld) and local libSQL database files opened directly from disk. The driver is a downloadable plugin; TablePro offers to install it when you select **libSQL / Turso** in the connection form. See [Plugins](/features/plugins).
+**Connection Mode** in the connection form decides everything else on it. Remote runs the Hrana HTTP protocol against Turso or a self-hosted sqld; Local opens a libSQL file from disk, and the fields change to match. The driver is a downloadable plugin; the install is offered the first time you select it. See [Plugins](/features/plugins).
 
-## Connection Settings
+## Connection settings
 
 Pick a mode with the **Connection Mode** dropdown:
 
@@ -21,7 +21,7 @@ Pick a mode with the **Connection Mode** dropdown:
 | **Database URL** | Full URL to your database, e.g. `https://your-db-name.turso.io` or `http://localhost:8080`. `libsql://` URLs are rewritten to `https://` automatically. |
 | **API Token** | Bearer token, entered in the built-in password field (labeled **API Token** for this driver). Optional for self-hosted sqld without auth. Stored in the macOS Keychain. |
 
-### Local File fields
+### Local file fields
 
 | Field | Description |
 |-------|-------------|
@@ -36,7 +36,7 @@ In Local File mode the API Token field is hidden; local files need no authentica
 
 Click **Test Connection** to verify, then **Save & Connect**.
 
-## Getting Your Credentials
+## Getting your credentials
 
 ### Turso Cloud
 
@@ -51,15 +51,15 @@ turso db tokens create <database-name>
 
 The default sqld HTTP endpoint is `http://localhost:8080`. If you started sqld without `--auth-jwt-key-file`, leave the token empty. With JWT authentication enabled, generate a token matching your configured key.
 
-<Warning>
+<Danger>
 Do not open a file that is being synced as a Turso embedded replica while the owning app is running. Concurrent access to a syncing replica can corrupt it.
-</Warning>
+</Danger>
 
-## Schema and Triggers
+## Schema and triggers
 
 The structure editor creates tables, adds and drops columns, and creates and drops indexes. It cannot change an existing column's name, type, nullability, or default: recreate the table for that. Triggers appear under **Triggers** in the Structure tab, where you can create, edit, and drop them.
 
-## SQL Dialect
+## SQL dialect
 
 libSQL uses SQLite syntax; browsing, EXPLAIN QUERY PLAN, data editing, and export work as they do for SQLite. See [SQLite](/databases/sqlite).
 

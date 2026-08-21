@@ -3,7 +3,7 @@ title: Filtering
 description: Filter table data with 18 operators, raw SQL, and saved presets
 ---
 
-Press `Cmd+Option+F` while viewing a table to open the filter bar. Type a raw SQL WHERE clause and press `Enter` to filter. Raw SQL is the default mode.
+A filter is a WHERE clause, and it runs at the database. That is the difference between filtering and the find bar: matches come from every row in the table, not from the page you are looking at. Open the filter bar with `Cmd+Option+F`, type a condition into the row that appears, and press `Enter`.
 
 <Frame caption="Filter panel with column and raw SQL conditions">
   <img className="block dark:hidden" src="/images/filter-panel.png" alt="Filter panel above the data grid" />
@@ -27,11 +27,11 @@ When you reopen a table, TablePro restores the filters you last applied to it, i
 
 To delete every saved filter row for the current table, open the **⋯** menu and choose **Remove All Filters**.
 
-The filter panel queries the database. To narrow rows already loaded in the grid without re-querying, use the column value filter in the [Data Grid](/features/data-grid).
+The filter bar queries the database. To narrow rows already loaded in the grid without re-querying, use the column value filter in the [Data Grid](/features/data-grid).
 
-<Note>
-Redis shows a key-pattern search bar (for example `user:*`) with a key-type picker instead of the filter panel.
-</Note>
+<Info>
+Redis shows a key-pattern search bar (for example `user:*`) with a key-type picker instead of the filter bar.
+</Info>
 
 ## Operators
 
@@ -39,19 +39,19 @@ Redis shows a key-pattern search bar (for example `user:*`) with a key-type pick
 
 BETWEEN shows two value fields. IN/NOT IN takes comma-separated values.
 
-## Case Sensitivity
+## Case sensitivity
 
 Contains, not contains, starts with, and ends with ignore case. Equals, not equals, IN, NOT IN, and regex match case. Open the operator menu and use **Match Case** to change either one for that row. A small `Aa` icon on the operator button marks a row that is not using its usual setting.
 
 TablePro picks the fastest form each database offers: `ILIKE` on PostgreSQL, DuckDB, CockroachDB, and Snowflake, and `LOWER()` on both sides for Oracle, BigQuery, ClickHouse, and Redshift, whose `ILIKE` only folds ASCII. Trino has no `ILIKE`, so it uses `regexp_like` with the `i` flag.
 
-<Note>
+<Info>
 On MySQL, MariaDB, SQL Server, SQLite, libSQL, and Cloudflare D1 the column's collation decides case sensitivity and TablePro cannot override it per query, so **Match Case** is dimmed. The default collation on these databases already ignores case. Cassandra and Redis have no case-insensitive matching at all, so the option is dimmed there too.
-</Note>
+</Info>
 
 Filters saved before this option existed follow the same rules, so a saved "contains" filter now ignores case on PostgreSQL, DuckDB, Oracle, and BigQuery. Turn **Match Case** on to get the old behavior back.
 
-## Nested Fields
+## Nested fields
 
 On a document store such as MongoDB, a field holding an object or an array of objects is one column in the grid, showing its JSON. The column picker also lists the paths inside it, so you can filter on `customer.country` or `items.sku` directly.
 
@@ -64,7 +64,7 @@ TablePro reads the paths from a sample of the collection, so the picker lists th
 
 A field whose name contains a literal dot is left out. MongoDB reads the dot in a query as a path separator, so a filter naming such a field would match a different field.
 
-### Fields Inside an Array
+### Fields inside an array
 
 A row on a field inside an array gets one more control, because MongoDB has two different answers here:
 
@@ -130,4 +130,4 @@ Save and load filter configurations via the **⋯** menu in the header.
 | Default Operator | Equal, Contains |
 | Panel State | Always Hide, Always Show, Restore Last Filter |
 
-**Panel State** controls what happens when you reopen a table. **Restore Last Filter** (the default) brings back the filter you last applied. **Always Hide** reopens tables unfiltered with the panel closed. **Always Show** keeps the filter panel visible even when no filter is set.
+**Panel State** controls what happens when you reopen a table. **Restore Last Filter** (the default) brings back the filter you last applied. **Always Hide** reopens tables unfiltered with the panel closed. **Always Show** keeps the filter bar visible even when no filter is set.
