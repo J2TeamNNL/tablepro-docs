@@ -214,7 +214,8 @@
             "icon": "arrow-right-arrow-left",
             "pages": [
               "features/import-export",
-              "features/backup-restore"
+              "features/backup-restore",
+              "features/compare-sync"
             ]
           },
           {
