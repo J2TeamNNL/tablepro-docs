@@ -29,6 +29,43 @@ Confirming with **Drop** or **Truncate** stages the operation. The row picks up 
 Dropping is irreversible. On MySQL and MariaDB, truncate also resets the auto-increment counter. Back up important data first.
 </Danger>
 
+## Rename
+
+Renaming happens in the row itself. Choose **Rename** from a table's right-click menu and the label becomes a field: Return commits, Escape leaves the name alone, and clicking elsewhere commits. The item is absent where the engine cannot rename that kind of object.
+
+The statement runs at once instead of joining the drop and truncate queue, so **Preview SQL** never shows it. Everything bound to the table follows the new name: open tabs keep their rows, filters, sort and column widths, a favourite stays a favourite, and the Recent entry holds its place. A drop or truncate already queued against that table comes back out of the queue.
+
+<Frame caption="The row's label becomes the rename field">
+  <img className="block dark:hidden" src="/images/rename-table.png" alt="A sidebar table row with its label replaced by an editable text field" />
+  <img className="hidden dark:block" src="/images/rename-table-dark.png" alt="A sidebar table row with its label replaced by an editable text field" />
+</Frame>
+
+| Database | Rename table | Rename database | Rename schema |
+|----------|--------------|-----------------|---------------|
+| MySQL | Yes | No | No schemas |
+| MariaDB | Yes | No | No schemas |
+| PostgreSQL | Yes | Yes | Yes |
+| Redshift | Yes | Yes | Yes |
+| CockroachDB | Yes | Yes | Yes |
+| PGlite | Yes | No | Yes |
+| SQLite | Tables, not views | No | No schemas |
+| LibSQL | Tables, not views | No | No schemas |
+| Cloudflare D1 | Tables, not views | No | No schemas |
+| ClickHouse | Yes | Yes | No |
+| SQL Server | Yes | No | No |
+| Oracle | Yes | No | No |
+| Dameng | Yes | No | No |
+| DuckDB | Yes | No | No |
+| BigQuery | Yes | No | No |
+| Snowflake | Yes | No | Yes |
+| Trino | Depends on the connector | No | Yes |
+| Teradata | Yes | No | No |
+| MongoDB | Yes | No | No |
+
+No other engine has a rename, so the item never appears on Cassandra, DynamoDB, Elasticsearch, etcd, Kafka, Redis, SurrealDB or Beancount. What resembles one there is a copy followed by a delete, and it changes record identity.
+
+**Rename Database** and **Rename Schema** are absent on the container the connection is browsing. Switch to another one first, then rename the one you left.
+
 ## Maintenance
 
 Right-click a table, choose **Maintenance**, and pick an operation. A sheet shows the operation's options and the exact SQL before it runs.
