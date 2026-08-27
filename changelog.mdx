@@ -4,6 +4,94 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="v0.69.0" description="August 27, 2026">
+  ### New Features
+
+  - **Restore Previous Values**: Take back a save that already committed. TablePro keeps the previous values of rows you changed, so an edit, a delete or a paste can be put back from the Edit menu or the toolbar's Table Actions group after the transaction closed. Settings > Data & Results has an off switch and Clear Saved Changes. This is a Starter feature ([#2107](https://github.com/TableProApp/TablePro/issues/2107))
+  - **Check constraints and generated columns**: A Constraints tab in the structure editor lists check constraints with their expression, and the column row gains Generated and Expression fields with a stored or virtual choice. MCP clients see them as `check_constraints` and `generation_expression` on `describe_table` ([#2478](https://github.com/TableProApp/TablePro/issues/2478))
+  - **SQLite over SSH**: A Remote File pane opens a read-only copy of a SQLite database that lives on an SSH server ([#2474](https://github.com/TableProApp/TablePro/issues/2474))
+  - **Rename from the sidebar**: Rename on a table's right-click menu edits the row's label in place, and databases and schemas rename the same way where the engine supports it ([#2482](https://github.com/TableProApp/TablePro/issues/2482))
+  - **Turso**: Its own engine in the New Connection picker, offered before the libSQL plugin installs
+  - A rebindable Find shortcut in Settings > Keyboard, for giving `Cmd+F` to the filter bar instead of the editor
+
+  ### Improvements
+
+  - Editor tabs are drawn as a segmented tab picker on every macOS version, so the active tab reads clearly in light appearance, in a background window and on macOS 27 ([#2439](https://github.com/TableProApp/TablePro/issues/2439))
+  - A connection opens full screen on iPhone and iPad, with its four sections in a sidebar on iPad ([#2544](https://github.com/TableProApp/TablePro/issues/2544))
+  - Size All Columns to Fit no longer slows down with the square of the column count
+  - A capped MySQL or MariaDB query returns its first rows without fetching the whole result set ([#2427](https://github.com/TableProApp/TablePro/issues/2427))
+
+  ### Bug Fixes
+
+  **Saving and editing**
+
+  - An edit or a delete on a table with no primary key changed every identical row ([#2107](https://github.com/TableProApp/TablePro/issues/2107))
+  - Pressing Cmd+S again during a slow save committed the same statements twice, and switching tabs mid-save cleared the edits of the tab switched to
+  - Deleting one row of a pasted batch dropped the other rows or saved them with another row's values, and double-clicking a cell after such a delete edited the wrong row
+  - Undoing a cell edit reverted the wrong row while a column filter was active, and undoing a deleted new row put its values in the wrong columns
+  - Save reported the number of statements it ran as the number of rows it changed
+  - A save that deletes a row and reuses its unique value failed on the constraint
+  - "Ignore foreign key checks" did nothing on SQLite, libSQL and Cloudflare D1
+  - A staged drop or truncate ran against the database in front at Save time rather than the one it was staged in, and `DROP TABLE` went out unqualified on Oracle, Dameng, Trino, Snowflake and BigQuery
+
+  **Connections**
+
+  - Background connections were stuck on the session preparation screen after connecting ([#2545](https://github.com/TableProApp/TablePro/issues/2545))
+  - Rows, tabs and an enabled toolbar stayed on screen over a connection the connections strip already showed as failed, and Reconnect did nothing once automatic reconnect had given up
+  - The connections strip was hidden, with its switch commands disabled, whenever the connection on screen was disconnected
+  - The icon was cut off the entry at the top of a scrolled connections strip, and the strip did not scroll to the entry you switched to ([#2452](https://github.com/TableProApp/TablePro/issues/2452))
+  - SSH Test Connection leaked a socket every run, and an SSH tunnel that died from sleep or a dropped network leaked its listening port, socket and session
+
+  **SQL editor**
+
+  - Selection highlight went missing from part of a long selection after scrolling, covered only the first line of a multi-line match, and was painted in the accent colour in an inactive window
+  - Shift+Arrow extended the wrong end of a selection made by dragging, Shift+double-click and Shift+triple-click did nothing, and double-clicking `=`, `<` or `>` selected nothing
+  - Drag-select scrolled faster on a mouse than on a trackpad and stalled mid-drag, and a quick drag started a few characters from the press point
+  - The arrow keys and Shift+Arrow did not work in the JSON, DDL and SQL preview editors
+  - VoiceOver was told the selection covered only its first line, with no announcement when it moved
+  - An abandoned editor tab drag reordered the strip anyway and kept that order across relaunch
+
+  **Data grid**
+
+  - Grid cells stayed at their old column positions until the next click after any column geometry change ([#2449](https://github.com/TableProApp/TablePro/issues/2449), [#2446](https://github.com/TableProApp/TablePro/issues/2446))
+  - The row-number column could be dragged out of first place, which walked it to the far right on the next refresh
+  - A reordered column snapped back on the next refresh in the Structure tab and in query results
+  - A time entered into a date cell was discarded when the stored value carried no time, a timestamp with an offset showed one day in the grid and another in its picker, and confirming a picker without changing anything rewrote the cell
+  - Keep Open for a preview tab, by double-clicking it in the tab strip or from its contextual menu ([#2436](https://github.com/TableProApp/TablePro/issues/2436))
+
+  **Keyboard shortcuts**
+
+  - A rebound shortcut silently killed Quit, Minimize, Hide, Settings, Show Toolbar or Enter Full Screen
+  - A data grid shortcut bound to `Cmd+G` took the key from Find Next with no conflict warning, and `Ctrl+Cmd+J` was accepted while the SQL editor kept it for Jump to Definition
+  - A shortcut recorded with only Option or Shift beeped with no reason given, against docs that said it would work
+
+  **Databases**
+
+  - MySQL and MariaDB: column charset and collation were lost when reordering a column by dragging its row; KILL went to a different server when the host was spelled `localhost`; Stop froze the app for up to five seconds against an unresponsive server; and a read was re-run after a dropped connection, advancing a sequence or taking a lock twice
+  - Snowflake: `DATE`, `TIME` and `TIMESTAMP_*` cells showed the raw epoch number, `BINARY` cells showed the hex of their hex, an unreadable date cell opened a picker set to today and overwrote the value on OK, `UPDATE` and `MERGE` reported no rows changed, two saved connections to one account shared a session, and Stop cancelled every other query on the connection ([#2454](https://github.com/TableProApp/TablePro/issues/2454))
+  - Computed SQL Server columns were offered as editable and written into the `INSERT`, on both Mac and iOS
+  - Kafka driver plugin: topics in the grid, consumer group lag, and KafkaQL for seeking and producing ([#2419](https://github.com/TableProApp/TablePro/issues/2419))
+  - The structure editor showed an empty Indexes, Foreign Keys or DDL tab with no error when the read failed, offered free-text cells for foreign key actions and index types in Create Table, and compared a generated column equal to a plain one in Compare & Sync
+
+  **Export**
+
+  - A CSV export wrote a real NULL and the text `NULL` identically
+  - A JSON export emitted a leading-zero string such as `01234` as an unquoted number, which no JSON parser accepts
+  - A SQL `INSERT` export quoted identifiers for ANSI on every engine, which MySQL and MariaDB reject outright
+
+  **iPhone and iPad**
+
+  - Insert Row wrote every column, which blocked a `NOT NULL` column with a default, wrote generated columns, offered NULL on `NOT NULL` columns, left both halves of a composite integer primary key out, discarded values typed before the column list loaded, and was offered on Redis where it can only fail ([#2543](https://github.com/TableProApp/TablePro/issues/2543))
+  - PostgreSQL and Redshift read another schema's table of the same name for columns, indexes and foreign keys, and SQL Server used the login's default schema rather than the one the toolbar showed, Truncate and Drop included
+  - `tablepro://` deep links were ignored, from the widget, a Live Activity or a shortcut
+  - A connection's Tables tab had no search field, and a search from one connection or table still filtered another's list ([#2544](https://github.com/TableProApp/TablePro/issues/2544))
+
+  ### Security
+
+  - SQL injection through a Snowflake schema or routine name containing a backslash
+  - Safe Mode on iPhone and iPad let a write run when it followed a comment or a CTE
+</Update>
+
 <Update label="v0.68.1" description="August 26, 2026">
   ### Improvements
 
