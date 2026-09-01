@@ -4,6 +4,66 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="v0.70.0" description="September 1, 2026">
+  ### New Features
+
+  - **Row as JSON**: A JSON tab in the inspector shows the selected row as JSON, reachable from Show Row as JSON on a row's right-click menu. Click a foreign key to fetch the row it points at, five levels deep, and turn on Always Expand Foreign Keys to have them open on arrival. The filter field takes plain text or a regular expression in slashes
+  - **JavaScript shell for MongoDB**: Write queries the way you write them in mongosh, with the `db` API, cursors, variables, functions and `print`. Each connection keeps its own shell state, so a variable or function you define survives to the next statement, and autocomplete offers the cursor methods after `find()` and `aggregate()`
+  - **Copy To and Duplicate Database**: Copy a database's structure, its data or both to any other connection, from the sidebar or the Database menu. The connection, database and schema picker it shares with Compare & Sync now has a search field ([#2487](https://github.com/TableProApp/TablePro/issues/2487))
+  - **Column reorder**: Drag a column into place on ClickHouse and Oracle, or use Move Column Up and Move Column Down on its right-click menu. PostgreSQL, SQLite, libSQL, Turso and Cloudflare D1 have no `MOVE COLUMN`, so TablePro rebuilds the table instead and shows you the statements before anything runs. Where the engine cannot do it at all, the row number carries the reason ([#2479](https://github.com/TableProApp/TablePro/issues/2479))
+  - **Open a database file from Finder**: TablePro recognises SQLite and DuckDB databases by their contents rather than their name, reads `.parquet` files through DuckDB, and offers to install the driver a file needs before opening it. File > Open File… opens anything TablePro reads ([#2476](https://github.com/TableProApp/TablePro/issues/2476))
+  - **Tab rows**: Settings > General > Tabs can wrap the tab strip onto several rows instead of scrolling it. Drag a tab out of the strip, or use Move Tab to New Window on its right-click menu, to move it to a window of its own ([#2438](https://github.com/TableProApp/TablePro/issues/2438))
+  - Korean, Turkish, Vietnamese and Chinese translations for 742 strings that had been shipping in English, and for the document kinds Finder shows
+
+  ### Improvements
+
+  - The connections strip leads with the connection name and puts the database or schema on a second line ([#2550](https://github.com/TableProApp/TablePro/issues/2550))
+  - `Up` and `Down` while editing a cell move the editor to the same column of the row above or below ([#2569](https://github.com/TableProApp/TablePro/issues/2569))
+  - Dragging a tab autoscrolls the strip, so a tab can be moved past the run currently on screen, and AppKit handles editor tab presses instead of SwiftUI gestures ([#2438](https://github.com/TableProApp/TablePro/issues/2438))
+  - Copy on a column's right-click menu in Structure copies the cell under the pointer
+  - MongoDB statements are split as JavaScript rather than at every semicolon, and the editor's diagnostics report JavaScript syntax errors rather than unsupported method names
+
+  ### Bug Fixes
+
+  **Columns the server fills in**
+
+  - Add Row pre-filled NULL into an identity column, which failed the insert on PostgreSQL, and a cell's Set Value menu offered no "Default" for one ([#2588](https://github.com/TableProApp/TablePro/issues/2588))
+  - Paste, Fill Column and the row inspector staged edits to generated and identity columns that the save then discarded, and Duplicate Row copied an identity column that is not the primary key ([#2588](https://github.com/TableProApp/TablePro/issues/2588))
+  - A new row of nothing but server-assigned columns was dropped from the save without a word
+  - Generated and identity columns became editable again after a tab switch or a refresh that reused cached metadata
+  - Add Row and Duplicate Row were offered before a table's schema had loaded, and stayed inert for good on a result switched away from mid-load ([#2588](https://github.com/TableProApp/TablePro/issues/2588))
+  - The row inspector offered an editor for a column the driver marks immutable, such as MongoDB's `_id`
+
+  **The cell editor**
+
+  - `Tab` saved half-composed input method text and left it behind, opened the editor off screen when it wrapped onto a row below the visible ones, and left the cell cursor on the old column
+  - One `Tab` press switched every data grid to its accessibility layout with no assistive app attached
+
+  **Tabs**
+
+  - About one tab drag in seven did nothing, and a drag released on a neighbour's exact centre left the order unchanged ([#2438](https://github.com/TableProApp/TablePro/issues/2438))
+
+  **MongoDB**
+
+  - Any filter written in shell syntax, such as `db.orders.find({status: 1})`, failed to parse, and `.sort()` and `.projection()` were ignored when written with unquoted keys
+
+  **Connections**
+
+  - Resizing a column on a database with a long file path crashed the app on every launch afterwards, with iCloud sync on ([#2575](https://github.com/TableProApp/TablePro/issues/2575))
+  - SSH Agent auth asked for a private key passphrase instead of reporting that the agent was never reached ([#2583](https://github.com/TableProApp/TablePro/issues/2583))
+  - An SSH connection with no password reported "SSH password rejected" when the server offered no keyboard-interactive
+
+  **Export and structure**
+
+  - A SQL export of a SQL Server database was missing `SET IDENTITY_INSERT` around a table's rows, so the dump could not be restored, and carried `OVERRIDING SYSTEM VALUE` and `setval` from PostgreSQL ([#2588](https://github.com/TableProApp/TablePro/issues/2588))
+  - Compare & Sync could not drop an overloaded PostgreSQL routine, or any trigger
+  - PostgreSQL sequence DDL named the schema it was read from, in SQL export and the structure editor
+  - PGlite `$$` bodies split at their inner semicolons
+  - The row inspector lagged on hover, on a tab switch and on every keystroke, from re-parsing each field's value
+  - Plugin download reported no progress at all when a connection or a file needed a driver installed
+  - A rerun answered from cache adopted another pinned result's column metadata ([#2588](https://github.com/TableProApp/TablePro/issues/2588))
+</Update>
+
 <Update label="v0.69.0" description="August 27, 2026">
   ### New Features
 
