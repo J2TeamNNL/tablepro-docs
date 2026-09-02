@@ -4,6 +4,37 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="v0.71.0" description="September 2, 2026">
+  ### New Features
+
+  - **Saved comparisons**: Save Comparison… in the Compare & Sync toolbar, and under Database > Compare, keeps a pair of endpoints with the mode and options you set. The Comparisons button lists every one you have saved, and loading one sets both sides for you. Compare & Sync also reopens on the source, target, mode and options it last held
+  - **Text for binary columns**: Display As offers Text on a binary column, and TablePro detects a column holding UTF-8 on its own. Find covers those columns too, matching the text you see rather than the bytes underneath ([#2599](https://github.com/TableProApp/TablePro/issues/2599))
+  - **Identity File on SSH Agent connections**: Point an agent connection at one key instead of every key the agent holds. TablePro also reads `IdentitiesOnly` out of your `~/.ssh/config` ([#2601](https://github.com/TableProApp/TablePro/issues/2601))
+  - **Middle-click a tab to close it** ([#2595](https://github.com/TableProApp/TablePro/issues/2595))
+  - Select > All and Select > None in the structure results pane
+
+  ### Improvements
+
+  - Cold launch to a usable window went from 470ms to 260ms. Plugin signature checks, 13ms each, now run after the first window instead of on the launch thread
+  - A connecting, schema or query progress indicator waits half a second before it appears, and stays a minimum time once it does. Window chrome no longer collapses and reopens around a connect that finishes inside that half second
+  - Compare & Sync reads a whole schema in a few queries instead of one per table, and reads both sides at once. Data mode lists the tables both sides share as soon as you pick a pair, and Apply… builds the script when there is not one yet
+  - Table collation is read on MySQL, which it never was before
+  - Stale `cloudflared` and `cloud-sql-proxy` processes are given time to exit before a new connection reuses their port
+
+  ### Bug Fixes
+
+  - Generated column expressions were missing from MySQL's whole-schema column read, and generated columns were missing entirely from SQLite's
+  - PostgreSQL index reads matched a table name in every schema rather than the one asked for
+  - Compare & Sync could publish one pair's results after the pickers had moved to another, and its toolbar kept naming the old pair after a saved comparison was loaded from Options
+  - A failed whole-schema trigger read counted as a schema with no triggers
+  - Clicks and hovers in the scrolled tab strip's edge padding landed on a tab clipped off the edge
+  - SSH Agent auth offered every key the agent holds, exhausting the server's `MaxAuthTries` ([#2601](https://github.com/TableProApp/TablePro/issues/2601))
+
+  <Note>
+    This release moves TablePro's plugin ABI to version 20, so every plugin installed from the registry needs its rebuilt binary. If a plugin stops loading after you update, reinstall it from Settings > Plugins.
+  </Note>
+</Update>
+
 <Update label="v0.70.0" description="September 1, 2026">
   ### New Features
 
