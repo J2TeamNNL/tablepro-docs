@@ -7,7 +7,7 @@ rss: true
 <Update label="v0.72.0" description="September 4, 2026">
   ### New Features
 
-  - **Backup and restore**: Back up a database with its own engine's tools and restore it again, on MySQL, MariaDB, MongoDB, SQLite and libSQL, and on SQL Server through SqlPackage ([#2618](https://github.com/TableProApp/TablePro/issues/2618))
+  - **Backup and restore**: Back up a database with its own engine's tools and restore it again. TablePro drives `pg_dump` and `pg_restore` on PostgreSQL and Redshift, `mysqldump` on MySQL and MariaDB, `mongodump` on MongoDB, `sqlite3` on SQLite and libSQL, and `sqlpackage` on SQL Server ([#2618](https://github.com/TableProApp/TablePro/issues/2618))
   - **Export any object, not just tables**: The export tree lists views, routines, triggers, user-defined types, privileges, MySQL events and PostgreSQL sequences, grouped by kind. Each table can carry its own `WHERE`, row limit and column subset ([#2618](https://github.com/TableProApp/TablePro/issues/2618))
   - **Transfer To**: Copy table rows straight into another open connection, with no file in between ([#2618](https://github.com/TableProApp/TablePro/issues/2618))
   - **Markdown, HTML, XML and Parquet export**: Parquet installs from Settings > Plugins. JSON export can also write NDJSON, one row per line ([#2618](https://github.com/TableProApp/TablePro/issues/2618))
