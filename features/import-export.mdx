@@ -12,7 +12,7 @@ The toolbar's **Export** (`Cmd+Shift+E`) re-reads every table you tick with `SEL
     Open a table or run a query, then click **Export** in the toolbar (`Cmd+Shift+E`), or right-click the results grid and choose **Export Results…**.
   </Step>
   <Step title="Choose a format and scope">
-    Pick a format, tick tables in the tree, and set the options for that format.
+    Pick a format, tick objects in the tree, and set the options for that format.
   </Step>
   <Step title="Export">
     Click **Export**. The destination file appears only on success: a failed or cancelled export removes its partial file.
@@ -21,10 +21,42 @@ The toolbar's **Export** (`Cmd+Shift+E`) re-reads every table you tick with `SEL
 
 The last format and its options come back next time, but only after an export succeeds; cancelling discards the changes. **Reset to Defaults** restores the stock settings for the current format.
 
+The bookmark button above the tree saves the current selection under a name and reapplies it later, including each table's options and row filter. A saved selection naming tables the database no longer has says how many it still matches, and applying it selects those and clears the rest.
+
 <Frame caption="Export dialog">
   <img className="block dark:hidden" src="/images/export-dialog.png" alt="Export dialog" />
   <img className="hidden dark:block" src="/images/export-dialog-dark.png" alt="Export dialog" />
 </Frame>
+
+### What the tree lists
+
+SQL exports more than tables. A database holding more than one kind of object groups them, in the order a restore needs them:
+
+| Group | Written as | Engines |
+|---|---|---|
+| Types | `CREATE TYPE` | PostgreSQL and its forks |
+| Tables | `CREATE TABLE` plus `INSERT` | every SQL engine |
+| Views | `CREATE VIEW` from the server's own definition | every SQL engine |
+| Materialized Views | `CREATE MATERIALIZED VIEW` | PostgreSQL, Oracle |
+| Routines | `CREATE FUNCTION` or `CREATE PROCEDURE` | engines with stored routines |
+| Triggers | `CREATE TRIGGER` | engines with triggers |
+| Privileges | `GRANT`, one principal per row | engines with user management |
+
+A database with only tables lists them flat, with no group to open first.
+
+Only SQL writes every group. CSV, JSON and XLSX take tables and views, and switching to one of them drops the rest from the tree. Per-object checkboxes follow the kind: **Data** is off the row for anything without rows, and a privilege row carries neither **Drop** nor **Data**.
+
+<Warning>
+Privileges are server-wide, so they appear once, under the container the dialog opened on. A `GRANT` naming an object the dump does not create fails on restore.
+</Warning>
+
+### Narrowing what a table exports
+
+Click the filter icon on a table row to write a `WHERE` clause, cap the row count, or pick columns. The icon fills in once a table is narrowed, and its tooltip repeats what the narrowing is.
+
+The clause is your engine's own SQL, spliced into the `SELECT` the export runs. It has to be one expression: a semicolon anywhere but the end refuses the filter, and the export summary says the table went out whole.
+
+Ticking no column exports every column, which is also what a table with a column added later gets.
 
 ### What ends up in the file
 
@@ -50,19 +82,25 @@ A whole-table export streams from the database at constant memory, with no row-c
     Sanitizing prefixes a value starting with `=`, `+`, `-`, or `@` with a single quote, so a spreadsheet treats it as text.
   </Tab>
   <Tab title="JSON">
-    An array of objects.
+    One object per table, each holding an array of rows.
 
     | Option | Default |
     |--------|---------|
+    | Layout (one JSON object, one row per line) | One JSON object |
     | Pretty print | Yes |
     | Include NULL values | Yes |
     | Preserve all values as strings | No |
+
+    **One row per line** writes NDJSON to a `.ndjson` file: no wrapping object, no array, one row per line, so a stream reader can process a file larger than memory a line at a time. Pretty print does not apply to it and is dimmed. Import reads `.json`, `.jsonl` and `.ndjson`, detecting the layout from the file.
   </Tab>
   <Tab title="SQL">
     | Option | Default |
     |--------|---------|
     | Compress with gzip (`.sql.gz`) | No |
     | Batch size (rows per INSERT: 1, 100, 500, 1,000) | 500 |
+    | On existing rows (insert, skip, replace, update) | Insert |
+    | Split every (one file, 8, 32, 128, 512 MB) | One file |
+    | Read every table at one snapshot | No |
     | Exclude the AUTO_INCREMENT counter | Yes |
     | Exclude DEFINER clauses | Yes |
 
@@ -75,6 +113,12 @@ A whole-table export streams from the database at constant memory, with no row-c
     A multi-table export orders the tables by their foreign keys, so a parent is created and filled before the rows that reference it and dropped after them. Foreign keys between two tables that reference each other leave no such order: those tables keep the order the export listed them in, the file says so in a comment, and the summary repeats it. Import that one with **Disable foreign key checks** ticked.
 
     The last two exclusions cover MySQL and MariaDB, and pass every other engine through untouched.
+
+    Insert mode is spelled differently on each engine: `INSERT IGNORE` and `REPLACE INTO` on MySQL and MariaDB, `INSERT OR IGNORE` and `INSERT OR REPLACE` on SQLite, `ON CONFLICT` on PostgreSQL. Updating needs a primary key to name as the conflict target. An engine with no spelling for the mode writes plain inserts, and the export summary says which tables that happened to.
+
+    Splitting writes `dump.part1.sql`, `dump.part2.sql` and so on, rotating between statements so no part ends mid-`INSERT`. Restore the parts in order. A gzipped export is one file, so the two settings do not combine and the summary says so.
+
+    One snapshot opens `START TRANSACTION WITH CONSISTENT SNAPSHOT` on MySQL, `BEGIN ISOLATION LEVEL REPEATABLE READ` on PostgreSQL, and a deferred transaction on SQLite. It holds that transaction open for the whole export.
 
     Excluding the counter drops `AUTO_INCREMENT=<n>` from the table options and leaves the column's own `AUTO_INCREMENT` attribute alone. Restoring rows sets the counter one past the highest key in the data, so a source counter that had run ahead of its rows, after deletes or a reset, does not carry over.
 
@@ -102,7 +146,74 @@ A whole-table export streams from the database at constant memory, with no row-c
 
     Each table becomes its own worksheet and numbers are stored as numeric cells. A table over 1,048,576 rows, Excel's limit, splits across sheets.
   </Tab>
+  <Tab title="Markdown">
+    GitHub-flavoured tables.
+
+    | Option | Default |
+    |--------|---------|
+    | Align columns | Yes |
+    | Write each table's name as a heading | Yes |
+    | NULL shows as | `NULL` |
+
+    Column widths come from the header and the first 200 rows, so a wide value later in a long table is written whole rather than widening every row before it. A pipe or a line break inside a value is neutralised: both would end the cell early.
+  </Tab>
+  <Tab title="HTML">
+    | Option | Default |
+    |--------|---------|
+    | Write a full HTML document | Yes |
+    | Write each table's name as a heading | Yes |
+    | Mark NULL cells | Yes |
+
+    A full document carries its own stylesheet and follows the reader's light or dark setting. Turn it off to paste bare `<table>` elements into a page that has its own styling.
+  </Tab>
+  <Tab title="XML">
+    One element per row, one child element per column.
+
+    | Option | Default |
+    |--------|---------|
+    | Pretty print | Yes |
+    | Mark NULL with `xsi:nil` | Yes |
+    | Row element | `row` |
+
+    A column name that is not a legal XML element name is rewritten: a leading digit gains an underscore, an illegal character becomes one, and a name starting `xml` is prefixed. Control characters XML 1.0 forbids are dropped, so a binary column cannot make the document unparseable.
+  </Tab>
+  <Tab title="Parquet">
+    Install the Parquet plugin from **Settings > Plugins** first. It carries its own copy of DuckDB, which does the encoding, and is too large to ship in the app.
+
+    | Option | Default |
+    |--------|---------|
+    | Compression (Snappy, Zstd, Gzip, None) | Snappy |
+    | Rows per group | 122,880 |
+
+    Column types come from the source engine's own declarations, so numbers, dates and booleans arrive as those rather than as strings. A value that will not convert is written as null rather than failing the export.
+
+    <Warning>
+    Parquet holds one table per file. Selecting several writes `dump.users.parquet`, `dump.orders.parquet` and so on beside the name you chose.
+    </Warning>
+  </Tab>
 </Tabs>
+
+## Transfer to another connection
+
+Right-click tables in the sidebar and choose **Transfer To…** to copy their rows straight into another connection, with no file in between.
+
+<Steps>
+  <Step title="Open both connections">
+    The destination list holds the connections that are already open. A connection that is not open does not appear.
+  </Step>
+  <Step title="Pick the destination and its database">
+    Then tick the tables to copy.
+  </Step>
+  <Step title="Transfer">
+    Each table is wrapped in its own transaction by default, so a table that fails leaves its own rows untouched and the ones before it committed.
+  </Step>
+</Steps>
+
+Rows only. The destination table has to exist and its column names have to match, because inventing DDL that crosses from one engine to another would create tables whose types quietly disagree with the data landing in them. A per-table row filter set in the export tree is not carried over; narrow the transfer by transferring fewer tables.
+
+<Warning>
+**Delete existing rows first** empties each destination table before writing. There is no undo.
+</Warning>
 
 ## Clipboard paste (CSV/TSV)
 
@@ -144,7 +255,7 @@ Select a row in the data grid and press `Cmd+V` to paste tabular data straight i
 | **Stop and Commit** | Stops there, keeping what already succeeded |
 | **Skip and Continue** | Logs it and carries on, including a line the parser cannot read. No transaction |
 
-Skip and Continue collects up to 1,000 failures with their line numbers and messages, and the summary counts successes against failures behind a **Copy Details** button. A stop shows the line, the database's own message, and the failing statement, with the dialog still open behind it, ready for a changed setting and another run.
+Skip and Continue collects up to 1,000 failures with their line numbers and messages, and the summary counts successes against failures behind a **Copy Details** button. **Save Report…** writes them all to a CSV with a line, a statement and the database's own error per row, so a large import's failures can be sorted and searched rather than scrolled. A stop shows the line, the database's own message, and the failing statement, with the dialog still open behind it, ready for a changed setting and another run.
 
 ### Disabling foreign key checks
 
@@ -167,6 +278,20 @@ The sheet accepts an array of objects `[{…}, {…}]`, newline-delimited JSON s
 - **New table**: name it and review the columns TablePro infers. Name, type, primary key, nullable flag, and default are all editable before the table is created.
 
 Rows insert through parameterized statements, so a JSON value is never concatenated into SQL. Nested objects and arrays are stored as JSON text.
+
+### Import XLSX
+
+Reads the first worksheet of an `.xlsx` workbook.
+
+| Option | Default |
+|--------|---------|
+| First row holds column names | Yes |
+| Trim whitespace | No |
+| Treat empty cells as NULL | Yes |
+
+A row that omits its empty cells still lands in the right columns: each cell's own reference decides where it goes, not its position among the cells that were written. Text stored in the workbook's shared string table is resolved, including a value split across several formatting runs.
+
+The workbook is read whole rather than streamed, because a sheet's rows refer back to a string table that has to be held anyway.
 
 ### Import CSV
 
