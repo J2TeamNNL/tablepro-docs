@@ -4,6 +4,70 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="v0.73.0" description="September 9, 2026">
+  ### New Features
+
+  - **Connection editor rebuilt**: Four sections in a sidebar, General, Network, Options and Appearance, in place of up to eleven panes. One Connect via picker replaces five Enable switches, and Save, Cancel and Test Connection sit on a bottom action bar
+  - **Toolbar rebuilt**: Five icon-only groups, with the connection and container as one centred control that switches either. Query duration and Stop moved to the results status bar
+  - **Typesense driver**: Collection browsing, document editing, a REST request console, API keys in Users & Roles, and Server Dashboard metrics from `/metrics.json` and `/stats.json`. Install it from Settings > Plugins ([#2629](https://github.com/TableProApp/TablePro/issues/2629))
+  - **Copy To across engines**: Copy a table into a connection on a different database engine, with every type approximation listed before the copy runs. Each table takes its own `WHERE` and row limit, and a copy inside one connection runs server-side as `INSERT … SELECT` ([#1491](https://github.com/TableProApp/TablePro/issues/1491))
+  - **SQLite structure editing**: Add, remove and edit foreign keys, and change a column's type, nullability and default, on SQLite, libSQL and Cloudflare D1. Each is applied as a reviewed table rebuild, checked against dependent views and triggers first
+  - **Default value menu**: The Structure tab's Default cell offers the engine's own values, No default, NULL, Empty string and a Custom editor ([#2688](https://github.com/TableProApp/TablePro/issues/2688))
+  - **Tunnel Command transport**: Reach a database through any command that opens a local port, with presets for `kubectl port-forward` and `aws ssm start-session` ([#2520](https://github.com/TableProApp/TablePro/issues/2520))
+  - **DuckDB backup and restore**: Write a database as one `.duckdb` file or a folder of Parquet. Backup Dump gained a table picker and can write several databases into one folder, and Back Up… is on a database in the connection tree ([#2485](https://github.com/TableProApp/TablePro/issues/2485))
+  - **DuckDB file lock control**: Release File Lock on the Database menu and the connections strip, an Open the File Read-Only option so several processes share one file, and per-connection idle release for DuckDB and MySQL ([#2518](https://github.com/TableProApp/TablePro/issues/2518))
+  - **Assistant as its own pane**: View > Show Assistant, or `Cmd+Option+A`. The inspector shows the selected row as Fields or JSON, with the column name and type on one line and the value at full width below, field search, an edited-fields-only filter, Tab between fields, and a value menu with `Ctrl+Option+N` for NULL and `Ctrl+Option+D` for DEFAULT
+  - **EXPLAIN bar chart**: A bar column in the plan tree, with a Metric menu for self cost, self time and row counts ([#2633](https://github.com/TableProApp/TablePro/issues/2633))
+  - **Image preview in cells**: A cell holding SVG or a raster image shows a preview beside its source ([#2535](https://github.com/TableProApp/TablePro/issues/2535))
+  - **Sort direction setting**: Sets the default row sort and which way the first click on a column header sorts ([#2665](https://github.com/TableProApp/TablePro/issues/2665))
+  - **Row selection in the grid**: The row-number gutter holds at the left edge when the table scrolls sideways, and `Shift+Space` widens the selection to every row it touches ([#2664](https://github.com/TableProApp/TablePro/issues/2664))
+  - **CSV export encoding**: Pick the encoding and whether to write a byte order mark, with a warning naming what the encoding dropped ([#2534](https://github.com/TableProApp/TablePro/issues/2534))
+  - **Indexes in SQL export**: Written after the data, with a materialized view's indexes written once the view exists ([#2492](https://github.com/TableProApp/TablePro/issues/2492))
+  - **MCP access approval**: A setting for connection access, with the list of approved connections and a Forget action ([#2640](https://github.com/TableProApp/TablePro/issues/2640))
+  - **Transport activity**: Live throughput for an SSH tunnel or SOCKS proxy in the toolbar, with bytes carried shown in the connection switcher
+
+  ### Improvements
+
+  - Both diagrams zoom on a ladder from 5 to 300 per cent, and Fit to Window uses whatever scale the diagram needs instead of stopping at 25% ([#2692](https://github.com/TableProApp/TablePro/issues/2692))
+  - Database type can be changed from inside the connection editor, and the reason Save is unavailable is shown next to the button
+  - Backup Dump is one sheet carrying scope, format and destination, in place of a picker with a save panel over it ([#2485](https://github.com/TableProApp/TablePro/issues/2485))
+  - The object tree's context menu is regrouped into four groups by intent, with connection-wide commands off object rows and keyboard shortcuts shown where a menu bar equivalent exists
+  - View Options moved into the sidebar's filter row, in place of an entry on every context menu
+  - Back is available with unsaved edits and asks to discard them, instead of standing down until they were saved
+  - Structured inspector values expand in place instead of replacing the whole pane
+  - An import proposes the table name from the file name, and warns when the name is taken
+  - Safe Mode, Session Context and Schema have submenus in the Database menu, and the editor tab whose query is running carries an indicator
+
+  ### Bug Fixes
+
+  - Column defaults were quoted into string literals, from `gen_random_uuid()` to `NOW()` to `nextval(...)`, and SQL Server dropped a column's `DEFAULT` constraint on a type change without re-adding it ([#2688](https://github.com/TableProApp/TablePro/issues/2688))
+  - `~/.ssh/config` was misread in eleven ways: `%h` and the other tokens arrived as literal text, `Include` lines naming more than one file read none of them, negated `Match` criteria matched every host, and `Match final` overrode blocks that had already set a value ([#2687](https://github.com/TableProApp/TablePro/issues/2687))
+  - A jump host's own `ProxyJump` was not followed, leaving a chained bastion unreachable ([#2687](https://github.com/TableProApp/TablePro/issues/2687))
+  - Half the ER diagram was left unpainted at its fit-to-window zoom, a table's relationship with itself was drawn underneath the table, and a table dragged past the top-left corner disappeared with the position saved ([#2692](https://github.com/TableProApp/TablePro/issues/2692))
+  - Unsaved cell edits were discarded without asking when a column was hidden, shown or reset, and grid row and cell selection was lost on switching editor tabs or moving a tab to a new window ([#2667](https://github.com/TableProApp/TablePro/issues/2667))
+  - Cell selection, copy and paste used columns the pointer never crossed once a column had been reordered or hidden, and a whole-result copy after Select All ignored the 50,000-row clipboard limit ([#2667](https://github.com/TableProApp/TablePro/issues/2667))
+  - Indexes were missing from an SQL export on SQLite, libSQL, Cloudflare D1, SQL Server, Oracle, Dameng and Cassandra, and unique constraints were lost on SQL Server, Oracle and Dameng ([#2492](https://github.com/TableProApp/TablePro/issues/2492))
+  - A PostgreSQL materialized view exported as a `CREATE TABLE`, and Oracle and ClickHouse views exported as a bare `SELECT` with no `CREATE VIEW` ([#2492](https://github.com/TableProApp/TablePro/issues/2492))
+  - Backup Dump and Restore Dump were unusable on SQLite, a libSQL backup wrote an empty 52-byte file and reported success, and Restore Dump asked every engine for a file `pg_dump` wrote ([#2485](https://github.com/TableProApp/TablePro/issues/2485))
+  - A connection with two transports enabled reached the database directly, with neither transport applied
+  - A MySQL statement was replayed outside the transaction it was run in after the server dropped the connection, and the query timeout was lost after a MySQL reconnect
+  - Redis and Valkey ACL users without permission to run `PING` were refused at connect and dropped by the health check, and a failed reconnect left the connection marked live
+  - The Query Live Activity kept counting on the iOS Lock Screen after the app was quit mid-query, and Stop left an iOS MySQL or Redis query running behind a stuck spinner
+  - The iOS connection screen was stuck on Connecting for good after a cancelled connect, and edited host, port or credentials were ignored until relaunch
+  - `is_connected` was reported as true over MCP for a connection that had stopped answering, and the MCP access prompt returned every 30 minutes ([#2640](https://github.com/TableProApp/TablePro/issues/2640))
+  - `IN`, `AND`, `OR`, `NOT`, `BY` and `ON` were drawn in the editor's plain text colour, built-in type names and function calls were unhighlighted, and the MongoDB and Elasticsearch query editors had no syntax highlighting at all ([#2634](https://github.com/TableProApp/TablePro/issues/2634))
+  - Delete Connection had been missing from the connection editor since 0.39.0
+
+  ### Security
+
+  - Redis and Valkey connections signed in as the default user when a username was typed with an empty password
+  - Redis connections on iOS were reported as successful without a single command reaching the server
+
+  <Note>
+    This release moves TablePro's plugin ABI to version 25. The change is additive, so plugins you already have keep working. Reinstall the SQLite, libSQL, Cloudflare D1, MSSQL, Oracle, Dameng, Cassandra and DuckDB drivers from Settings > Plugins to pick up the index and constraint export fixes.
+  </Note>
+</Update>
+
 <Update label="v0.72.0" description="September 4, 2026">
   ### New Features
 
