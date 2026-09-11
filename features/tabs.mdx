@@ -59,7 +59,7 @@ A preview tab turns permanent as soon as you sort it, filter it, or edit data, a
 
 Closing the last tab leaves the connection open on its empty state. `Cmd+W` again closes the connection; [Keyboard Shortcuts](/features/keyboard-shortcuts#tabs-and-windows) has the rest of that cascade.
 
-**Close Tabs for Other Databases** takes only tabs opened against a database other than the one the connection is browsing now, never the tab in front of you, and never another connection's tabs. On engines that switch schemas instead, such as BigQuery and Oracle, it reads **Close Tabs for Other Schemas**.
+**Close Tabs for Other Databases** takes only tabs opened against a database other than the one the connection is browsing now, never the tab in front of you, and never another connection's tabs. On engines that switch schemas instead, such as BigQuery, Spanner and Oracle, it reads **Close Tabs for Other Schemas**.
 
 Closing asks **Do you want to save changes?** when the tab holds unsaved cell edits, a `.sql` file that differs from disk, or staged structure, Create Table, or user and role changes. Save closes the tab once the save lands, except for user and role changes, where it opens the review sheet instead and leaves the tab open. Closing one tab selects it first, putting the work in front of you before you answer.
 

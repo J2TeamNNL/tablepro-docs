@@ -80,7 +80,7 @@ Eight record types sync: `Connection`, `ConnectionGroup`, `ConnectionTag`, `AppS
 Passwords are not one of those record types. The **Passwords** toggle nested under Connections instead marks keychain items as synchronizable, so Apple's iCloud Keychain carries them end to end encrypted. It is off by default, and it applies to items written after you turn it on.
 
 <Warning>
-That flag is set on every keychain item the app writes, not only connection passwords: AI provider keys and the license key go through the same helper. MCP tokens do not; their store always writes device-only items.
+That flag is set on every keychain item the app writes, not only connection passwords: AI provider keys and the license key go through the same helper. MCP tokens and Google sign-in refresh tokens do not; their stores always write device-only items.
 </Warning>
 
 With password sync off, secrets are written `kSecAttrAccessibleAfterFirstUnlockThisDeviceOnly`, which keeps them on that one Mac. Query history, the activity log, the execution log, tab state, MCP settings, and the sync settings themselves are never synced. Individual connections can be marked **Local only**. Full detail in [iCloud Sync](/features/icloud-sync).
@@ -132,7 +132,7 @@ There are none. The app links no crash reporting SDK, its only remote packages b
 
 ## Your database connections
 
-The largest thing leaving your Mac is the traffic you asked for: the connection to your own server, plus whatever hops you configured, such as an SSH tunnel, a Cloudflare tunnel, a SOCKS proxy, or Cloud SQL Proxy. Cloud drivers reach their vendor's endpoint by design, so BigQuery talks to `bigquery.googleapis.com`, DynamoDB to AWS, and Microsoft Entra authentication to `login.microsoftonline.com`.
+The largest thing leaving your Mac is the traffic you asked for: the connection to your own server, plus whatever hops you configured, such as an SSH tunnel, a Cloudflare tunnel, a SOCKS proxy, or Cloud SQL Proxy. Cloud drivers reach their vendor's endpoint by design, so BigQuery talks to `bigquery.googleapis.com`, Spanner to `spanner.googleapis.com`, DynamoDB to AWS, and Microsoft Entra authentication to `login.microsoftonline.com`.
 
 Two helpers download on first use, and each is verified before it runs: the Cloud SQL Proxy binary from `storage.googleapis.com` against a pinned SHA-256, and the Copilot language server tarball against the integrity hash npm publishes with it.
 
@@ -174,7 +174,7 @@ Every path here is under `~/Library/Application Support/TablePro/` unless it say
 
 ## Passwords and secrets
 
-Secrets live in the macOS keychain, under the `com.TablePro` service and in the data protection keychain: connection passwords, SSH passwords, key passphrases, SSL client key passphrases, TOTP secrets, plugin secure fields, AI provider keys, and the license key. MCP tokens are the exception, stored as a salted SHA-256 hash; the plaintext is shown once at creation and never written down.
+Secrets live in the macOS keychain, under the `com.TablePro` service and in the data protection keychain: connection passwords, SSH passwords, key passphrases, SSL client key passphrases, TOTP secrets, plugin secure fields, AI provider keys, and the license key. Google sign-in refresh tokens for BigQuery and Spanner are kept in the same keychain under `com.TablePro.GoogleOAuth`, one per OAuth client ID. MCP tokens are the exception, stored as a salted SHA-256 hash; the plaintext is shown once at creation and never written down.
 
 A connection can name a [password source](/features/connection-sharing#password-sources) instead of using the keychain: a file, an environment variable, a shell command, 1Password, HashiCorp Vault, or AWS Secrets Manager. Those resolve at connect time, on your machine, and are never synced, since a path or a command belongs to one Mac.
 
