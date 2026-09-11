@@ -150,6 +150,7 @@
               "databases/cassandra",
               "databases/clickhouse",
               "databases/cloudflare-d1",
+              "databases/cloudflare-r2-sql",
               "databases/cockroachdb",
               "databases/dameng",
               "databases/databend",
