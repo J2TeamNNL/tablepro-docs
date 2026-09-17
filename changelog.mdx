@@ -4,6 +4,85 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="v0.75.0" description="September 17, 2026">
+  ### New Features
+
+  - **macOS 13 Ventura**: TablePro now runs on macOS 13.0 and later
+  - **Credential profiles**: Save a username and password once and link any number of connections to it. Profiles have their own pane in Settings, a **Credentials** picker on the connection form with **Save These as a Profile…**, and a toggle in Settings > Sync ([#2853](https://github.com/TableProApp/TablePro/issues/2853))
+  - **Import from AWS**: **File > Import > Import from AWS…** finds RDS instances and Aurora clusters in the regions you choose and imports them as connections, including profiles signed in through IAM Identity Center ([#2852](https://github.com/TableProApp/TablePro/issues/2852))
+  - **Updates in the background**: Updates download on their own and install when you quit. Turn it off with **Download and install updates automatically** in Settings > General, which also shows when TablePro last checked
+  - **What's New**: A window from Help > What's New with the highlights of the version you updated to, and a line on the welcome window naming the version you came from
+  - **Welcome window**: Favorites and Recent sections, sorting, drag and drop into groups, nested groups, inline rename and tag search tokens, with **File > New Group…**, **File > Rename** and **View > Sort Connections By**. The iOS connection list gets Favorites, Recent, nested groups, sorting and tag search too
+  - **Partitions in the sidebar**: Partitioned tables list their partitions underneath, with each partition's bound and a count on the parent, on PostgreSQL, MySQL, MariaDB and Oracle. Turn it off with **Partitions** in View Options ([#2523](https://github.com/TableProApp/TablePro/issues/2523))
+  - **System databases and schemas**: Show or hide them in the sidebar tree from View Options and Settings > General ([#2832](https://github.com/TableProApp/TablePro/issues/2832))
+  - **Find and Replace**: **Edit > Find > Find and Replace…** (`Cmd+Option+F`) and **Use Selection for Find** (`Cmd+E`) in the SQL editor
+  - **Run button**: A split button in the query editor with Run All Statements, Run Without Limit, Clear Query and Clear Results on its menu, **Stop** while a query runs, and a reason on any command that cannot run yet
+  - **Result chooser**: The status bar names the result on screen and offers Pin, Unpin, Close and Close Others
+  - **View > Focus**: Move the keyboard to the Object List, Editor, Results, Inspector or Assistant from one submenu ([#2904](https://github.com/TableProApp/TablePro/issues/2904))
+  - **Keyword case**: Completed keywords and functions follow the case you type, set in Settings > Editor ([#2833](https://github.com/TableProApp/TablePro/issues/2833))
+  - **OceanBase**: A MySQL-mode connection type on the MySQL driver ([#1748](https://github.com/TableProApp/TablePro/issues/1748)), by [@J2TeamNNL](https://github.com/J2TeamNNL)
+  - **SQLite on an SSH server, in place**: The Server mode for a Remote Database File runs statements on the server, so the database is edited where it lives ([#2831](https://github.com/TableProApp/TablePro/issues/2831))
+  - **PostgreSQL schemas**: **New Schema…** and **Edit Schema…** with owner, comment, `USAGE` and `CREATE` privileges and a statement preview ([#2908](https://github.com/TableProApp/TablePro/issues/2908))
+  - **PostgreSQL arrays**: Formatted JSON and per-element editing for `jsonb[]` and `json[]`, and an element editor for arrays in the row inspector ([#2897](https://github.com/TableProApp/TablePro/issues/2897))
+  - **Data Compare & Sync**: A per-table row filter and row limit, and a row grid that marks each differing value ([#2537](https://github.com/TableProApp/TablePro/issues/2537))
+  - **Oracle Network Encryption**: On the connection form, matching `SQLNET.ENCRYPTION_CLIENT` ([#2919](https://github.com/TableProApp/TablePro/issues/2919))
+  - **SQL Server types**: Alias, table and CLR types in the sidebar's **Types** section, each with its `CREATE TYPE` statement
+  - **Delete for Kafka topics and DynamoDB tables**, and `DROP TOPIC` in the Kafka query editor
+
+  ### Improvements
+
+  - **View > Zoom In** and **Zoom Out** (`Cmd+=`, `Cmd+-`) zoom a focused ER or query plan diagram, and change the editor's text size everywhere else
+  - Toggle Filters moved to `Cmd+Shift+F`, leaving `Cmd+Option+F` to Find and Replace
+  - New versions reach everyone over 36 hours, and a waiting update renames **Check for Updates…** to **Update Available…** rather than interrupting
+  - The data grid keeps its top row across a refresh, and starts from the first row after a sort, filter or page change
+  - Duplicate Connection keeps a linked credential profile instead of copying its password
+  - The connection switcher lists Favorites, Recent and groups at every depth, and connection rows drop their colored dots
+  - Approval cards in the assistant name the statement and the connection, and **Cancel** is now **Reject**
+  - SQL Server sessions open with the ANSI settings the server expects
+
+  ### Removed
+
+  - The result tab strip above query results and the "Query" heading above the editor, replaced by the result chooser
+  - **Auto-uppercase keywords** in Settings > Editor, replaced by **Keyword case**
+
+  ### Security
+
+  - The AI assistant is held to the connection it is attached to: it could write to another connection with that connection's Safe Mode skipped, and read any connection's schema by id, including one with AI turned off
+  - The AI assistant refuses statements that read or write files or run code on the server, such as `ATTACH`, `LOAD` and `VACUUM INTO`, matching the MCP server ([#2831](https://github.com/TableProApp/TablePro/issues/2831))
+  - Oracle login continuing in clear text when the server picks an encryption algorithm without sending key material ([#2919](https://github.com/TableProApp/TablePro/issues/2919))
+  - Pairing approval never showed where the one-time code is sent, and a pairing link with an unreadable connection list asked for every connection ([#2930](https://github.com/TableProApp/TablePro/issues/2930))
+  - Sparkle 2.10.0, with installer fixes for a symlink attack and a privilege escalation
+  - SQLite denies `fts3_tokenizer`, which a crafted query could use to crash the app
+  - Remote `VACUUM INTO` snapshots and the cached AWS SSO token were created world-readable
+
+  ### Bug Fixes
+
+  - `Tab` reaching no further than the sidebar, leaving the editor, data grid, inspector and assistant unreachable from the keyboard ([#2904](https://github.com/TableProApp/TablePro/issues/2904))
+  - `Cmd+Return` inserting the highlighted completion instead of running the query while the autocomplete list was open
+  - Autocomplete that stopped opening after a request came back empty, opened by itself after being dismissed, or skipped a quoted identifier or a PostgreSQL `::` cast ([#2915](https://github.com/TableProApp/TablePro/issues/2915))
+  - `Return` in the filter field accepting a suggestion nobody picked, by [@filipac](https://github.com/filipac)
+  - Nested Elasticsearch fields showing as null in the grid, and filters on them matching nothing, by [@digows](https://github.com/digows)
+  - `Esc` not leaving Vim's Insert mode in the SQL editor ([#2914](https://github.com/TableProApp/TablePro/issues/2914))
+  - Drop Schema and Drop Database skipping Safe Mode's confirmation and Touch ID, and Drop Schema offered on engines with nothing behind it
+  - Drop Table, Truncate Table and exports generating SQL for Elasticsearch, Kafka, Weaviate and etcd, which have none ([#2884](https://github.com/TableProApp/TablePro/issues/2884))
+  - The sidebar, completion and other windows not updating after a table, view, routine, trigger, type, schema or database changed ([#2819](https://github.com/TableProApp/TablePro/issues/2819))
+  - A table tab showing another database's rows, or opening empty, while the connection switched database
+  - Row inspector edits missing from the grid, writing NULL into every selected row, or landing on another record after a sort ([#2851](https://github.com/TableProApp/TablePro/issues/2851))
+  - Data sync scripts missing every UPDATE and DELETE, writing to the source schema, pairing rows on a key that is not unique, and failing on identity columns ([#2537](https://github.com/TableProApp/TablePro/issues/2537))
+  - Empty Procedures and Functions lists on every SQL Server connection, and rows that could not be saved on a table with a filtered index
+  - SSH profile edits and deletes not reaching the connections that use them, on this Mac or another
+  - Backups and restores running with no password when it comes from a password source or `~/.pgpass`
+  - Saved passwords deleted from iCloud Keychain when TablePro for iPhone launched before its connections loaded
+  - SSH settings dropped from a Mac connection after it synced from the iPhone app
+  - Remote database file connections hanging for minutes when SSH dropped silently, and reaching the old server after the host changed
+  - Oracle login hanging when the server declined network encryption, and crashing on some login packets ([#2919](https://github.com/TableProApp/TablePro/issues/2919))
+  - Crash on launch when a pairing link opened the approval sheet ([#2930](https://github.com/TableProApp/TablePro/issues/2930))
+  - No automatic update checks on a fresh install, and update preferences overwritten at every launch
+  - Clicks and drags landing on the wrong table or plan step once a diagram was zoomed, and `Cmd+scroll` not zooming diagrams
+  - AWS profiles backed by IAM Identity Center failing to authenticate, and AWS unreachable in the China and GovCloud partitions
+  - Stutter and slow typing in the SQL editor on very long lines, with word wrap on, or while Find highlights many matches
+</Update>
+
 <Update label="v0.74.0" description="September 13, 2026">
   ### New Features
 
