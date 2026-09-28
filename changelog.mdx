@@ -4,6 +4,42 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="v0.76.1" description="September 29, 2026">
+  ### Improvements
+
+  - Cassandra and ScyllaDB tables open without header sorting, **Match any** or an automatic row count, and CQL editor results are read-only, by [@yordis](https://github.com/yordis)
+
+  ### Removed
+
+  - **Verify CA** in the SSL mode picker for new Oracle connections on iPhone and iPad, which have no field for a CA certificate. Choose **Verify Identity** instead
+
+  ### Security
+
+  - Trino sent the password or access token in plain text when **SSL Mode** was **Disabled**, by [@J2TeamNNL](https://github.com/J2TeamNNL)
+  - **Verify CA** without a CA certificate accepted a certificate issued for any host on Trino, ClickHouse and etcd, by [@J2TeamNNL](https://github.com/J2TeamNNL)
+  - **Verify CA** without a CA certificate accepted a certificate issued for any host on Kafka, Oracle and Teradata. Choose the CA certificate that signed the server's certificate, or use **Verify Identity**
+
+  ### Bug Fixes
+
+  - Cassandra and ScyllaDB: syntax errors opening, paging or filtering a table, Save dropping edited numbers, dates, UUIDs and booleans while reporting success, **Add Row** replacing a row with the same primary key, and multi-row or composite-key deletes failing, by [@yordis](https://github.com/yordis)
+  - Cassandra and ScyllaDB values: `decimal` and `varint` shown as hex, `time` cut to milliseconds, and user-defined types, tuples, `duration` and `vector` shown garbled or empty, by [@yordis](https://github.com/yordis)
+  - Cassandra and ScyllaDB: query results stopping at 100,000 rows without saying so, Structure edits that failed at Save, missing functions, aggregates and triggers on ScyllaDB, trigger and function source that failed when run, and an SSL/TLS hint recommending settings for DataStax Astra, which does not connect, by [@yordis](https://github.com/yordis)
+  - CQL `BATCH` statements split at their inner semicolons, and a column named `case` running the next statement with its `CREATE TABLE`, by [@yordis](https://github.com/yordis)
+  - Endless reconnect attempts after a server started requiring TLS, stopped accepting it, or rejected the client certificate, with the certificate error shown in place of "The connection stopped responding", and ClickHouse host lookup failures reported as a TLS hostname mismatch
+  - Trino and ClickHouse on port 443, and ClickHouse on 8443, sending plain HTTP to an HTTPS port ([#3166](https://github.com/TableProApp/TablePro/issues/3166)), by [@J2TeamNNL](https://github.com/J2TeamNNL)
+  - Trino certificate failures shown as "Query was cancelled", raw HTML error pages in connection errors, PEM CA files rejected, proxy redirects followed to another address or over plain HTTP, and no warning under **Preferred** that Trino does not fall back to plain connections, by [@J2TeamNNL](https://github.com/J2TeamNNL)
+  - Trino and etcd mutual TLS crashing on an `RSA PRIVATE KEY` file, rejecting other keys, and copying them to the login keychain, by [@J2TeamNNL](https://github.com/J2TeamNNL)
+  - ClickHouse **Verify Identity** ignoring the chosen CA certificate, and certificate failures reported as a generic connection failure, by [@J2TeamNNL](https://github.com/J2TeamNNL)
+  - Verify modes refusing to save without a CA file on SQL Server, and **Verify Identity** on Trino and ClickHouse, by [@J2TeamNNL](https://github.com/J2TeamNNL)
+  - etcd rejecting a PEM CA certificate, by [@J2TeamNNL](https://github.com/J2TeamNNL)
+  - Teradata falling back to the system trust store when the CA file could not be read
+  - **Import from URL** rejecting `jdbc:` URLs and ignoring their `user` and `password`, and imported Trino and ClickHouse URLs with `SSL=true` skipping certificate checks, by [@J2TeamNNL](https://github.com/J2TeamNNL)
+  - Links opened from a browser or `open` ignoring the driver's default SSL mode, and copied connection URLs losing **SSL Disabled**, by [@J2TeamNNL](https://github.com/J2TeamNNL)
+  - A result on a plugin-browsed engine taking the selected tab's table when it finished in another tab, and plugin saves running changes out of order after an undo, by [@yordis](https://github.com/yordis)
+  - The welcome window toolbar growing and captioning its search field after choosing **Icon and Text**, by [@shuvroroy](https://github.com/shuvroroy)
+  - Generic icons for ScyllaDB, libSQL, Teradata, Trino and Cloudflare R2 SQL in the iOS widget, and for ScyllaDB in the iOS app, by [@yordis](https://github.com/yordis)
+</Update>
+
 <Update label="v0.76.0" description="September 28, 2026">
   ### New Features
 
