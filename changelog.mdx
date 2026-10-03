@@ -4,6 +4,34 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="v0.77.1" description="October 3, 2026">
+  ### New Features
+
+  - **New database file**: **New…** beside **Browse…** for SQLite, DuckDB and libSQL names a database file that does not exist yet. TablePro creates the file when the connection opens
+
+  ### Improvements
+
+  - `$1` in a regular-expression **Replace** in the SQL editor inserts the capture group, as it does in data files
+
+  ### Bug Fixes
+
+  - **Replace** in the find panel editing the wrong text after the first replacement, and crashing when a match ran past the end
+  - **Replace All** crashing on a space in an indent or after **Clear Query**, wrapping quotes and brackets in pairs, and taking minutes on a few thousand matches
+  - Two **Replace** clicks undoing as one step, and a collapsed fold hiding the wrong text after **Replace All**
+  - **Replace** and **All** offered in read-only editors, clearing the matches without changing the text
+  - Regular-expression **Replace** in data files inserting the wrong capture text when a replacement changes length
+  - **Import into Table** from a data file naming the sheet, table, error reports and history after a temporary copy
+  - The query editor staying put when Cmd+Up, Cmd+Down or a long paste moves the caret out of view ([#3239](https://github.com/TableProApp/TablePro/issues/3239))
+  - **Clear Query**, a favorite, a history entry or an AI fix sometimes not reaching the editor, or typing bringing the old query back
+  - **Run**, **Explain** and AI actions using the caret from before a find or a jump to a result's statement
+  - **Use Selection for Find** reverting to the previous search term once the caret moves
+  - Connections strip entries cutting off the database or schema line and crowding the icon against the highlight, and the strip resting partway through an entry after the sidebar was resized ([#3244](https://github.com/TableProApp/TablePro/issues/3244))
+  - Oracle closing TablePro, or failing with "unexpected message", while loading rows with `SDO_GEOMETRY` or `BLOB` columns, or when a query is stopped or the connection closed while rows load. Update the Oracle driver in **Settings > Plugins** ([#3241](https://github.com/TableProApp/TablePro/issues/3241))
+  - Oracle object columns such as `SDO_GEOMETRY` labelled "unknown" and showing a placeholder instead of NULL ([#3241](https://github.com/TableProApp/TablePro/issues/3241))
+  - DuckDB **Browse…** offering any file, and SQLite **Browse…** dimming databases saved without a known extension
+  - **File > Open File…** dimming folders reached through a symlink or a Finder alias
+</Update>
+
 <Update label="v0.77.0" description="October 2, 2026">
   ### New Features
 
