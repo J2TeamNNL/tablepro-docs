@@ -8,9 +8,10 @@ the PluginKit ABI number after a breaking bump. Each is mechanically checkable
 against the source that defines it, so none of them should ever need a human to
 notice.
 
-Run from the repository root or from docs/.
+    python3 scripts/check-docs-against-source.py --app ../TablePro
 """
 
+import argparse
 import collections
 import re
 import sys
@@ -69,12 +70,14 @@ def leaf_forms(leaf: str) -> set[str]:
     return forms
 
 
-def repo_root() -> Path:
-    here = Path(__file__).resolve()
-    for parent in here.parents:
-        if (parent / "TablePro" / "Core" / "Menu").is_dir():
-            return parent
-    sys.exit("could not locate the repository root from " + str(here))
+DOCS = Path(__file__).resolve().parent.parent
+
+
+def app_root(path: str) -> Path:
+    root = Path(path).resolve()
+    if not (root / "TablePro" / "Core" / "Menu").is_dir():
+        sys.exit(f"{path} is not a TablePro app checkout")
+    return root
 
 
 def localized_strings(path: Path) -> set[str]:
@@ -376,7 +379,7 @@ def unwrapped(page: Path) -> str:
 
 
 def check_engine_counts(root: Path, docs: Path) -> list[str]:
-    """Every engine count printed in docs/, against the registry that defines it.
+    """Every engine count printed in the docs, against the registry that defines it.
 
     The count lived on three pages and the marketing site with nothing reconciling them, so
     they drifted to 27, 27 and 25 while the app offered 28. STYLE.md 9 gives the count one
@@ -450,8 +453,10 @@ def check_introduction_description(docs: Path, total: int) -> list[str]:
 
 
 def main() -> int:
-    root = repo_root()
-    docs = root / "docs"
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--app", required=True, help="path to a TablePro app checkout")
+    root = app_root(parser.parse_args().app)
+    docs = DOCS
 
     checks = (
         ("menu paths", check_menu_paths),
@@ -474,9 +479,9 @@ def main() -> int:
             print(f"        {failure}")
 
     if total:
-        print(f"\n{total} claim(s) in docs/ contradict the source.")
+        print(f"\n{total} claim(s) in the docs contradict the source.")
         return 1
-    print("\ndocs/ agrees with the source.")
+    print("\nThe docs agree with the source.")
     return 0
 
 

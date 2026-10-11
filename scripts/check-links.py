@@ -1,12 +1,20 @@
 #!/usr/bin/env python3
-"""Resolve every internal link, image and navigation entry in docs/ against the files on disk.
+"""Resolve every internal link, image and navigation entry in the docs against the files on disk.
 
 The Mintlify CLI does this too, but it needs a working npm install with native bindings, and it
 cannot answer the question that has broken this repo twice: a page that exists but sits in no
 navigation group, so nothing ever links to it and the sidebar never shows it.
+
+With `--app`, it also resolves every docs.tablepro.app link the app repository ships: the Help
+menu, the plugin registry's homepages, the READMEs and the release notes. Those live in another
+repository, so a renamed page breaks them with nothing on this side noticing.
+
+    python3 scripts/check-links.py --app ../TablePro
 """
 
+import argparse
 import json
+import subprocess
 import re
 import sys
 from pathlib import Path
@@ -22,6 +30,7 @@ CODE_SPAN = re.compile(r"(`[^`]*`)")
 INLINE_LINK = re.compile(r"!?\[([^\]]*)\]\([^)]*\)")
 EMPHASIS = re.compile(r"(\*\*|\*)(.+?)\1")
 TAG = re.compile(r"<[^>]+>")
+SITE_URL = re.compile(r"https://docs\.tablepro\.app(/[^\s)\]\"'<>`]*)?")
 
 
 def heading_text(raw):
@@ -124,7 +133,7 @@ def check_snippets(path, raw, failures):
     for name, source in IMPORT.findall(raw):
         declared[name] = source
         if not (DOCS / source.lstrip("/")).exists():
-            failures.append(f"{rel} imports {source}, which is not in docs/snippets")
+            failures.append(f"{rel} imports {source}, which is not in snippets/")
     if not declared:
         return
 
@@ -148,7 +157,51 @@ def check_snippets(path, raw, failures):
             )
 
 
+def unresolved(target, redirects, on_disk, anchors):
+    """Why a site path such as `/features/tabs#pinning` does not resolve, or None when it does."""
+    page, _, anchor = target.partition("#")
+    page = page.rstrip("/") or "/"
+    if page in redirects:
+        page = redirects[page]
+    if page == "/":
+        return None
+    bare = page.lstrip("/")
+    if bare not in on_disk and f"{bare}/index" in on_disk:
+        page = f"/{bare}/index"
+        bare = page.lstrip("/")
+    if bare not in on_disk:
+        return "which does not resolve"
+    if anchor and clean_heading_id(anchor) not in anchors.get(page, set()):
+        return "but that heading does not exist"
+    return None
+
+
+def app_links(app):
+    """Every literal docs.tablepro.app path in the app's tracked files, as (file, line, path)."""
+    tracked = subprocess.run(
+        ["git", "-C", str(app), "ls-files", "-z"], capture_output=True, check=True
+    ).stdout.decode().split("\0")
+    for name in filter(None, tracked):
+        if name.startswith("docs/"):
+            continue
+        try:
+            text = (app / name).read_text()
+        except (UnicodeDecodeError, IsADirectoryError, FileNotFoundError):
+            continue
+        for line_no, line in enumerate(text.splitlines(), 1):
+            for match in SITE_URL.finditer(line):
+                target = (match.group(1) or "/").rstrip(".,;:")
+                # An interpolated path is built at runtime; only a literal one can be checked.
+                if "\\(" in target or "{" in target:
+                    continue
+                yield name, line_no, target
+
+
 def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument("--app", help="path to a TablePro app checkout, to check its links here")
+    args = parser.parse_args()
+
     config = json.loads((DOCS / "docs.json").read_text())
     pages = set()
     nav_pages(config["navigation"], pages)
@@ -181,30 +234,30 @@ def main() -> int:
         check_snippets(path, body, failures)
         for line_no, line in enumerate(body.splitlines(), 1):
             for target in LINK.findall(line) + HREF.findall(line):
-                page, _, anchor = target.partition("#")
-                page = page.rstrip("/") or "/"
-                if page in redirects:
-                    page = redirects[page]
-                if page == "/":
-                    continue
-                bare = page.lstrip("/")
-                if bare not in on_disk and f"{bare}/index" in on_disk:
-                    page = f"/{bare}/index"
-                    bare = page.lstrip("/")
-                if bare not in on_disk:
-                    failures.append(f"{rel}:{line_no} links to {target}, which does not resolve")
-                elif anchor and clean_heading_id(anchor) not in anchors.get(page, set()):
-                    failures.append(f"{rel}:{line_no} links to {target}, but that heading does not exist")
+                reason = unresolved(target, redirects, on_disk, anchors)
+                if reason:
+                    failures.append(f"{rel}:{line_no} links to {target}, {reason}")
             for asset in SRC.findall(line):
                 if not (DOCS / asset.lstrip("/")).exists():
-                    failures.append(f"{rel}:{line_no} references {asset}, which is not in docs/")
+                    failures.append(f"{rel}:{line_no} references {asset}, which is not on disk")
+
+    inbound = 0
+    if args.app:
+        for name, line_no, target in app_links(Path(args.app).resolve()):
+            inbound += 1
+            reason = unresolved(target, redirects, on_disk, anchors)
+            if reason:
+                failures.append(f"app {name}:{line_no} links to {target}, {reason}")
 
     if failures:
         for failure in failures:
             print("  FAIL", failure)
         print(f"\n{len(failures)} unresolved references.")
         return 1
-    print(f"  ok  {len(pages)} navigation entries, {len(on_disk)} pages, every link resolves")
+    summary = f"{len(pages)} navigation entries, {len(on_disk)} pages"
+    if args.app:
+        summary += f", {inbound} app links"
+    print(f"  ok  {summary}, every link resolves")
     return 0
 
 

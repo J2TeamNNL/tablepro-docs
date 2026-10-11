@@ -4,8 +4,11 @@
 # itself defines. Every rule here passes on the corpus today, so a failure is a
 # regression rather than a backlog item.
 #
-# The banned filler comes from scripts/banned-words.txt, the list the other
-# writing checks read, and matches case-insensitively at the start of a word.
+# The banned filler comes from the app checkout's scripts/banned-words.txt, the
+# list the app's own writing checks read, so both repos ban the same words. It
+# matches case-insensitively at the start of a word.
+#
+#   scripts/check-writing-style.sh ../TablePro
 #
 # changelog.mdx is excluded throughout. It is 116 releases of shipped history and
 # what 0.41.0's notes called a button cannot be rewritten now.
@@ -14,9 +17,13 @@
 # UI strings to tell a Title Case slip from a control's real name.
 
 set -uo pipefail
-cd "$(dirname "$0")/.." || exit 1
 
-BANNED_WORDS="../scripts/banned-words.txt"
+if [ $# -ne 1 ]; then
+    echo "usage: $0 <path to a TablePro app checkout>" >&2
+    exit 2
+fi
+BANNED_WORDS="$(cd "$1" && pwd)/scripts/banned-words.txt" || exit 2
+cd "$(dirname "$0")/.." || exit 1
 
 fail=0
 
@@ -73,9 +80,9 @@ check "filter panel" 'filter panel'
 
 if [ "$fail" -ne 0 ]; then
     echo
-    echo "docs/ breaks the house style. See docs/scripts/check-writing-style.sh."
+    echo "The docs break the house style. See scripts/check-writing-style.sh."
     exit 1
 fi
 
 echo
-echo "docs/ matches the house style."
+echo "The docs match the house style."

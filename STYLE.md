@@ -1,7 +1,7 @@
 # How the TablePro docs are written
 
-The rules a page has to meet. `docs/scripts/check-writing-style.sh` and
-`docs/scripts/check-docs-against-source.py` enforce the mechanical half in CI; the rest is here
+The rules a page has to meet. `scripts/check-writing-style.sh` and
+`scripts/check-docs-against-source.py` enforce the mechanical half in CI; the rest is here
 because no grep can settle it.
 
 Most of this was learned the hard way, from defects that shipped. Where a rule has a scar, the scar
@@ -109,7 +109,7 @@ So the rule is not "avoid last time's tic". It is this:
 
 > **If a sibling page already carries the sentence you are about to write, you do not need a
 > different wording. You need a snippet.** Rewording a duplicated fact eleven ways is how the corpus
-> got eleven templates for "this driver downloads on first use". `docs/snippets/` is where a shared
+> got eleven templates for "this driver downloads on first use". `snippets/` is where a shared
 > fact lives; `registry-plugin.mdx` and `helper-port.mdx` are the two that exist.
 
 Vary the shape deliberately: an imperative, a plain declarative, a constraint, a number, a full
@@ -163,7 +163,7 @@ normal reader should pick and who should pick differently. Exhaustiveness is not
 ### Headings
 
 Sentence case. Capitals only for acronyms, names with an interior capital (`MySQL`, `PGlite`), and
-headings that are literally a control or menu item in the app. `docs/scripts/proper-nouns.txt` holds
+headings that are literally a control or menu item in the app. `scripts/proper-nouns.txt` holds
 the product names whose second word is an ordinary English word: Google **Cloud** SQL, DynamoDB
 **Local**.
 

@@ -1,38 +1,43 @@
-# TablePro Documentation
+# TablePro Docs
 
-Source files for the [TablePro documentation site](https://docs.tablepro.app), powered by [Mintlify](https://mintlify.com).
+Source of [docs.tablepro.app](https://docs.tablepro.app), built with [Mintlify](https://mintlify.com). The app lives in [TableProApp/TablePro](https://github.com/TableProApp/TablePro).
 
-## Structure
-
-```
-docs/
-├── index.mdx                # Introduction
-├── quickstart.mdx           # Getting started guide
-├── installation.mdx         # Installation instructions
-├── changelog.mdx            # Release changelog
-├── databases/               # Database connection guides
-├── features/                # Feature documentation
-├── customization/           # Settings and customization
-├── integrations/            # Using TablePro with other tools
-├── developers/              # Build an integration, API reference, directory listing
-└── development/             # Contributing
-```
-
-## Local Development
-
-Install the [Mintlify CLI](https://www.npmjs.com/package/mint) and start the dev server:
+## Local preview
 
 ```bash
-npm i -g mint
-mint dev
+npm ci
+npm run dev
 ```
 
 Preview at `http://localhost:3000`.
 
+## Checks
+
+CI runs these on every pull request, on every push to `main`, and daily against the app's `main`. The scripts read the app source, so they take a checkout of it:
+
+```bash
+npm run validate
+npm run broken-links
+npm run a11y
+python3 scripts/check-docs-against-source.py --app ../TablePro
+bash scripts/check-writing-style.sh ../TablePro
+python3 scripts/check-links.py --app ../TablePro
+```
+
+## Contributing
+
+Read [STYLE.md](STYLE.md) before writing a page. A page that documents an app change is checked against the app's `main`, so open it alongside the app pull request and merge it after that one merges.
+
+Report problems with the docs in [TablePro issues](https://github.com/TableProApp/TablePro/issues).
+
 ## Deployment
 
-Changes pushed to the default branch are deployed automatically via the [Mintlify GitHub app](https://dashboard.mintlify.com/settings/organization/github-app).
+Mintlify deploys `main` through its GitHub app.
+
+## History
+
+This repository was split out of `docs/` in TableProApp/TablePro in October 2026 with its history kept. In commits from before the split, `#1234` refers to a pull request or issue in TableProApp/TablePro.
 
 ## License
 
-The pages in this directory are covered by the repository's [AGPLv3 license](../LICENSE), like the rest of TablePro. The TablePro name and logo, including `logo/` and `favicon.png`, are trademarks of Ngo Quoc Dat and are not licensed under it. Screenshots of other products belong to their owners.
+The pages are covered by the [AGPLv3 license](LICENSE), like TablePro itself. The TablePro name and logo, including `logo/` and `favicon.png`, are trademarks of Ngo Quoc Dat and are not licensed under it. Screenshots of other products belong to their owners.

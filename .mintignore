@@ -6,5 +6,7 @@
 drafts/
 *.draft.mdx
 
-# Contributor style guide, not a docs page
+# Contributor and agent guides, not docs pages
 STYLE.md
+AGENTS.md
+CLAUDE.md

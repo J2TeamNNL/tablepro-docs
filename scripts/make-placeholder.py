@@ -3,11 +3,11 @@
 
 The card is a marker, not a defect. It reserves the filename the page already references, so
 replacing it is dropping a PNG in with the same name and nothing else. Colours, size and layout
-match the cards already in docs/images so a page never shows two different placeholder designs.
+match the cards already in images/ so a page never shows two different placeholder designs.
 
-    python3 docs/scripts/make-placeholder.py "Data grid" data-grid
+    python3 scripts/make-placeholder.py "Data grid" data-grid
 
-writes docs/images/data-grid.png and docs/images/data-grid-dark.png.
+writes images/data-grid.png and images/data-grid-dark.png.
 """
 
 import sys

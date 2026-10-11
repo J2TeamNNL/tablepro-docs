@@ -1,0 +1,18 @@
+{
+  "name": "tablepro-docs",
+  "private": true,
+  "description": "Source of docs.tablepro.app",
+  "license": "AGPL-3.0-only",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "mint dev",
+    "validate": "mint validate",
+    "broken-links": "mint broken-links --check-anchors --check-redirects",
+    "a11y": "mint a11y"
+  },
+  "devDependencies": {
+    "mint": "4.2.816"
+  }
+}
