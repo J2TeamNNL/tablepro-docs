@@ -4,6 +4,152 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="v0.80.0" description="October 11, 2026">
+  ### New Features
+
+  - **Google Cloud IAM sign-in**: Sign in to MySQL and PostgreSQL on Cloud SQL with Application Default Credentials or a service account key, without the Cloud SQL Auth Proxy, by [@i87ce](https://github.com/i87ce)
+  - **MySQL and MariaDB Unix socket**: Connect through a local Unix socket in place of a host and port
+  - **Socket in URLs**: A `socket` parameter in `mysql://` and `mariadb://` URLs and `tablepro://import` links
+  - **Map preview**: A geometry value opens on a map in the row inspector, with **Text** and **Map** segments, **Fit to Geometry** and **Open in Window**
+  - **Selection statistics**: Sum, Average and Count of the selected cells in the status bar. Click it for Minimum, Maximum and **Copy**
+  - **Select Column**: In the column header menu
+  - **Selection in the JSON and PHP viewers**: Select rows and text in the viewer trees. `Cmd+C` copies the selected values
+  - **Links in JSON**: http, https and mailto values are clickable in the JSON and PHP viewer trees and the inspector's JSON tab
+  - **Color swatches**: Beside hex, `rgb()` and `hsl()` values in the JSON and PHP viewer trees and the inspector's JSON tab
+  - **Move Tab to Connection…**: `Ctrl+Option+Cmd+C`, in the **Database** menu and the tab menu. Takes a query tab to another connection
+  - **Sidebar + button**: At the foot of the sidebar, for **New Table**, **New View**, **New Schema**, **New Database** and **New Folder**
+  - **Favorites + button**: At the foot of the Favorites sidebar, for **New Query**, **New Favorite**, **New Folder** and **Add Linked SQL Folder**
+  - **New Folder**: In the **Database** menu
+  - **Comment in Create Table**: A Comment field for the new table
+  - **Table comment in Structure**: Edit the table comment in the **Structure** tab. It saves with the other structure changes
+  - **Edit Comment…**: For MySQL, MariaDB, ClickHouse, CockroachDB, Redshift, SQL Server, Oracle, DuckDB and other engines with table comments
+  - **Custom icons**: Pick an icon for a connection or a group from a searchable set of symbols, on Mac and iPhone. Icons sync through iCloud
+  - **Edit Group…**: In the welcome window, with name, icon, color and parent group in one sheet
+  - **Saved queries in exports**: Connection exports carry saved queries with their folders and keywords, with an option to add global saved queries
+  - **Saved queries on import**: Imported with connections from TablePro files, TablePlus, Sequel Ace, DBeaver, DataGrip and Beekeeper Studio
+  - **Filter Schemas…**: In the **View** menu. Choose the schemas listed in the sidebar, its search, Open Quickly, export and the column type picker
+  - **Settings links**: `tablepro://settings` and `tablepro://settings/<pane>` open Settings on a pane
+  - **Help > Integrations**: Opens the integrations directory on tablepro.app
+  - **MCP connection details**: Group, tags and color in the MCP connection list and on the AppleScript connection class
+  - **Pairing links**: Take `state` and `response_mode`, and send a standard `code` to any redirect
+  - **`connections:display` scope**: A pairing scope, off by default, that lets a launcher list connections hidden from AI
+
+  ### Improvements
+
+  - **Settings > MCP** in place of **Settings > Integrations**, and **MCP Activity…** in place of **TablePro > Integrations…**
+  - **Settings > Sync** names what stops iCloud Sync, such as full iCloud storage or a signed-out account, with the action that clears it
+  - Value filters stay through sorting, paging and the filter bar, and clear when the tab shows another table or query
+  - **Save**, **Refresh** and sorting keep the selected rows, matched by primary key
+  - Connection files keep the full path of nested groups, and import rebuilds that path
+  - Connection files written by this version, Team Catalog files included, open only in this version or later
+  - **Keep Existing, Add Queries** in place of **Skip** for a duplicate connection on import
+  - Importing connections asks before adding their startup SQL, the same way it asks about tunnel commands
+  - Deprecated: pairing links without `response_mode`, which wrap the code in `context` for `raycast://` redirects
+
+  ### Security
+
+  - Duplicating a connection set to **Blocked** for external access making the copy readable over MCP
+  - MCP completions offering a connection for up to 15 seconds after it was set to **Never** or **Blocked**
+  - Generated SQL quoting broken by a combining mark after a quote in DuckDB names and a backslash in ClickHouse names
+  - A database link's SQL filter shown cut to 300 characters, and connecting to a trusted database before asking about it
+  - A database link through an SSH tunnel to `127.0.0.1` reusing a local database's **Always Allow** for any SSH server
+  - Pairing accepting a redirect that opens TablePro, a web browser, a database URL or another remote resource
+  - A refused or unrecognized deep link writing its query values, SQL included, to the system log
+  - AI chat on an open connection ignoring a change to its AI policy until reconnect
+
+  ### Bug Fixes
+
+  - PostgreSQL slow to connect, browse, search, commit and switch schema on databases with many schemas
+  - Export dialog and column type picker slow to open on PostgreSQL databases with many schemas
+  - Database switcher slow to open on servers with many or large databases
+  - Table sizes read on every table switch while the inspector was closed
+  - Primary keys missing for PostgreSQL roles that can only read a table
+  - Materialized views and foreign tables listed in PostgreSQL schemas the role cannot read
+  - **Table Info** showing -1 rows for a PostgreSQL table that was never analyzed
+  - MCP database statistics reporting 0 tables for another PostgreSQL database, or failing when one refuses CONNECT
+  - Opening a PostgreSQL table on iPhone and iPad slow on databases with many tables
+  - Value filter cleared by **Save**, **Refresh**, **Restore Previous Values** and hiding a column
+  - Value filter lost on a background tab whose rows were freed, or by choosing the result already shown
+  - **Save** in a query tab running the statement at the caret instead of reading its result again, and losing the sort
+  - Sort arrow left on a query tab's columns after **Run**
+  - Header sort on rows returned by an `INSERT`, `UPDATE` or `DELETE` running that statement again
+  - Header sort on a pinned result, or on one of several results, dropping the other results
+  - **New View…** offered on Redis and other engines without views
+  - Column comments typed in **Create Table** dropped on PostgreSQL, SQL Server, Oracle, DuckDB and Teradata
+  - DuckDB **Create Table** failing on an auto-increment column
+  - Oracle **Create Table** ignoring **Auto Increment**
+  - DuckDB errors shown as "Unknown DuckDB error" instead of the message DuckDB returned
+  - **Create Table** and structure saves failing on Teradata when they run more than one statement
+  - BigQuery table comments showing partition, labels and timestamps instead of the description
+  - Teradata **Table Info** counting every row of the table each time it opened
+  - **Create Table** keeping a draft that could only fail again once the table existed and a later index or comment failed
+  - An AWS IAM sign-in to MySQL failing to reconnect after an idle release, and **Stop** failing, once its token expired, by [@i87ce](https://github.com/i87ce)
+  - MySQL and MariaDB connections with SSL Disabled still using TLS when a client certificate or key was saved
+  - SQL Server empty strings and binaries shown as NULL, reverting edits on **Save** in a table without a primary key
+  - Saves to a SQL Server or Oracle table without a primary key reporting success when no row matched
+  - SQL Server `datetimeoffset` values shown, copied and exported without their offset
+  - SQL Server `geography`, `geometry` and `hierarchyid` values shown as NULL
+  - A possible crash when a result holds a SQL Server `sql_variant` value
+  - iCloud Sync errors shown as raw CloudKit text with record IDs, on Mac and iPhone
+  - Every pending change resent on each edit and app switch while iCloud storage is full or iCloud is signed out
+  - Synced and a new Last Synced time after a sync whose download failed
+  - A restricted or not yet ready iCloud account told to sign in
+  - Signing in to another iCloud account on a Mac reusing the previous account's sync state
+  - TablePro data deleted in iCloud settings uploaded again without asking
+  - Sync not resuming on its own when the network comes back
+  - iPhone and iPad downloading the same changes again on every sync while uploads failed
+  - **Apply** and Return in **Filter Values…** keeping every value after a search narrowed the list
+  - Return in **Filter Values…** hiding every row when no value was selected
+  - Clicks on the **Select All** label in **Filter Values…** doing nothing
+  - "Values from 1 loaded rows" in **Filter Values…**
+  - The connection form, Acknowledgements and MCP Activity sidebars dragged shut with no way to bring them back
+  - The **Users & Roles** list and the server dashboard's slow queries staying hidden for good once dragged shut
+  - A JSON cell edit made in the popover lost on **Save** after **Open in Window**
+  - **Copy Value** on a JSON object or array copying only the rows a tree filter left on screen
+  - The JSON tree filter matching array positions such as `[1]`, counts such as `{2 keys}` and the `…` row
+  - "JSON Too Large" in Tree mode for a minified value under the 100,000 character cap
+  - Shift-click or Cmd-click after clicking a cell selecting only the cell clicked last
+  - Cmd-click on a cell inside a selected block not deselecting it
+  - MySQL and MariaDB DECIMAL columns in results treated as text in charts, sorting and JSON copy
+  - **Column Statistics** showing very small values as 0 and rounding long integers
+  - Copying more than 50,000 rows of selected cells cutting the text without saying so
+  - Disclosure arrows in the inspector's JSON tab doing nothing under a filter, then collapsing rows once it was cleared
+  - **Copy Key Path** not quoting keys such as `a.b` and `content-type`, giving a wrong or unparseable path
+  - "Invalid JSON" in Tree mode for a NULL or empty JSON cell
+  - `{1 keys}` and `[1 items]` for a one-member object or array in the JSON and PHP viewer trees
+  - A broken character before the `…` of a long string in the JSON and PHP viewer trees
+  - Binary geometry values shown as garbled text in the row inspector, where typing replaced the bytes with text
+  - Binary values saved as text after **Set NULL** or **Set DEFAULT** was cleared in the row inspector
+  - Crash when a spatial or JSON column held a value with thousands of nested brackets
+  - Parts of a multi-part geometry missing from the map with nothing saying so
+  - Geographic SRIDs such as 4258, 4283 and 7844 refused by the map as projected coordinate systems
+  - GeoJSON with a lowercase type name such as `point` not drawn on the map
+  - A column holding only curved geometry losing the Map view, and `CIRCULARSTRINGM` called unreadable instead of named
+  - Closing the only tab of a connection first opened from a link or the query history deleting its saved tabs
+  - A reopened tab disappearing when its connection's saved tabs finished loading
+  - Picking a connection that was still connecting restarting its connect
+  - A `.sql` file opening on the connection that connected last instead of the one on screen
+  - Opening an already open `.sql` file, linked favorite, query link or database file not showing its connection and tab
+  - Picking a database in the query editor rerunning the statement at the caret, writes included, without asking
+  - "Connection Failed: Cancelled by user." after declining a connect prompt from **Switch Connection**
+  - A database link with a filter replacing the filters of a tab already showing that table
+  - A cleared group, tag, AI rule, startup command or SSH profile, or a group's old parent, returning after iCloud sync
+  - Exported connections taking the color of another group with the same name
+  - **Copy TablePro Link** dropping the connect and query timeouts, and new tags after the first
+  - The toolbar keeping a connection's old name after it was renamed while connected
+  - iOS widget icons differing from the app for Dameng, Snowflake, Beancount, SurrealDB and Kafka connections
+  - No icon for a connection to a database type no installed plugin describes
+  - MCP clients on the Mac locked out for 5 minutes after five requests sent without a token
+  - An expired MCP token answered as unknown, without the documented `-33008` code and `token expired` challenge
+  - A `%2B` in a pairing redirect's own query arriving at the callback as `+`
+  - Connections exported from iPhone, or with an SSL mode TablePro did not recognize, imported with SSL off
+  - Saving or importing connections while the connection library could not be read replacing every saved connection
+  - Import counting connections it could not save and storing their passwords in the Keychain
+  - Import creating the groups, tags and credential profiles of connections left unselected
+  - An unpredictable password when two imported rows replaced the same connection
+  - TablePlus import reading the default folder instead of the data location set in TablePlus
+</Update>
+
 <Update label="v0.79.0" description="October 9, 2026">
   ### New Features
 
