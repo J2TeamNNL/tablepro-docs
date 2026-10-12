@@ -22,7 +22,7 @@ sequenceDiagram
     E->>E: verifier = randomBytes(32).base64url
     E->>E: challenge = base64url(SHA-256(verifier))
     E->>T: open tablepro://integrations/pair<br/>?client=…&challenge=…&redirect=…&response_mode=query&state=…
-    T->>M: lazy-start server
+    T->>M: start server (refused while MCP is off)
     T->>U: Approval sheet (client, destination, scopes, connections, expiry)
     U->>T: Approve
     T->>T: mint token, hold pending exchange<br/>{ code, plaintext, challenge }, 5 min
@@ -157,7 +157,8 @@ The sheet names the client and counts down the five minutes the request is good 
 the link asked for, movable in either direction), **Allowed Connections** (all, or a checked subset),
 and **Expiration** (never, 1, 7, 30 or 90 days). A link that asks for `connections:display` adds
 **List connections hidden from AI**, off until the user ticks it. The link's parameters are a
-request, not a grant.
+request, not a grant. **Deny** is the default button: Return and Escape both deny, and **Approve**
+takes a click. The sheet does not take focus from another app; TablePro's Dock icon bounces instead.
 
 Approving mints the token, holds the plaintext against a one-time code for 5 minutes, and opens the
 redirect. Pairing again mints a second token rather than replacing the first, so an extension that
@@ -174,6 +175,9 @@ re-pairs should stop using its old one. Revoke either under
 | The plaintext token is not persisted | Only a salted SHA-256 hash is saved, in the login keychain. |
 
 ## Errors
+
+With **Enable MCP Server** off, the pair link stops before the approval sheet with an alert that
+names **Settings > MCP**. No redirect is opened, so the extension sees no answer.
 
 A failed verification burns the code, so retrying with a guessed verifier is not an option: start a
 new pair request.
