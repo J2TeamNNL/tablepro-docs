@@ -4,6 +4,149 @@ description: "Product updates and announcements for TablePro"
 rss: true
 ---
 
+<Update label="v0.81.0" description="October 16, 2026">
+  ### New Features
+
+  - **Cloud Firestore and Firebase Realtime Database**: A registry plugin that connects over their REST APIs, by [@i87ce](https://github.com/i87ce)
+  - **Google Cloud Bigtable**: A registry plugin that connects over the REST API, by [@i87ce](https://github.com/i87ce)
+  - **Schema picker**: In the query editor on servers that switch schemas, such as Oracle. Point a query tab at another schema without moving the sidebar
+  - **Login warnings**: A banner and a **Test Connection** notice for a server warning at login, such as an Oracle password about to expire
+  - **Theme slots**: Header, grid line, selection and focus colors in the theme editor
+  - **Theme pickers**: **Light theme** and **Dark theme** pickers in **Settings > Appearance**, with **New Theme Based On**, **Rename** and **Show in Finder** for custom themes
+  - **Theme load errors**: **Settings > Appearance** shows why a theme file could not be loaded
+  - **Window background**: A theme can set the window background. On macOS 26 and later the sidebar, inspector and toolbar take it on
+  - **Hide version on Welcome**: A setting in **Settings > General** hides the version and **Check for Updates** on the Welcome window, by [@RaffeYang](https://github.com/RaffeYang)
+  - **Install Parquet…**: In the Export dialog's format menu when the Parquet plugin is not installed
+
+  ### Improvements
+
+  - Each database in the connections strip keeps its own tabs. The tab bar shows the tabs of the one you are on
+  - Query tabs stay on the schema they were opened in on servers that switch schemas, instead of following the sidebar
+  - **Close Tab** with no tab left closes the database's entry in the connections strip, then the connection
+  - **Default Light** and **Default Dark** use the system colors in the editor and data grid, and Xcode's default syntax colors
+  - Themes color every content view, including trees, diffs, diagrams and charts. Controls and Settings keep the system look
+  - JSON and PHP tree values use the editor's syntax colors, matching the same value shown as text
+  - Theme file format 3, with every color optional. Themes from earlier versions do not load and need to be recreated
+  - Triggers and ClickHouse Parts in table structure shown as data grids, with multiple selection and **Copy**
+  - Filter and maintenance previews highlighted in the editor font, as SQL or, for DynamoDB, as JSON
+  - Commas instead of dots between details in Quick Switcher, autocomplete, Settings, query plans, tooltips and the result bar
+  - **Settings > Editor** grouped into Display, Gutter and Editing
+  - **Editor Font** and **Data Grid Font** moved to **Settings > Editor** and **Settings > Data**, and kept per Mac
+  - Editor font size from 10 to 24 points everywhere, including zoom
+  - Pre-connect script and SQLite extension prompts close as **Cancel** after 60 seconds without an answer
+  - Connections with a pre-connect script wait for you to reconnect a dropped tunnel
+  - iCloud Sync watches the network and the iCloud account only while it is turned on
+  - The `tablepro` command ships inside the app. **Settings > General** shows the Terminal line that links it, without an admin prompt
+  - The MCP server runs only while **Enable MCP Server** is on in **Settings > MCP**, including for clients and pairing
+  - **Edit > Data** shown only in data file windows
+  - Smaller updates: about 6 MB from any of the last five releases and 21 MB from older ones, down from 34 MB
+  - PostgreSQL on iPhone and iPad commits several statements one at a time, keeping the ones before a failure
+  - MySQL dumps write TIMESTAMP values in UTC and turn off foreign key checks while they load, as mysqldump does
+  - AI chat code blocks show all their code in the editor font and colors, without line numbers
+  - AI chat shows its scroll bar as set in System Settings
+  - **Set Value > Empty** and **Set EMPTY** offered only on columns that can hold an empty value
+  - Clearing a date, number or boolean cell in a NOT NULL column keeps the stored value instead of saving an empty string
+  - Clearing a Redis key's TTL in the grid removes its expiry
+
+  ### Removed
+
+  - Interface, Sidebar and Toolbar color groups, which had no effect, from the theme editor and the theme file
+  - Fonts from the theme file
+  - The clipboard URL banner in the New Connection form. **Import from URL** fills the form from a pasted link
+  - **Share > Copy as JSON** in the connection list. **Copy as JSON** in the data grid stays
+  - **Export as SQL** in the ER diagram. Export Tables to SQL with Structure writes the DDL
+  - Enum label editing and **New Type…** for PostgreSQL types. Run `ALTER TYPE` or `CREATE TYPE` in a query tab
+  - The Server Dashboard for SQLite and DuckDB
+  - The Dashboard button from Customize Toolbar. Open the Server Dashboard from the **Database** menu or Actions
+  - Loading plugins signed by other developers, and **Trusted Plugin Developers** in **Settings > Plugins**
+  - The Browse tab and plugin download counts in **Settings > Plugins**
+  - The on/off switch for each plugin in **Settings > Plugins**
+  - Theme install from the plugin registry
+  - HTML and XML export
+  - Server-Side Export for Oracle, Snowflake and BigQuery. Run the unload statement in a query tab instead
+  - The Cursor AI provider. A saved Cursor provider is dropped; Cursor still reaches TablePro through the MCP server
+  - Sign in with xAI. An xAI provider needs an xAI API key
+  - Per-kind toggles in **Settings > Notifications**. Kinds you turned off notify again while notifications are on
+  - The **Require authentication** switch in **Settings > MCP**. Every MCP request needs a token, including one from this Mac
+
+  ### Security
+
+  - GitHub Copilot language server pinned to a reviewed version and checksum instead of the latest npm release
+  - Prompts from MCP clients, pairing and query links taking focus from other apps, and Return approving them
+  - Pre-connect scripts running unprompted for a connection opened by MCP, AppleScript, the AI assistant, Compare or Copy To
+  - Import and Transfer To writing rows without Safe Mode's confirmation, Touch ID or audit log entry
+
+  ### Bug Fixes
+
+  - Line Number color having no effect on the editor gutter
+  - Default Light used for the dark theme when the chosen dark theme could not be loaded
+  - Editor zoom lost on the next appearance or theme change
+  - DDL, trigger and SQL import previews keeping the previous theme's colors
+  - Query history preview ignoring the theme and the editor font
+  - Theme editor changing the active theme instead of the theme selected for the slot being edited
+  - Malformed theme files loading as Default Light under their own name
+  - A color with a typo in it rendering as a different color instead of being reported
+  - Editor and data grid colors not following a change to the Accent color, Highlight color or Increase Contrast
+  - Selected text in the editor ignoring the Highlight color, and the cursor ignoring the Accent color
+  - **Zoom In** and **Zoom Out** staying enabled at the largest and smallest font size
+  - Theme color wells and the theme preview unreadable to VoiceOver
+  - Query plan image export coming out light in Dark mode
+  - Favorite query field turning straight quotes into curly quotes
+  - One unreadable setting, or one unknown AI provider, resetting its whole settings group to defaults
+  - **Reopen Last Session** forgetting its connections after an MCP client launched TablePro in the background
+  - GitHub Copilot starting at launch when not in use, and running on after AI was turned off or Copilot was removed
+  - **Settings > AI** reading sign-in tokens and running command line tools for providers that were never added
+  - Database type icon and checkmark hard to see on the selected row in Choose a Database
+  - Oracle connection timing out after 30 seconds when the password is about to expire
+  - Oracle session left open on the server when a connect was canceled during login
+  - MySQL dumps failing to restore on zero dates such as `0000-00-00`, or renumbering an AUTO_INCREMENT value of 0
+  - Strings with backslashes changing when a MySQL dump is restored on a server using NO_BACKSLASH_ESCAPES
+  - TIMESTAMP values shifting when a MySQL dump or copy moves between servers in different time zones
+  - MySQL dumps exported from an ANSI_QUOTES session failing to restore
+  - Restored MySQL routines, triggers and events losing the SQL mode they were created with
+  - MySQL dumps failing in the mysql client when a table references one created after it
+  - PostgreSQL dumps changing dates, intervals and floats exported from a session with non-default output settings
+  - Imported SQL files changing settings on the editor's connection, such as an empty search_path after a pg_dump file
+  - MySQL Object Copy and Import from connection failing on zero dates and renumbering AUTO_INCREMENT values of 0
+  - SQL import reporting a rollback after MySQL had already committed the file's schema changes
+  - Clearing a date, number or boolean value saving an empty string instead of NULL, shown as `0000-00-00` on MySQL
+  - Pasting a copied NULL cell writing the text NULL instead of a NULL value
+  - The inspector's boolean picker showing false for a value set to NULL in the grid
+  - Clearing an Elasticsearch long, short or byte field sending an empty string the mapping refuses
+  - An empty line in pasted cells moving the values below it up a row, or cutting off the columns after it
+  - Only the first statement running on iPhone and iPad when the query holds several
+  - A query on iPhone and iPad showing nothing after CREATE, DROP, a write that changed no rows, or any Oracle write
+  - SQLite on iPhone and iPad reporting a row that broke a CHECK or UNIQUE constraint as saved
+  - The previous write's row count shown after a SQLite CREATE, DROP or ALTER
+  - SQLite, PostgreSQL, MySQL and DuckDB queries on iPhone and iPad hiding an error raised after the first rows
+  - **Stop** on iPhone and iPad letting a SQLite or PostgreSQL statement commit, and restarting a DuckDB query
+  - A query run right after **Stop** on iPhone and iPad showing no rows
+  - PostgreSQL queries on iPhone and iPad downloading the whole table before showing the first 10,000 rows
+  - DuckDB results on iPhone and iPad cut at 10,000 rows without the notice that more rows exist
+  - MySQL failing every query after a procedure that returns rows, and a procedure failing midway reported as success
+  - Redis commands on iPhone and iPad reading a line break as part of a value, and dropping an empty quoted value
+  - View DDL shown as a made-up CREATE TABLE on SQL Server, Oracle, Dameng, DuckDB, Redshift and Cassandra
+  - **Show DDL** and **Copy DDL** failing on every view on SQLite, libSQL, Cloudflare D1, SAP HANA, Spanner, Trino and Teradata
+  - SQL Server view definitions showing the old name after a rename, and blank for an encrypted view or a dotted name
+  - The SQL Server Edit View Definition template creating the view in the default schema instead of the view's own
+  - Oracle view DDL losing the view's column names, and cut off after 4000 bytes without saying so
+  - Trino materialized views left out of SQL exports
+  - Return in **Switch Connection** reopening the current connection after typing another connection's name
+  - AI chat stuttering while scrolling, and code blocks cutting off their last lines and catching the scroll
+  - AI chat showing code and notes indented under a list item outside the list, with extra indentation
+  - AI chat tables after a line of text, or without outer pipes, shown as plain text
+  - AI chat not following a reply as it streams, and jumping to the end after scrolling up
+  - The scroll to latest message button in AI chat never appearing
+  - AI reasoning text not updating while it streams
+  - Switching database from the toolbar, sidebar or **Open Database** leaving the previous database's tab on screen
+  - Quick Switcher marking a table as open when a table of the same name was open in another database
+  - **Table Info** in the inspector showing the numbers of a table of the same name in another database
+  - Links, AppleScript and MCP `open_table_tab` focusing a table of the same name in another database
+  - Dropped databases staying in the connections strip, where clicking them failed with an error
+  - A query tab moved to another database in its database picker keeping the old database's schema
+  - The connections strip missing a database whose tabs were in a torn-off window
+</Update>
+
 <Update label="v0.80.0" description="October 11, 2026">
   [Read the announcement](https://tablepro.app/blog/tablepro-0-80)
 
