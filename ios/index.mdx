@@ -128,11 +128,24 @@ On Redis the list holds the current database's keys. A key opens by type: a stri
 
 ### Editing
 
-Tap a row to open it full screen, page between rows, edit values, toggle one to `NULL`, and save. An emptied date, number or boolean field saves `NULL`, and in a NOT NULL column it keeps its value; an emptied text field saves an empty string. While you edit, **Cancel** takes the place of the back button and asks before it throws away a changed value, and so does **Connections** in another tab. Inserting and deleting rows, and truncating or dropping a table, are here too; a PostgreSQL foreign table offers neither Truncate nor Drop. Editing needs a primary key, and a row whose key holds binary data opens read only.
+Tap a row to open it full screen, page between rows, edit values, toggle one to `NULL`, and save. An emptied date, number, boolean or JSON field saves `NULL`, and in a NOT NULL column it keeps its value; an emptied text field saves an empty string. While you edit, **Cancel** takes the place of the back button and asks before it throws away a changed value, and so does **Connections** in another tab. Inserting and deleting rows, and truncating or dropping a table, are here too; a PostgreSQL foreign table offers neither Truncate nor Drop. Editing needs a primary key, and a row whose key holds binary data opens read only.
 
 A new row starts with every column on **DEFAULT**, which leaves that column out of the `INSERT` so the database fills it in. The badge beside a field switches it between **DEFAULT**, **NULL** and a typed value, and **NULL** is offered on nullable columns only. Generated columns are never written, and an auto-increment key stays on **DEFAULT** until you type one.
 
 A save, insert, delete, truncate or drop runs inside a read-write transaction. MySQL, MariaDB, TiDB, PostgreSQL, Redshift, Oracle and SQLite report what their session is already holding, and a write there runs inside that rather than under a transaction of its own, so the rows wait for whoever opened it. A server that starts its sessions read-only is a different problem: see [Server read-only is not Safe Mode](/features/safe-mode#server-read-only-is-not-safe-mode). SQL typed into the Query section is yours and goes out as written.
+
+### JSON values
+
+A `json` or `jsonb` field opens indented on the row screen. Tap **View as JSON** to read all of it: **Text** shows the value indented, and **Tree** folds each object and array. Touch and hold a tree row for **Copy Value**, **Copy Key** and **Copy Key Path**, which copies a path such as `$.user.emails[0]`. A text column holding a JSON object or array offers **View as JSON** too.
+
+<Frame caption="Tree mode starts with the first level open">
+  <img className="block dark:hidden" src="/images/ios-json-viewer.png" alt="A row whose payload field shows indented JSON above View as JSON, next to the same payload as a tree of keys and values" />
+  <img className="hidden dark:block" src="/images/ios-json-viewer-dark.png" alt="A row whose payload field shows indented JSON above View as JSON, next to the same payload as a tree of keys and values" />
+</Frame>
+
+To change a JSON field, tap **Edit**, then **Edit JSON**. Smart quotes, dashes and autocorrect stay off, and the value saves exactly as typed; **Format** reindents it only when tapped. While the text is not valid JSON, the line under it names the spot, as in `Line 18, column 1: Unexpected character.`, and **Done** stays dimmed. Tap that line to move the cursor there.
+
+A value over 4 KB arrives cut. Tap **Load full value** first; until then it is plain text with no **View as JSON**. Rows opened from **Query** results have no **Load full value**.
 
 ### Querying
 
@@ -151,7 +164,7 @@ On SQL Server, lines with no semicolon between them are one statement up to the 
 
 On Redis a command ends at a semicolon or at a line break outside quotes, so each line is its own command and a quoted value may run across lines. A command with an unclosed quote fails without running.
 
-**Stop** cancels the running statement and starts no other. On MySQL and Redis the statement keeps running on the server until it finishes. Results copy or export as JSON, CSV, or SQL `INSERT`.
+**Stop** cancels the running statement and starts no other. On MySQL and Redis the statement keeps running on the server until it finishes. Results copy or export as JSON, CSV, or SQL `INSERT`. A value over 4 KB, or a binary value, stops the copy or export with **Cannot Export**: leave that column out of the `SELECT`. Copying rows from a table reads values over 4 KB in full first.
 
 A running query appears in a Live Activity on the lock screen and Dynamic Island, with the elapsed time and the row count so far. **Settings > Live Activities > Hide Query** replaces the SQL text there with "Running query". The card clears when the query ends. Quitting the app mid-query leaves it behind, marked interrupted, until the next launch clears it.
 
