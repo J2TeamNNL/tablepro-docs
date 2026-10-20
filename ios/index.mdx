@@ -169,7 +169,7 @@ Safe Mode reads only the text that runs, so a `SELECT` before an `UPDATE` runs w
 
 On SQL Server, lines with no semicolon between them are one statement up to the next line holding only `GO`, so **Run** sends that batch. In a selection or **Run All Statements**, each `GO` line ends a batch, each batch goes to the server whole, and `GO 5` runs its batch five times.
 
-On Redis a command ends at a semicolon or at a line break outside quotes, so each line is its own command and a quoted value may run across lines. A command with an unclosed quote fails without running.
+On Redis a command ends at a semicolon or at a line break outside quotes, so each line is its own command and a quoted value may run across lines. A command with an unclosed quote fails without running. Quotes and escapes read as they do on the Mac: see [Redis CLI](/databases/redis#redis-cli).
 
 **Stop** cancels the running statement and starts no other. On MySQL and Redis the statement keeps running on the server until it finishes. Results copy or export as JSON, CSV, or SQL `INSERT`. A value over 4 KB, or a binary value, stops the copy or export with **Cannot Export**: leave that column out of the `SELECT`. Copying rows from a table reads values over 4 KB in full first.
 
