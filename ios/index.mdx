@@ -149,6 +149,13 @@ A value over 4 KB arrives cut. Tap **Load full value** first; until then it is p
 
 ### Querying
 
+Suggestions fill the bar above the keyboard as you type, in front of the fixed keys. After `FROM`, `JOIN`, `INTO` or `UPDATE` they are tables and views; after `SELECT`, `WHERE`, `ON` or `SET`, the columns of the tables the statement names; elsewhere, keywords. An alias and a dot, as in `i.`, give that table's columns. Tap one to replace the word you are typing, quoted when the engine needs it. A table's columns load the first time it needs them and again after each run. On iPad with a hardware keyboard, `Tab` inserts the first suggestion and `Escape` hides the bar until you type or move the cursor.
+
+<Frame caption="Tables after FROM, columns after an alias">
+  <img className="block dark:hidden" src="/images/ios-query-suggestions.png" alt="Query editor on iPhone suggesting Invoice and InvoiceLine for SELECT * FROM Inv, beside Total and InvoiceId suggested for WHERE i." />
+  <img className="hidden dark:block" src="/images/ios-query-suggestions-dark.png" alt="Query editor on iPhone suggesting Invoice and InvoiceLine for SELECT * FROM Inv, beside Total and InvoiceId suggested for WHERE i." />
+</Frame>
+
 **Run** sends the statement the cursor is in, and a faint band behind the text marks it before you tap. Select text first to send the selection instead; a selection hides the band. With the cursor past the last statement or inside a comment, **Run** sends nothing, keeps the last result, and shows "The cursor is not in a statement." Past 10,000 characters the editor drops its colors and the band, and **Run** still finds the statement.
 
 Touch and hold **Run** for **Run All Statements**, which sends every statement in the editor in order. It is in the **More** menu too. On a hardware keyboard, `Cmd+Enter` runs the statement or the selection, `Cmd+Shift+Enter` runs every statement, and `Cmd+.` stops.
