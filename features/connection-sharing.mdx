@@ -140,7 +140,7 @@ Press `Cmd+,`, then **Settings > General > Linked Folders > Add Folder…** and 
 
 <Info>Needs a [Team license](/features/licensing).</Info>
 
-**Share > Publish to Team Catalog…** writes each selected connection as its own `.tablepro` file into a shared folder, asking for the folder the first time. Republishing overwrites the file, and passwords, passphrases, TOTP secrets, and saved queries are never written. Teammates add that folder as a Linked Folder. An older TablePro skips these files, as [File format](#file-format) explains.
+**Share > Publish to Team Catalog…** writes each selected connection as its own `.tablepro` file into a shared folder, asking for the folder the first time. Republishing overwrites the file, and passwords, passphrases, TOTP secrets, and saved queries are never written. Teammates add that folder as a Linked Folder. An older TablePro skips the file of a connection inside a nested group, as [File format](#file-format) explains.
 
 ## Environment variables
 
@@ -180,7 +180,7 @@ Editing `connections.json` by hand costs one extra step. TablePro stamps the fil
 
 ## File format
 
-JSON, at format version 2. A file needs `formatVersion`, `exportedAt`, `appVersion`, and `connections`. Each connection needs `ref`, `name`, `host`, `port`, `database`, `username`, and `type`, and an empty string is fine where a value does not apply. Paths use `~/` so they travel.
+JSON, in format version 1 or 2. Saved queries and nested groups need version 2, the shape shown here; a file with neither is written as version 1. A file needs `formatVersion`, `exportedAt`, `appVersion`, and `connections`. Each connection needs `ref`, `name`, `host`, `port`, `database`, `username`, and `type`, and an empty string is fine where a value does not apply. Paths use `~/` so they travel.
 
 ```json
 {
@@ -224,4 +224,4 @@ A `ref` links records inside one file and means nothing outside it. Refs must be
 | `savedQueries` | A `ref`, `name`, and `sql`, and an optional `keyword`, `folderRef`, and `connectionRef`. Without a `connectionRef` a query is global |
 | `credentials` | Only inside an encrypted file: secrets keyed by connection `ref` |
 
-Version 1 files still import. Their `groupName` becomes a group at the top level of the library, and `tagName` or `tagNames` become tags. A TablePro version from before saved query export cannot open a version 2 file and reports that it needs a newer version; Linked Folders on such a version skip these files, Team Catalog ones included.
+Version 1 has no refs. A connection names its group in `groupName`, its tags in `tagName` or `tagNames`, and its profile in `credentialProfileName`, and `credentials` are keyed by the connection's position from `0`. The group imports at the top level of the library. A TablePro version from before saved query export opens only version 1: it reports that a version 2 file needs a newer version, and its Linked Folders skip the file.

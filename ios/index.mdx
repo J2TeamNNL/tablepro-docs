@@ -46,7 +46,12 @@ Every driver is compiled in, so there is no plugin system and nothing to install
 Redshift is not in the picker, but the driver is present: a Redshift connection created on the Mac connects once it syncs over.
 </Info>
 
-MongoDB, ClickHouse, Cassandra, BigQuery, Spanner, Snowflake and the rest have no iOS driver. Those connections still sync and still appear in the list, but opening one fails.
+MongoDB, ClickHouse, Cassandra, BigQuery, Spanner, Snowflake and the rest have no iOS driver. Their connections still sync and sit in the list dimmed, marked **Opens on Mac only**. A tap says why and connects nothing. Rename, move, edit or delete one as usual; the fields you leave alone sync back to the Mac intact. Importing a `.tablepro` file marks these rows the same way.
+
+<Frame caption="Tap a Mac-only connection to see why it stays closed">
+  <img className="block dark:hidden" src="/images/ios-mac-only-connections.png" alt="Connection list with the MongoDB and ClickHouse rows dimmed and marked Opens on Mac only, beside the Opens on Mac Only alert for the MongoDB connection" />
+  <img className="hidden dark:block" src="/images/ios-mac-only-connections-dark.png" alt="Connection list with the MongoDB and ClickHouse rows dimmed and marked Opens on Mac only, beside the Opens on Mac Only alert for the MongoDB connection" />
+</Frame>
 
 ## The connection list
 
@@ -77,15 +82,16 @@ A connection, group or tag form with unsaved changes stays open when swiped down
 
 The same CloudKit container as the Mac. iCloud Sync is off on both until you turn it on: here during first launch or under **Settings > iCloud**. While it is off nothing leaves the device, and edits made in the meantime go up when you turn it back on, provided the device is still signed in to the same Apple Account. Sign in to a different Apple Account and sync starts over for that account: its connections come down, edits not yet sent go up to it, deletions not yet sent are dropped, and the other connections already on the device stay and go up the next time you edit them. Four kinds of data cross: connections (host, port, SSH tunnel and SSL settings, color, icon, safe mode level, favorite), groups with their nesting and icons, tags, and [saved queries](#saved-queries) with their folders. Saved queries have no switch of their own here and sync whenever iCloud Sync is on. SSH profiles, table favorites, and app settings are skipped, and query history on the phone is only what you ran on the phone.
 
-Three things a connection depends on are per device and never sync:
+Four things a connection depends on are per device and never sync:
 
 | Per device | What you see | What to do |
 | --- | --- | --- |
 | CA and client certificates | The SSL section reads **Not set** | Import them here. One PKCS#12 file covers the client certificate and its key |
 | An SSH key file | It arrived as a path on the Mac, so the tunnel cannot find it | Pick the key on this device, or paste it into **Private Key** |
+| A jump host's key file | The hop under **Jump Hosts** reads **No key on this device** | Open the hop and pick or paste its key, or turn on **Same Key as SSH Server** |
 | SQLite and DuckDB files | Opening one says the file isn't available on this device | Edit the connection and pick the file here |
 
-Passwords are a separate opt-in, off by default, at **Settings > iCloud > Sync Passwords**. They ride iCloud Keychain and only new saves are affected, so re-save a password on the Mac to push it across. A private key saved on this device follows the same setting: with **Sync Passwords** on, iCloud Keychain copies the key to your other iPhones and iPads, which use it, and to your Mac, which does not. Pull down on the connection list to sync now; a background refresh runs about every 30 minutes.
+Passwords are a separate opt-in, off by default, at **Settings > iCloud > Sync Passwords**. They ride iCloud Keychain and only new saves are affected, so re-save a password on the Mac to push it across. A private key saved on this device, a jump host's included, follows the same setting: with **Sync Passwords** on, iCloud Keychain copies the key to your other iPhones and iPads, which use it, and to your Mac, which does not. Pull down on the connection list to sync now; a background refresh runs about every 30 minutes.
 
 When a sync cannot finish, the connection list and **Settings > iCloud** name the reason, and changes made meanwhile wait on the device. For **iCloud Storage Is Full**, open the Settings app, tap your name, then tap **iCloud**, and free up space or add storage. The upload is tried again after 5 minutes, then twice as long each time up to an hour; pull down on the list to try at once. For **TablePro Data Was Removed from iCloud**, choose **Upload Again** to send everything on the device back up, or **Turn Off iCloud Sync** to keep it here only.
 
@@ -107,7 +113,14 @@ On iPhone Duo the system draws the toolbar and the tab bar down the side of the 
 
 ### Browsing
 
-A row in the list previews four of its fields, and eight where the display is wide enough. Search the table list by name. A PostgreSQL materialized view sits under **Views** and opens read only. Page a table at 50, 100, 200, or 500 rows, jump to a page number, sort by a column, search text columns, and stack filters with AND or OR. A foreign key value previews the row it points at.
+A row in the list previews four of its fields, and eight where the display is wide enough. Search the table list by name. A PostgreSQL materialized view sits under **Views** and opens read only. Page a table at 50, 100, 200, or 500 rows, jump to a page number, sort by a column, search text columns, and stack filters with AND or OR.
+
+To follow a foreign key, tap the link under its value on a row, or long-press a row in the list and pick the key. A sheet previews the row it points at, titled with the table and, when it differs from the one open, the schema. A value in the preview that is itself a foreign key opens the next row in the same sheet, and **Back** returns one step. **Open Table** opens that table filtered to the key, and when one row matches it lands on that row, ready to edit. **Back** then returns to the filtered list and to the row you started from. While that row has an edit open, **Open Table** is dimmed.
+
+<Frame caption="One more tap from the preview to the row in its table">
+  <img className="block dark:hidden" src="/images/ios-foreign-key-preview.png" alt="Customer preview sheet with a SupportRepId link to Employee and an Open Table button, beside the Customer row screen showing 1 of 1" />
+  <img className="hidden dark:block" src="/images/ios-foreign-key-preview-dark.png" alt="Customer preview sheet with a SupportRepId link to Employee and an Open Table button, beside the Customer row screen showing 1 of 1" />
+</Frame>
 
 **Table Structure** lists columns, indexes, and foreign keys, read only. An index shows its key columns and expressions in key order, then any `INCLUDE` columns and a partial index's `WHERE` clause. On Redshift the index list holds the DISTKEY and SORTKEY columns.
 
@@ -115,17 +128,50 @@ On Redis the list holds the current database's keys. A key opens by type: a stri
 
 ### Editing
 
-Tap a row to open it full screen, page between rows, edit values, toggle one to `NULL`, and save. An emptied date, number or boolean field saves `NULL`, and in a NOT NULL column it keeps its value; an emptied text field saves an empty string. While you edit, **Cancel** takes the place of the back button and asks before it throws away a changed value, and so does **Connections** in another tab. Inserting and deleting rows, and truncating or dropping a table, are here too; a PostgreSQL foreign table offers neither Truncate nor Drop. Editing needs a primary key.
+Tap a row to open it full screen, page between rows, edit values, toggle one to `NULL`, and save. An emptied date, number, boolean or JSON field saves `NULL`, and in a NOT NULL column it keeps its value; an emptied text field saves an empty string. While you edit, **Cancel** takes the place of the back button and asks before it throws away a changed value, and so does **Connections** in another tab. Inserting and deleting rows, and truncating or dropping a table, are here too; a PostgreSQL foreign table offers neither Truncate nor Drop. Editing needs a primary key, and a row whose key holds binary data opens read only.
 
 A new row starts with every column on **DEFAULT**, which leaves that column out of the `INSERT` so the database fills it in. The badge beside a field switches it between **DEFAULT**, **NULL** and a typed value, and **NULL** is offered on nullable columns only. Generated columns are never written, and an auto-increment key stays on **DEFAULT** until you type one.
 
-A save, insert, delete, truncate or drop runs inside a read-write transaction. MySQL, MariaDB, PostgreSQL, Redshift, Oracle and SQLite report what their session is already holding, and a write there runs inside that rather than under a transaction of its own, so the rows wait for whoever opened it. A server that starts its sessions read-only is a different problem: see [Server read-only is not Safe Mode](/features/safe-mode#server-read-only-is-not-safe-mode). SQL typed into the Query section is yours and goes out as written.
+A save, insert, delete, truncate or drop runs inside a read-write transaction. MySQL, MariaDB, TiDB, PostgreSQL, Redshift, Oracle and SQLite report what their session is already holding, and a write there runs inside that rather than under a transaction of its own, so the rows wait for whoever opened it. A server that starts its sessions read-only is a different problem: see [Server read-only is not Safe Mode](/features/safe-mode#server-read-only-is-not-safe-mode). SQL typed into the Query section is yours and goes out as written.
+
+### JSON values
+
+A `json` or `jsonb` field opens indented on the row screen. Tap **View as JSON** to read all of it: **Text** shows the value indented, and **Tree** folds each object and array. Touch and hold a tree row for **Copy Value**, **Copy Key** and **Copy Key Path**, which copies a path such as `$.user.emails[0]`. A text column holding a JSON object or array offers **View as JSON** too.
+
+<Frame caption="Tree mode starts with the first level open">
+  <img className="block dark:hidden" src="/images/ios-json-viewer.png" alt="A row whose payload field shows indented JSON above View as JSON, next to the same payload as a tree of keys and values" />
+  <img className="hidden dark:block" src="/images/ios-json-viewer-dark.png" alt="A row whose payload field shows indented JSON above View as JSON, next to the same payload as a tree of keys and values" />
+</Frame>
+
+To change a JSON field, tap **Edit**, then **Edit JSON**. Smart quotes, dashes and autocorrect stay off, and the value saves exactly as typed; **Format** reindents it only when tapped. While the text is not valid JSON, the line under it names the spot, as in `Line 18, column 1: Unexpected character.`, and **Done** stays dimmed. Tap that line to move the cursor there.
+
+A value over 4 KB arrives cut. Tap **Load full value** first; until then it is plain text with no **View as JSON**. Rows opened from **Query** results have no **Load full value**.
 
 ### Querying
 
-**Run** sends every statement in the editor, in order, and each one commits as it runs unless your script opened a transaction. The result area shows the last statement's rows, or how many rows the run changed. The first statement that fails ends the run: the error names its position, as in `Statement 2/3 failed`, and, where the connection reports its transaction state, whether the statements before it stay applied or wait in your open transaction. On SQL Server, a line holding only `GO` splits the text into batches, each batch goes to the server whole, and `GO 5` runs its batch five times.
+Suggestions fill the bar above the keyboard as you type, in front of the fixed keys. After `FROM`, `JOIN`, `INTO` or `UPDATE` they are tables and views; after `SELECT`, `WHERE`, `ON` or `SET`, the columns of the tables the statement names; elsewhere, keywords. An alias and a dot, as in `i.`, give that table's columns. Tap one to replace the word you are typing, quoted when the engine needs it. A table's columns load the first time it needs them and again after each run. On iPad with a hardware keyboard, `Tab` inserts the first suggestion and `Escape` hides the bar until you type or move the cursor.
 
-**Stop** cancels the running statement and starts no other. On MySQL and Redis the statement keeps running on the server until it finishes. Results copy or export as JSON, CSV, or SQL `INSERT`.
+<Frame caption="Tables after FROM, columns after an alias">
+  <img className="block dark:hidden" src="/images/ios-query-suggestions.png" alt="Query editor on iPhone suggesting Invoice and InvoiceLine for SELECT * FROM Inv, beside Total and InvoiceId suggested for WHERE i." />
+  <img className="hidden dark:block" src="/images/ios-query-suggestions-dark.png" alt="Query editor on iPhone suggesting Invoice and InvoiceLine for SELECT * FROM Inv, beside Total and InvoiceId suggested for WHERE i." />
+</Frame>
+
+**Run** sends the statement the cursor is in, and a faint band behind the text marks it before you tap. Select text first to send the selection instead; a selection hides the band. With the cursor past the last statement or inside a comment, **Run** sends nothing, keeps the last result, and shows "The cursor is not in a statement." Past 10,000 characters the editor drops its colors and the band, and **Run** still finds the statement.
+
+Touch and hold **Run** for **Run All Statements**, which sends every statement in the editor in order. It is in the **More** menu too. On a hardware keyboard, `Cmd+Enter` runs the statement or the selection, `Cmd+Shift+Enter` runs every statement, and `Cmd+.` stops.
+
+<Frame caption="The band marks the statement Run sends">
+  <img className="block dark:hidden" src="/images/ios-query-run.png" alt="Query section with the second of three SELECT statements banded and its result b 2, beside the Run menu holding Run Statement and Run All Statements" />
+  <img className="hidden dark:block" src="/images/ios-query-run-dark.png" alt="Query section with the second of three SELECT statements banded and its result b 2, beside the Run menu holding Run Statement and Run All Statements" />
+</Frame>
+
+Safe Mode reads only the text that runs, so a `SELECT` before an `UPDATE` runs without the **Confirm Writes** question. Each statement commits as it runs unless your script opened a transaction. The result area shows the last statement's rows, or how many rows the run changed. The first statement that fails ends the run: the error names its position, as in `Statement 2/3 failed`, and, where the connection reports its transaction state, whether the statements before it stay applied or wait in your open transaction.
+
+On SQL Server, lines with no semicolon between them are one statement up to the next line holding only `GO`, so **Run** sends that batch. In a selection or **Run All Statements**, each `GO` line ends a batch, each batch goes to the server whole, and `GO 5` runs its batch five times.
+
+On Redis a command ends at a semicolon or at a line break outside quotes, so each line is its own command and a quoted value may run across lines. A command with an unclosed quote fails without running.
+
+**Stop** cancels the running statement and starts no other. On MySQL and Redis the statement keeps running on the server until it finishes. Results copy or export as JSON, CSV, or SQL `INSERT`. A value over 4 KB, or a binary value, stops the copy or export with **Cannot Export**: leave that column out of the `SELECT`. Copying rows from a table reads values over 4 KB in full first.
 
 A running query appears in a Live Activity on the lock screen and Dynamic Island, with the elapsed time and the row count so far. **Settings > Live Activities > Hide Query** replaces the SQL text there with "Running query". The card clears when the query ends. Quitting the app mid-query leaves it behind, marked interrupted, until the next launch clears it.
 
@@ -149,12 +195,34 @@ Open the **More** menu (•••) beside **Run** and choose **Saved Queries**. 
 
 To change a saved query's SQL, edit it on the Mac. Version history and linked SQL folders are Mac only.
 
+### Open transactions
+
+After `BEGIN` in **Query**, a bar sits at the bottom of every section until the transaction ends, by its buttons or by a typed `COMMIT` or `ROLLBACK`. On a MySQL or MariaDB server with autocommit off, opening a table is enough to start one. The bar names the database, or the connection on an engine with one database, and the connection list marks the row with an hourglass. Where their titles do not fit, **Roll Back** and **Commit** show as an arrow and a checkmark.
+
+<Frame caption="The mark stays on the list after you leave the connection">
+  <img className="block dark:hidden" src="/images/ios-transaction-bar.png" alt="Orders table with a Transaction Open bar above the tab bar, beside the connection list with an hourglass on the Shop connection" />
+  <img className="hidden dark:block" src="/images/ios-transaction-bar-dark.png" alt="Orders table with a Transaction Open bar above the tab bar, beside the connection list with an hourglass on the Shop connection" />
+</Frame>
+
+**Roll Back** asks first at every [safe mode](/features/safe-mode) level. **Commit** follows the level:
+
+| Safe Mode | Commit |
+| --- | --- |
+| **Off** | Commits at once |
+| **Confirm Writes** | Asks first |
+| **Read-Only** | Hidden |
+
+**Transaction Failed** means a PostgreSQL statement inside it failed, and the server keeps none of it. Only **Roll Back** is offered, and a typed `COMMIT` rolls it back as well.
+
+The bar shows on PostgreSQL, Redshift, MySQL, MariaDB, TiDB, SQLite and Oracle. DuckDB, SQL Server and OceanBase do not report their session state, so an open transaction there shows nothing.
+
+A connection that drops with a transaction open reconnects and says the server rolled the transaction back. One that drops during **Commit** never got the answer: check which changes were saved before running them again. Switching database on PostgreSQL or Redshift with a transaction open asks first, since the switch rolls it back.
+
 ## What is missing
 
 - **Schema changes.** Truncating and dropping a table is the whole list; creating or altering tables, columns, indexes, triggers, and views is Mac only.
 - **Changing Redis data.** Keys open read only; change them in **Query**.
-- **Jump hosts.** A connection whose SSH tunnel goes through a bastion opens on the Mac only. Its hops sync here and back intact.
-- **Socket connections.** A MySQL or MariaDB connection that uses a socket on the Mac opens there only, and the connection list shows it as **Mac socket** and the path. Its socket path syncs here and back intact.
+- **Socket connections.** A MySQL or MariaDB connection that uses a socket on the Mac opens there only. The connection list shows **Mac socket** and the path, marked **Opens on Mac only**, and a tap says why. Its socket path syncs here and back intact.
 - **AI.** No chat, no inline suggestions, no MCP server.
 
 ## Security
@@ -163,7 +231,18 @@ Turn on Face ID, Touch ID, or Optic ID under **Settings > Security**. A cold lau
 
 Each connection carries its own [safe mode](/features/safe-mode) level, synced from the Mac. Set it with **Safe Mode** under **Organization** in the connection's form. iOS has three: **Off**, **Confirm Writes**, and **Read-Only**, which refuses writes outright. **Default Safe Mode** under **Settings > New Connections** sets the level a new connection starts at.
 
-SSH tunnels authenticate with a password or a private key, and an unknown host key prompts with its fingerprint first, on the connection's own screen. The question waits there until you answer it, and leaving the screen ends that attempt. A key pasted under **Paste Key**, or picked as a text file, is kept in the Keychain beside the connection's passwords, never in the saved connection list. A key file that is not text is copied into the app and read from there. Setting **Auth Method** to **Password**, choosing **Import File**, or turning **SSH Tunnel** off deletes the saved key when you tap **Save**.
+SSH tunnels authenticate with a password or a private key. A tunnel set to **SSH Agent** on the Mac signs in here with a private key on this device and stays **SSH Agent** on the Mac. An unknown host key, the SSH server's or a jump host's, prompts with its fingerprint first, on the connection's own screen. The question waits there until you answer it, and leaving the screen ends that attempt. A key pasted under **Paste Key**, or picked as a text file, is kept in the Keychain beside the connection's passwords, never in the saved connection list. A key file that is not text is copied into the app and read from there. Setting **Auth Method** to **Password**, choosing **Import File**, or turning **SSH Tunnel** off deletes the saved key when you tap **Save**.
+
+### Jump hosts
+
+A tunnel that reaches its SSH server through bastions lists them under **Jump Hosts** in the connection's form, in the order they are dialed. Tap **Add Jump Host** to add one, touch and hold a hop to drag it to a new place, and swipe left to delete it. Each hop takes a host, a port, 22 when left empty, and a username, and signs in with a private key, never a password.
+
+Hops synced from the Mac arrive with key paths that name files on the Mac, so each reads **No key on this device** until it gets one here. Open the hop and pick or paste its key, or turn on **Same Key as SSH Server** to reuse the server's key from this device. A hop's key file has to be text. The Mac keeps its own key paths for the same hops. A hop with no key or no username is named before anything is dialed.
+
+<Frame caption="Hops synced from the Mac, before they have keys on this iPhone">
+  <img className="block dark:hidden" src="/images/ios-jump-hosts.png" alt="Edit Connection form with two jump hosts marked No key on this device, beside the editor for bastion1.example.com with Same Key as SSH Server switched off" />
+  <img className="hidden dark:block" src="/images/ios-jump-hosts-dark.png" alt="Edit Connection form with two jump hosts marked No key on this device, beside the editor for bastion1.example.com with Same Key as SSH Server switched off" />
+</Frame>
 
 ## Privacy
 
