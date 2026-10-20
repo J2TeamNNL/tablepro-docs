@@ -1,6 +1,6 @@
 ---
 title: iPhone and iPad
-description: Browse tables, run queries, and edit rows on ten database engines from a synced connection list
+description: Browse tables, run queries, and edit rows on eleven database engines from a synced connection list
 ---
 
 You need iOS 18 or later. Builds ship on their own schedule, so a feature in a Mac release note may not be on your phone yet. Your version and build are under **Settings > About**. Connections saved on a Mac come over iCloud; the rest of your Mac setup stays on the Mac.
@@ -28,7 +28,7 @@ Both answers can change later, under **Settings > iCloud** and **Settings > Priv
 
 ## Supported databases
 
-Every driver is compiled in, so there is no plugin system and nothing to install. The type picker offers these ten:
+Every driver is compiled in, so there is no plugin system and nothing to install. The type picker offers these eleven:
 
 | Type | Notes |
 | --- | --- |
@@ -38,6 +38,7 @@ Every driver is compiled in, so there is no plugin system and nothing to install
 | **PostgreSQL** | Port 5432 by default |
 | **SQL Server** | TDS, including Microsoft Entra ID sign-in on a connection synced from the Mac |
 | **Oracle** | Service name or SID |
+| **ClickHouse** | Port 8123 by default, the HTTP interface |
 | **Redis** | Port 6379 by default |
 | **SQLite** | Copies the file you pick into the app |
 | **DuckDB** | A file on the device, or in-memory |
@@ -46,7 +47,7 @@ Every driver is compiled in, so there is no plugin system and nothing to install
 Redshift is not in the picker, but the driver is present: a Redshift connection created on the Mac connects once it syncs over.
 </Info>
 
-MongoDB, ClickHouse, Cassandra, BigQuery, Spanner, Snowflake and the rest have no iOS driver. Their connections still sync and sit in the list dimmed, marked **Opens on Mac only**. A tap says why and connects nothing. Rename, move, edit or delete one as usual; the fields you leave alone sync back to the Mac intact. Importing a `.tablepro` file marks these rows the same way.
+MongoDB, Cassandra, BigQuery, Spanner, Snowflake and the rest have no iOS driver. Their connections still sync and sit in the list dimmed, marked **Opens on Mac only**. A tap says why and connects nothing. Rename, move, edit or delete one as usual; the fields you leave alone sync back to the Mac intact. Importing a `.tablepro` file marks these rows the same way.
 
 <Frame caption="Tap a Mac-only connection to see why it stays closed">
   <img className="block dark:hidden" src="/images/ios-mac-only-connections.png" alt="Connection list with the MongoDB and ClickHouse rows dimmed and marked Opens on Mac only, beside the Opens on Mac Only alert for the MongoDB connection" />
@@ -130,9 +131,11 @@ On Redis the list holds the current database's keys. A key opens by type: a stri
 
 Tap a row to open it full screen, page between rows, edit values, toggle one to `NULL`, and save. An emptied date, number, boolean or JSON field saves `NULL`, and in a NOT NULL column it keeps its value; an emptied text field saves an empty string. While you edit, **Cancel** takes the place of the back button and asks before it throws away a changed value, and so does **Connections** in another tab. Inserting and deleting rows, and truncating or dropping a table, are here too; a PostgreSQL foreign table offers neither Truncate nor Drop. Editing needs a primary key, and a row whose key holds binary data opens read only.
 
+A ClickHouse key is not unique, so a ClickHouse row is matched on every value it holds: a save is an `ALTER TABLE … UPDATE` and a delete an `ALTER TABLE … DELETE`, and a row holding a value over 4 KB or binary data opens read only, with no **Load full value**. Each one waits until the server has applied it. When another row holds the same value in every column, the save or delete is refused with **Identical Rows**, since it would change both.
+
 A new row starts with every column on **DEFAULT**, which leaves that column out of the `INSERT` so the database fills it in. The badge beside a field switches it between **DEFAULT**, **NULL** and a typed value, and **NULL** is offered on nullable columns only. Generated columns are never written, and an auto-increment key stays on **DEFAULT** until you type one.
 
-A save, insert, delete, truncate or drop runs inside a read-write transaction. MySQL, MariaDB, TiDB, PostgreSQL, Redshift, Oracle and SQLite report what their session is already holding, and a write there runs inside that rather than under a transaction of its own, so the rows wait for whoever opened it. A server that starts its sessions read-only is a different problem: see [Server read-only is not Safe Mode](/features/safe-mode#server-read-only-is-not-safe-mode). SQL typed into the Query section is yours and goes out as written.
+A save, insert, delete, truncate or drop runs inside a read-write transaction, except on ClickHouse, which has none. MySQL, MariaDB, TiDB, PostgreSQL, Redshift, Oracle and SQLite report what their session is already holding, and a write there runs inside that rather than under a transaction of its own, so the rows wait for whoever opened it. A server that starts its sessions read-only is a different problem: see [Server read-only is not Safe Mode](/features/safe-mode#server-read-only-is-not-safe-mode). SQL typed into the Query section is yours and goes out as written.
 
 ### JSON values
 
