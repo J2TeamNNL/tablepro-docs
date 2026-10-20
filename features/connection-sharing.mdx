@@ -154,7 +154,7 @@ Write `$VAR` or `${VAR}` in a `.tablepro` file and it resolves from TablePro's p
 
 ## Password sources
 
-A connection in `~/Library/Application Support/TablePro/connections.json` can say where its password comes from instead of keeping one in the Keychain, which suits a script that provisions connections. The source resolves at connect time, replaces the Keychain lookup rather than supplementing it, and never syncs to iCloud. A source that fails to resolve fails the connection.
+A connection in `~/Library/Application Support/TablePro/connections.json` can say where its password comes from instead of keeping one in the Keychain, which suits a script that provisions connections. The source resolves at connect time, replaces the Keychain lookup rather than supplementing it, and never syncs to iCloud. A source that fails to resolve fails the connection. Open the connection to see its source under **Password**, and click **Test Source** to run it without connecting.
 
 ```json
 { "passwordSource": { "kind": "file", "path": "~/.config/tablepro/secrets/feature-x.pw" } }
