@@ -100,7 +100,7 @@ A connect you did not start never runs the script. A restored window at launch, 
 
 ## Startup commands
 
-Statements split on semicolons and newlines and run in order on the connection that just opened, after every connect including an automatic reconnect. They all run on one connection, so write one dialect.
+Statements split on semicolons and newlines outside quotes and comments, and run in order on the connection that just opened, after every connect including an automatic reconnect. They all run on one connection, so write one dialect.
 
 <CodeGroup>
 ```sql MySQL
