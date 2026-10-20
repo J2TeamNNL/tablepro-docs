@@ -195,7 +195,7 @@ A connection that drops with a transaction open reconnects and says the server r
 
 - **Schema changes.** Truncating and dropping a table is the whole list; creating or altering tables, columns, indexes, triggers, and views is Mac only.
 - **Changing Redis data.** Keys open read only; change them in **Query**.
-- **Socket connections.** A MySQL or MariaDB connection that uses a socket on the Mac opens there only. The connection list shows **Mac socket** and the path, marked **Opens on Mac only**, and a tap says why. Its socket path syncs here and back intact.
+- **Socket connections.** A MySQL or MariaDB connection that uses a socket on the Mac opens there only. The connection list shows **Mac socket** and the path, marked **Opens on Mac only**, and a tap says why. Importing a `.tablepro` file marks such a row the same way. Its socket path syncs here and back intact.
 - **AI.** No chat, no inline suggestions, no MCP server.
 
 ## Security
@@ -204,7 +204,7 @@ Turn on Face ID, Touch ID, or Optic ID under **Settings > Security**. A cold lau
 
 Each connection carries its own [safe mode](/features/safe-mode) level, synced from the Mac. Set it with **Safe Mode** under **Organization** in the connection's form. iOS has three: **Off**, **Confirm Writes**, and **Read-Only**, which refuses writes outright. **Default Safe Mode** under **Settings > New Connections** sets the level a new connection starts at.
 
-SSH tunnels authenticate with a password or a private key. A tunnel set to **SSH Agent** on the Mac signs in here with a private key on this device and stays **SSH Agent** on the Mac. An unknown host key, the SSH server's or a jump host's, prompts with its fingerprint first, on the connection's own screen. The question waits there until you answer it, and leaving the screen ends that attempt. A key pasted under **Paste Key**, or picked as a text file, is kept in the Keychain beside the connection's passwords, never in the saved connection list. A key file that is not text is copied into the app and read from there. Setting **Auth Method** to **Password**, choosing **Import File**, or turning **SSH Tunnel** off deletes the saved key when you tap **Save**.
+SSH tunnels authenticate with a password or a private key. A tunnel set to **SSH Agent** on the Mac signs in here with a private key on this device and stays **SSH Agent** on the Mac. An unknown host key, the SSH server's or a jump host's, prompts with its fingerprint first, on the connection's own screen. The question waits there until you answer it, and leaving the screen ends that attempt. A key pasted under **Paste Key**, or picked as a text file, is kept in the Keychain beside the connection's passwords, never in the saved connection list. A key file that is not text is copied into the app and read from there. Setting **Auth Method** to **Password**, choosing **Import File**, or turning **SSH Tunnel** off deletes the saved key when you tap **Save**. Turning the tunnel off keeps its other settings, here and on the Mac, for when you turn it back on.
 
 ### Jump hosts
 
@@ -227,4 +227,4 @@ Hops synced from the Mac arrive with key paths that name files on the Mac, so ea
 
 Three App Intents put the app in Shortcuts, the Share Sheet, and Siri: **Open Connection**, **Add Row to Table**, **Add Rows to Table**. See [iOS Shortcuts](/integrations/ios-shortcuts) for pickers, data formats, and limits.
 
-A **Quick Connect** home screen widget opens a saved connection directly, and Handoff carries an open connection between devices. A `tablepro://connect/<uuid>` link opens a connection and `tablepro://connect/<uuid>/table/<name>` opens a table; the Mac's other links do less or nothing here, as [URL scheme](/developers/url-scheme#on-iphone-and-ipad) lists. A `.tablepro` file from Files or AirDrop imports its connections, leaving out any saved queries it carries.
+A **Quick Connect** home screen widget opens a saved connection directly and leaves out the ones that open on the Mac only. Handoff carries an open connection between devices. A `tablepro://connect/<uuid>` link opens a connection and `tablepro://connect/<uuid>/table/<name>` opens a table; the Mac's other links do less or nothing here, as [URL scheme](/developers/url-scheme#on-iphone-and-ipad) lists. A `.tablepro` file from Files or AirDrop imports its connections, leaving out any saved queries it carries.
