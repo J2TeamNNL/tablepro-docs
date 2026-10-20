@@ -163,7 +163,7 @@ Suggestions fill the bar above the keyboard as you type, in front of the fixed k
 
 Touch and hold **Run** for **Run All Statements**, which sends every statement in the editor in order. It is in the **More** menu too. On a hardware keyboard, `Cmd+Enter` runs the statement or the selection, `Cmd+Shift+Enter` runs every statement, and `Cmd+.` stops. On iPad the menu bar's **Query** menu lists **Run Statement**, **Run All Statements**, **Stop** and **Clear Query**, and its **View** menu switches sections with `Cmd+1` through `Cmd+4`.
 
-Tap a query in **History**, or a table under **SELECT * FROM ...** in the **More** menu, to add it to the editor. It fills an empty editor; otherwise it goes after your text as a statement of its own, with the cursor in it, and **Undo** takes it back. A statement that creates, alters or drops a table refreshes the table list in every window open on the connection.
+Tap a query in **History** or **Saved Queries**, or a table under **SELECT * FROM ...** in the **More** menu, to add it to the editor. It fills an empty editor; otherwise it goes after your text as a statement of its own, with the cursor in it, and **Undo** takes it back. A statement that creates, alters or drops a table refreshes the table list in every window open on the connection.
 
 <Frame caption="The band marks the statement Run sends">
   <img className="block dark:hidden" src="/images/ios-query-run.png" alt="Query section with the second of three SELECT statements banded and its result b 2, beside the Run menu holding Run Statement and Run All Statements" />
@@ -182,7 +182,7 @@ A running query appears in a Live Activity on the lock screen and Dynamic Island
 
 ### Saved queries
 
-Open the **More** menu (•••) beside **Run** and choose **Saved Queries**. The list holds this connection's queries and the global ones, in their folders, and search matches names, keywords and SQL. Tap a query to put its SQL in the editor in place of what was there. Nothing runs until you tap **Run**.
+Open the **More** menu (•••) beside **Run** and choose **Saved Queries**. The list holds this connection's queries and the global ones, in their folders, and search matches names, keywords and SQL. Tap a query to add its SQL to the editor the way a **History** entry goes in: it fills an empty editor, otherwise it follows your text and **Undo** takes it back. Nothing runs until you tap **Run**.
 
 **Save Query…** in the same menu keeps the editor's text, with the first line of the SQL filled in as its name. Turn on **Global** to list the query on every connection. Keywords and the size limit follow the [Mac's rules](/features/favorites#keywords), and a keyword expands in the Mac's editor only.
 
