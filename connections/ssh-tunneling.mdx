@@ -63,6 +63,8 @@ A first connection shows the server's key type and SHA-256 fingerprint, in `ssh-
 
 If a trusted server's key later changes, an **SSH Host Key Changed** alert lists the previous and current fingerprints. **Connect Anyway** does not answer the Return key. Escape picks **Disconnect**, which is what to take unless you know the server was reinstalled. With jump hosts, every hop's key is verified the same way.
 
+The tunnel offers the post-quantum key exchange `mlkem768x25519-sha256` first, so a server that allows only post-quantum key exchange connects too. A server that allows only `sntrup761x25519-sha512` does not.
+
 ## Using ~/.ssh/config
 
 Pick an alias from the **Config Host** picker and `HostName`, `User`, `Port`, `IdentityFile`, `IdentitiesOnly`, `IdentityAgent`, and `ProxyJump` are resolved from the config at connect time. Anything typed into the form overrides the file, which is re-read whenever it or an `Include`d file changes.
