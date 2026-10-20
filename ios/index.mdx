@@ -125,9 +125,9 @@ A key for this device and the IAM Identity Center settings stay on this device. 
   <img className="hidden dark:block" src="/images/ios-iam-sign-in-dark.png" alt="AWS Profile Is on the Mac error with Edit Connection and Retry, beside the connection form's Authentication section set to AWS IAM (Profile) with an empty Access Key for This Device section" />
 </Frame>
 
-**Sign In with IAM Identity Center** shows a code and opens the browser; confirm the code there. When that sign-in expires, opening the connection offers to sign in again.
+**Sign In with IAM Identity Center** shows a code and opens the browser; confirm the code there. The sign-in renews itself with its refresh token until the IAM Identity Center session ends; after that, opening the connection offers to sign in again.
 
-A token needs an encrypted connection. A MySQL, MariaDB or PostgreSQL connection with **SSL Mode** on **Disabled** connects with **Required**, and a MySQL server that offers no TLS is refused before the token is sent. A Redis connection with SSL off fails until you turn SSL on.
+A token needs an encrypted connection. A MySQL, MariaDB or PostgreSQL connection with **SSL Mode** on **Disabled** or **Preferred** connects with **Required**, and a server that offers no TLS is refused before the token is sent. A Redis connection with SSL off fails until you turn SSL on.
 
 ## What works
 
