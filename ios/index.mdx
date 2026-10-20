@@ -82,15 +82,16 @@ A connection, group or tag form with unsaved changes stays open when swiped down
 
 The same CloudKit container as the Mac. iCloud Sync is off on both until you turn it on: here during first launch or under **Settings > iCloud**. While it is off nothing leaves the device, and edits made in the meantime go up when you turn it back on, provided the device is still signed in to the same Apple Account. Sign in to a different Apple Account and sync starts over for that account: its connections come down, edits not yet sent go up to it, deletions not yet sent are dropped, and the other connections already on the device stay and go up the next time you edit them. Three record types cross: connections (host, port, SSH tunnel and SSL settings, color, icon, safe mode level, favorite), groups with their nesting and icons, and tags. SSH profiles, table favorites, saved queries, and app settings are skipped, and query history on the phone is only what you ran on the phone.
 
-Three things a connection depends on are per device and never sync:
+Four things a connection depends on are per device and never sync:
 
 | Per device | What you see | What to do |
 | --- | --- | --- |
 | CA and client certificates | The SSL section reads **Not set** | Import them here. One PKCS#12 file covers the client certificate and its key |
 | An SSH key file | It arrived as a path on the Mac, so the tunnel cannot find it | Pick the key on this device, or paste it into **Private Key** |
+| A jump host's key file | The hop under **Jump Hosts** reads **No key on this device** | Open the hop and pick or paste its key, or turn on **Same Key as SSH Server** |
 | SQLite and DuckDB files | Opening one says the file isn't available on this device | Edit the connection and pick the file here |
 
-Passwords are a separate opt-in, off by default, at **Settings > iCloud > Sync Passwords**. They ride iCloud Keychain and only new saves are affected, so re-save a password on the Mac to push it across. A private key saved on this device follows the same setting: with **Sync Passwords** on, iCloud Keychain copies the key to your other iPhones and iPads, which use it, and to your Mac, which does not. Pull down on the connection list to sync now; a background refresh runs about every 30 minutes.
+Passwords are a separate opt-in, off by default, at **Settings > iCloud > Sync Passwords**. They ride iCloud Keychain and only new saves are affected, so re-save a password on the Mac to push it across. A private key saved on this device, a jump host's included, follows the same setting: with **Sync Passwords** on, iCloud Keychain copies the key to your other iPhones and iPads, which use it, and to your Mac, which does not. Pull down on the connection list to sync now; a background refresh runs about every 30 minutes.
 
 When a sync cannot finish, the connection list and **Settings > iCloud** name the reason, and changes made meanwhile wait on the device. For **iCloud Storage Is Full**, open the Settings app, tap your name, then tap **iCloud**, and free up space or add storage. The upload is tried again after 5 minutes, then twice as long each time up to an hour; pull down on the list to try at once. For **TablePro Data Was Removed from iCloud**, choose **Upload Again** to send everything on the device back up, or **Turn Off iCloud Sync** to keep it here only.
 
@@ -158,7 +159,6 @@ A running query appears in a Live Activity on the lock screen and Dynamic Island
 
 - **Schema changes.** Truncating and dropping a table is the whole list; creating or altering tables, columns, indexes, triggers, and views is Mac only.
 - **Changing Redis data.** Keys open read only; change them in **Query**.
-- **Jump hosts.** A connection whose SSH tunnel goes through a bastion opens on the Mac only. Its hops sync here and back intact.
 - **Socket connections.** A MySQL or MariaDB connection that uses a socket on the Mac opens there only. The connection list shows **Mac socket** and the path, marked **Opens on Mac only**, and a tap says why. Its socket path syncs here and back intact.
 - **AI.** No chat, no inline suggestions, no MCP server.
 
@@ -168,7 +168,18 @@ Turn on Face ID, Touch ID, or Optic ID under **Settings > Security**. A cold lau
 
 Each connection carries its own [safe mode](/features/safe-mode) level, synced from the Mac. Set it with **Safe Mode** under **Organization** in the connection's form. iOS has three: **Off**, **Confirm Writes**, and **Read-Only**, which refuses writes outright. **Default Safe Mode** under **Settings > New Connections** sets the level a new connection starts at.
 
-SSH tunnels authenticate with a password or a private key, and an unknown host key prompts with its fingerprint first, on the connection's own screen. The question waits there until you answer it, and leaving the screen ends that attempt. A key pasted under **Paste Key**, or picked as a text file, is kept in the Keychain beside the connection's passwords, never in the saved connection list. A key file that is not text is copied into the app and read from there. Setting **Auth Method** to **Password**, choosing **Import File**, or turning **SSH Tunnel** off deletes the saved key when you tap **Save**.
+SSH tunnels authenticate with a password or a private key. A tunnel set to **SSH Agent** on the Mac signs in here with a private key on this device and stays **SSH Agent** on the Mac. An unknown host key, the SSH server's or a jump host's, prompts with its fingerprint first, on the connection's own screen. The question waits there until you answer it, and leaving the screen ends that attempt. A key pasted under **Paste Key**, or picked as a text file, is kept in the Keychain beside the connection's passwords, never in the saved connection list. A key file that is not text is copied into the app and read from there. Setting **Auth Method** to **Password**, choosing **Import File**, or turning **SSH Tunnel** off deletes the saved key when you tap **Save**.
+
+### Jump hosts
+
+A tunnel that reaches its SSH server through bastions lists them under **Jump Hosts** in the connection's form, in the order they are dialed. Tap **Add Jump Host** to add one, touch and hold a hop to drag it to a new place, and swipe left to delete it. Each hop takes a host, a port, 22 when left empty, and a username, and signs in with a private key, never a password.
+
+Hops synced from the Mac arrive with key paths that name files on the Mac, so each reads **No key on this device** until it gets one here. Open the hop and pick or paste its key, or turn on **Same Key as SSH Server** to reuse the server's key from this device. A hop's key file has to be text. The Mac keeps its own key paths for the same hops. A hop with no key or no username is named before anything is dialed.
+
+<Frame caption="Hops synced from the Mac, before they have keys on this iPhone">
+  <img className="block dark:hidden" src="/images/ios-jump-hosts.png" alt="Edit Connection form with two jump hosts marked No key on this device, beside the editor for bastion1.example.com with Same Key as SSH Server switched off" />
+  <img className="hidden dark:block" src="/images/ios-jump-hosts-dark.png" alt="Edit Connection form with two jump hosts marked No key on this device, beside the editor for bastion1.example.com with Same Key as SSH Server switched off" />
+</Frame>
 
 ## Privacy
 
