@@ -46,7 +46,12 @@ Every driver is compiled in, so there is no plugin system and nothing to install
 Redshift is not in the picker, but the driver is present: a Redshift connection created on the Mac connects once it syncs over.
 </Info>
 
-MongoDB, ClickHouse, Cassandra, BigQuery, Spanner, Snowflake and the rest have no iOS driver. Those connections still sync and still appear in the list, but opening one fails.
+MongoDB, ClickHouse, Cassandra, BigQuery, Spanner, Snowflake and the rest have no iOS driver. Their connections still sync and sit in the list dimmed, marked **Opens on Mac only**. A tap says why and connects nothing. Rename, move, edit or delete one as usual; the fields you leave alone sync back to the Mac intact. Importing a `.tablepro` file marks these rows the same way.
+
+<Frame caption="Tap a Mac-only connection to see why it stays closed">
+  <img className="block dark:hidden" src="/images/ios-mac-only-connections.png" alt="Connection list with the MongoDB and ClickHouse rows dimmed and marked Opens on Mac only, beside the Opens on Mac Only alert for the MongoDB connection" />
+  <img className="hidden dark:block" src="/images/ios-mac-only-connections-dark.png" alt="Connection list with the MongoDB and ClickHouse rows dimmed and marked Opens on Mac only, beside the Opens on Mac Only alert for the MongoDB connection" />
+</Frame>
 
 ## The connection list
 
@@ -108,7 +113,14 @@ On iPhone Duo the system draws the toolbar and the tab bar down the side of the 
 
 ### Browsing
 
-A row in the list previews four of its fields, and eight where the display is wide enough. Search the table list by name. A PostgreSQL materialized view sits under **Views** and opens read only. Page a table at 50, 100, 200, or 500 rows, jump to a page number, sort by a column, search text columns, and stack filters with AND or OR. A foreign key value previews the row it points at.
+A row in the list previews four of its fields, and eight where the display is wide enough. Search the table list by name. A PostgreSQL materialized view sits under **Views** and opens read only. Page a table at 50, 100, 200, or 500 rows, jump to a page number, sort by a column, search text columns, and stack filters with AND or OR.
+
+To follow a foreign key, tap the link under its value on a row, or long-press a row in the list and pick the key. A sheet previews the row it points at, titled with the table and, when it differs from the one open, the schema. A value in the preview that is itself a foreign key opens the next row in the same sheet, and **Back** returns one step. **Open Table** opens that table filtered to the key, and when one row matches it lands on that row, ready to edit. **Back** then returns to the filtered list and to the row you started from. While that row has an edit open, **Open Table** is dimmed.
+
+<Frame caption="One more tap from the preview to the row in its table">
+  <img className="block dark:hidden" src="/images/ios-foreign-key-preview.png" alt="Customer preview sheet with a SupportRepId link to Employee and an Open Table button, beside the Customer row screen showing 1 of 1" />
+  <img className="hidden dark:block" src="/images/ios-foreign-key-preview-dark.png" alt="Customer preview sheet with a SupportRepId link to Employee and an Open Table button, beside the Customer row screen showing 1 of 1" />
+</Frame>
 
 **Table Structure** lists columns, indexes, and foreign keys, read only. An index shows its key columns and expressions in key order, then any `INCLUDE` columns and a partial index's `WHERE` clause. On Redshift the index list holds the DISTKEY and SORTKEY columns.
 
@@ -116,7 +128,7 @@ On Redis the list holds the current database's keys. A key opens by type: a stri
 
 ### Editing
 
-Tap a row to open it full screen, page between rows, edit values, toggle one to `NULL`, and save. An emptied date, number or boolean field saves `NULL`, and in a NOT NULL column it keeps its value; an emptied text field saves an empty string. While you edit, **Cancel** takes the place of the back button and asks before it throws away a changed value, and so does **Connections** in another tab. Inserting and deleting rows, and truncating or dropping a table, are here too; a PostgreSQL foreign table offers neither Truncate nor Drop. Editing needs a primary key.
+Tap a row to open it full screen, page between rows, edit values, toggle one to `NULL`, and save. An emptied date, number or boolean field saves `NULL`, and in a NOT NULL column it keeps its value; an emptied text field saves an empty string. While you edit, **Cancel** takes the place of the back button and asks before it throws away a changed value, and so does **Connections** in another tab. Inserting and deleting rows, and truncating or dropping a table, are here too; a PostgreSQL foreign table offers neither Truncate nor Drop. Editing needs a primary key, and a row whose key holds binary data opens read only.
 
 A new row starts with every column on **DEFAULT**, which leaves that column out of the `INSERT` so the database fills it in. The badge beside a field switches it between **DEFAULT**, **NULL** and a typed value, and **NULL** is offered on nullable columns only. Generated columns are never written, and an auto-increment key stays on **DEFAULT** until you type one.
 
@@ -124,7 +136,20 @@ A save, insert, delete, truncate or drop runs inside a read-write transaction. M
 
 ### Querying
 
-**Run** sends every statement in the editor, in order, and each one commits as it runs unless your script opened a transaction. The result area shows the last statement's rows, or how many rows the run changed. The first statement that fails ends the run: the error names its position, as in `Statement 2/3 failed`, and, where the connection reports its transaction state, whether the statements before it stay applied or wait in your open transaction. On SQL Server, a line holding only `GO` splits the text into batches, each batch goes to the server whole, and `GO 5` runs its batch five times.
+**Run** sends the statement the cursor is in, and a faint band behind the text marks it before you tap. Select text first to send the selection instead; a selection hides the band. With the cursor past the last statement or inside a comment, **Run** sends nothing, keeps the last result, and shows "The cursor is not in a statement." Past 10,000 characters the editor drops its colors and the band, and **Run** still finds the statement.
+
+Touch and hold **Run** for **Run All Statements**, which sends every statement in the editor in order. It is in the **More** menu too. On a hardware keyboard, `Cmd+Enter` runs the statement or the selection, `Cmd+Shift+Enter` runs every statement, and `Cmd+.` stops.
+
+<Frame caption="The band marks the statement Run sends">
+  <img className="block dark:hidden" src="/images/ios-query-run.png" alt="Query section with the second of three SELECT statements banded and its result b 2, beside the Run menu holding Run Statement and Run All Statements" />
+  <img className="hidden dark:block" src="/images/ios-query-run-dark.png" alt="Query section with the second of three SELECT statements banded and its result b 2, beside the Run menu holding Run Statement and Run All Statements" />
+</Frame>
+
+Safe Mode reads only the text that runs, so a `SELECT` before an `UPDATE` runs without the **Confirm Writes** question. Each statement commits as it runs unless your script opened a transaction. The result area shows the last statement's rows, or how many rows the run changed. The first statement that fails ends the run: the error names its position, as in `Statement 2/3 failed`, and, where the connection reports its transaction state, whether the statements before it stay applied or wait in your open transaction.
+
+On SQL Server, lines with no semicolon between them are one statement up to the next line holding only `GO`, so **Run** sends that batch. In a selection or **Run All Statements**, each `GO` line ends a batch, each batch goes to the server whole, and `GO 5` runs its batch five times.
+
+On Redis a command ends at a semicolon or at a line break outside quotes, so each line is its own command and a quoted value may run across lines. A command with an unclosed quote fails without running.
 
 **Stop** cancels the running statement and starts no other. On MySQL and Redis the statement keeps running on the server until it finishes. Results copy or export as JSON, CSV, or SQL `INSERT`.
 
@@ -134,7 +159,7 @@ A running query appears in a Live Activity on the lock screen and Dynamic Island
 
 - **Schema changes.** Truncating and dropping a table is the whole list; creating or altering tables, columns, indexes, triggers, and views is Mac only.
 - **Changing Redis data.** Keys open read only; change them in **Query**.
-- **Socket connections.** A MySQL or MariaDB connection that uses a socket on the Mac opens there only, and the connection list shows it as **Mac socket** and the path. Its socket path syncs here and back intact.
+- **Socket connections.** A MySQL or MariaDB connection that uses a socket on the Mac opens there only. The connection list shows **Mac socket** and the path, marked **Opens on Mac only**, and a tap says why. Its socket path syncs here and back intact.
 - **AI.** No chat, no inline suggestions, no MCP server.
 
 ## Security
