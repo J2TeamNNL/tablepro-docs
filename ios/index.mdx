@@ -3,7 +3,7 @@ title: iPhone and iPad
 description: Browse tables, run queries, and edit rows on eleven database engines from a synced connection list
 ---
 
-You need iOS 18 or later. Builds ship on their own schedule, so a feature in a Mac release note may not be on your phone yet. Your version and build are under **Settings > About**. Connections saved on a Mac come over iCloud; the rest of your Mac setup stays on the Mac.
+You need iOS 18 or later. Builds ship on their own schedule, so a feature in a Mac release note may not be on your phone yet. Your version and build are under **Settings > About**. Connections and saved queries from a Mac come over iCloud; the rest of your Mac setup stays on the Mac.
 
 <Frame caption="The connection list and Settings on iPhone">
   <img className="block dark:hidden" src="/images/ios-connection-list.png" alt="Connections grouped under Favorites and a Production folder, next to Settings with Security, iCloud and New Connections sections" />
@@ -81,7 +81,7 @@ A connection, group or tag form with unsaved changes stays open when swiped down
 
 ## What syncs over
 
-The same CloudKit container as the Mac. iCloud Sync is off on both until you turn it on: here during first launch or under **Settings > iCloud**. While it is off nothing leaves the device, and edits made in the meantime go up when you turn it back on, provided the device is still signed in to the same Apple Account. Sign in to a different Apple Account and sync starts over for that account: its connections come down, edits not yet sent go up to it, deletions not yet sent are dropped, and the other connections already on the device stay and go up the next time you edit them. Three record types cross: connections (host, port, SSH tunnel and SSL settings, color, icon, safe mode level, favorite), groups with their nesting and icons, and tags. SSH profiles, table favorites, saved queries, and app settings are skipped, and query history on the phone is only what you ran on the phone.
+The same CloudKit container as the Mac. iCloud Sync is off on both until you turn it on: here during first launch or under **Settings > iCloud**. While it is off nothing leaves the device, and edits made in the meantime go up when you turn it back on, provided the device is still signed in to the same Apple Account. Sign in to a different Apple Account and sync starts over for that account: its connections come down, edits not yet sent go up to it, deletions not yet sent are dropped, and the other connections already on the device stay and go up the next time you edit them. Four kinds of data cross: connections (host, port, SSH tunnel and SSL settings, color, icon, safe mode level, favorite), groups with their nesting and icons, tags, and [saved queries](#saved-queries) with their folders. Saved queries have no switch of their own here and sync whenever iCloud Sync is on. SSH profiles, table favorites, and app settings are skipped, and query history on the phone is only what you ran on the phone.
 
 Four things a connection depends on are per device and never sync:
 
@@ -178,6 +178,26 @@ On Redis a command ends at a semicolon or at a line break outside quotes, so eac
 
 A running query appears in a Live Activity on the lock screen and Dynamic Island, with the elapsed time and the row count so far. **Settings > Live Activities > Hide Query** replaces the SQL text there with "Running query". The card clears when the query ends. Quitting the app mid-query leaves it behind, marked interrupted, until the next launch clears it.
 
+### Saved queries
+
+Open the **More** menu (•••) beside **Run** and choose **Saved Queries**. The list holds this connection's queries and the global ones, in their folders, and search matches names, keywords and SQL. Tap a query to put its SQL in the editor in place of what was there. Nothing runs until you tap **Run**.
+
+**Save Query…** in the same menu keeps the editor's text, with the first line of the SQL filled in as its name. Turn on **Global** to list the query on every connection. Keywords and the size limit follow the [Mac's rules](/features/favorites#keywords), and a keyword expands in the Mac's editor only.
+
+<Frame caption="A globe marks a global query">
+  <img className="block dark:hidden" src="/images/ios-saved-queries.png" alt="Query menu with Saved Queries and Save Query above History, beside the Saved Queries sheet with a Reports folder and two queries carrying keyword badges" />
+  <img className="hidden dark:block" src="/images/ios-saved-queries-dark.png" alt="Query menu with Saved Queries and Save Query above History, beside the Saved Queries sheet with a Reports folder and two queries carrying keyword badges" />
+</Frame>
+
+| To | Do this |
+| --- | --- |
+| Rename, move or delete a query | Touch and hold it and choose **Rename**, **Move to Folder…** or **Delete** |
+| Change its name, folder, keyword or scope | Swipe right on it, or touch and hold it and choose **Edit…** |
+| Add a folder | Tap **New Folder** at the top of the list, or touch and hold a folder and choose **New Subfolder** |
+| Rename a folder, make it global, or delete it | Touch and hold the folder. Deleting one moves what it held up a level |
+
+To change a saved query's SQL, edit it on the Mac. Version history and linked SQL folders are Mac only.
+
 ### Open transactions
 
 After `BEGIN` in **Query**, a bar sits at the bottom of every section until the transaction ends, by its buttons or by a typed `COMMIT` or `ROLLBACK`. A typed `ROLLBACK` reloads open tables and closes row screens the way **Roll Back** does. On a MySQL or MariaDB server with autocommit off, opening a table is enough to start one. The bar names the database, or the connection on an engine with one database, and the connection list marks the row with an hourglass. Where their titles do not fit, **Roll Back** and **Commit** show as an arrow and a checkmark.
@@ -214,7 +234,7 @@ Turn on Face ID, Touch ID, or Optic ID under **Settings > Security**. A cold lau
 
 Each connection carries its own [safe mode](/features/safe-mode) level, synced from the Mac. Set it with **Safe Mode** under **Organization** in the connection's form. iOS has three: **Off**, **Confirm Writes**, and **Read-Only**, which refuses writes outright. **Default Safe Mode** under **Settings > New Connections** sets the level a new connection starts at.
 
-SSH tunnels authenticate with a password or a private key. A tunnel set to **SSH Agent** on the Mac signs in here with a private key on this device and stays **SSH Agent** on the Mac. An unknown host key, the SSH server's or a jump host's, prompts with its fingerprint first, on the connection's own screen. The question waits there until you answer it, and leaving the screen ends that attempt. A key pasted under **Paste Key**, or picked as a text file, is kept in the Keychain beside the connection's passwords, never in the saved connection list. A key file that is not text is copied into the app and read from there. Setting **Auth Method** to **Password**, choosing **Import File**, or turning **SSH Tunnel** off deletes the saved key when you tap **Save**. Turning the tunnel off keeps its other settings, here and on the Mac, for when you turn it back on.
+SSH tunnels authenticate with a password or a private key. A tunnel set to **SSH Agent** on the Mac signs in here with a private key on this device and stays **SSH Agent** on the Mac. An unknown host key, the SSH server's or a jump host's, prompts with its fingerprint first, on the connection's own screen. The question waits there until you answer it, and leaving the screen ends that attempt. A key pasted under **Paste Key**, or picked as a text file, is kept in the Keychain beside the connection's passwords, never in the saved connection list. A key file that is not text is copied into the app and read from there. Setting **Auth Method** to **Password**, choosing **Import File**, or turning **SSH Tunnel** off deletes the saved key when you tap **Save**. A tunnel the Mac forwards to a unix socket on the server forwards to the same socket here. Turning the tunnel off keeps its other settings, here and on the Mac, for when you turn it back on.
 
 ### Jump hosts
 
@@ -227,6 +247,10 @@ Hops synced from the Mac arrive with key paths that name files on the Mac, so ea
   <img className="hidden dark:block" src="/images/ios-jump-hosts-dark.png" alt="Edit Connection form with two jump hosts marked No key on this device, beside the editor for bastion1.example.com with Same Key as SSH Server switched off" />
 </Frame>
 
+### SSH profiles
+
+A connection that uses an [SSH profile](/connections/ssh-profiles) on the Mac arrives with the profile's server, sign-in method and jump hosts, read only in the form: change them in the profile on the Mac. It signs in with the profile's password once the Mac syncs passwords to iCloud Keychain; until then the password field works as it does for any tunnel. A key passphrase saved here wins over the profile's, since it goes with the key on this device. Turning **SSH Tunnel** off unlinks the profile from that connection on every device.
+
 ## Privacy
 
 **Share Usage Data** under **Settings > Privacy** sends one small report a day: a hashed device identifier, the app and iOS versions, your language, the database types you use, and when you first connected and first ran a query. It is off unless you chose **Share Usage Data** on first launch, and it never carries a hostname, username, password, query, or row.
@@ -237,4 +261,4 @@ Hops synced from the Mac arrive with key paths that name files on the Mac, so ea
 
 Three App Intents put the app in Shortcuts, the Share Sheet, and Siri: **Open Connection**, **Add Row to Table**, **Add Rows to Table**. See [iOS Shortcuts](/integrations/ios-shortcuts) for pickers, data formats, and limits.
 
-A **Quick Connect** home screen widget opens a saved connection directly and leaves out the ones that open on the Mac only. Handoff carries an open connection between devices. A `tablepro://connect/<uuid>` link opens a connection and `tablepro://connect/<uuid>/table/<name>` opens a table; the Mac's other links do less or nothing here, as [URL scheme](/developers/url-scheme#on-iphone-and-ipad) lists. A `.tablepro` file from Files or AirDrop imports its connections, leaving out any saved queries it carries.
+A **Quick Connect** home screen widget opens a saved connection directly and leaves out the ones that open on the Mac only. Handoff carries an open connection between devices. A `tablepro://connect/<uuid>` link opens a connection and `tablepro://connect/<uuid>/table/<name>` opens a table; the Mac's other links do less or nothing here, as [URL scheme](/developers/url-scheme#on-iphone-and-ipad) lists. A `.tablepro` file from Files or AirDrop imports its connections and saved queries.
