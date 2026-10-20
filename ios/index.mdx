@@ -177,7 +177,7 @@ A running query appears in a Live Activity on the lock screen and Dynamic Island
 
 ### Open transactions
 
-After `BEGIN` in **Query**, a bar sits at the bottom of every section until the transaction ends, by its buttons or by a typed `COMMIT` or `ROLLBACK`. On a MySQL or MariaDB server with autocommit off, opening a table is enough to start one. The bar names the database, or the connection on an engine with one database, and the connection list marks the row with an hourglass. Where their titles do not fit, **Roll Back** and **Commit** show as an arrow and a checkmark.
+After `BEGIN` in **Query**, a bar sits at the bottom of every section until the transaction ends, by its buttons or by a typed `COMMIT` or `ROLLBACK`. A typed `ROLLBACK` reloads open tables and closes row screens the way **Roll Back** does. On a MySQL or MariaDB server with autocommit off, opening a table is enough to start one. The bar names the database, or the connection on an engine with one database, and the connection list marks the row with an hourglass. Where their titles do not fit, **Roll Back** and **Commit** show as an arrow and a checkmark.
 
 <Frame caption="The mark stays on the list after you leave the connection">
   <img className="block dark:hidden" src="/images/ios-transaction-bar.png" alt="Orders table with a Transaction Open bar above the tab bar, beside the connection list with an hourglass on the Shop connection" />
@@ -194,9 +194,9 @@ After `BEGIN` in **Query**, a bar sits at the bottom of every section until the 
 
 **Transaction Failed** means a PostgreSQL statement inside it failed, and the server keeps none of it. Only **Roll Back** is offered, and a typed `COMMIT` rolls it back as well.
 
-The bar shows on PostgreSQL, Redshift, MySQL, MariaDB, TiDB, SQLite and Oracle. DuckDB, SQL Server and OceanBase do not report their session state, so an open transaction there shows nothing.
+The bar shows on PostgreSQL, Redshift, MySQL, MariaDB, TiDB, SQLite, Oracle, DuckDB and SQL Server. OceanBase does not report its session state, so an open transaction there shows nothing.
 
-A connection that drops with a transaction open reconnects and says the server rolled the transaction back. One that drops during **Commit** never got the answer: check which changes were saved before running them again. Switching database on PostgreSQL or Redshift with a transaction open asks first, since the switch rolls it back.
+A connection that drops with a transaction open reconnects and says the server rolled the transaction back. One that drops during **Commit** never got the answer: check which changes were saved before running them again. Switching database on PostgreSQL or Redshift, saving a connection edit that reconnects, or deleting the connection asks first while a transaction is open, since each rolls it back. On MySQL, MariaDB, TiDB, OceanBase and Oracle, **Truncate** and **Drop** commit an open transaction, and their confirmation says so. Two iPad windows on one connection follow each other's database switch.
 
 ## What is missing
 
