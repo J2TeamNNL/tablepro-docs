@@ -55,6 +55,14 @@ PostgreSQL, Redshift, CockroachDB, MySQL, MariaDB, TiDB, SQLite, DuckDB, SQL Ser
 
 Two things survive a rollback in any of those four cases. MySQL, MariaDB and Oracle commit a `CREATE`, `ALTER` or `DROP` the moment it runs, along with everything before it, and CockroachDB commits the open transaction before it processes any DDL at all.
 
+### The open transaction bar
+
+While a session holds a transaction, a bar above every tab of the connection says **Transaction Open**, names the database, and offers **Roll Back** and **Commit**. It shows whoever opened the transaction, a `BEGIN` you ran, a grid save inside one, or an [MCP client's](/developers/mcp-tools) `transaction_control`, and goes once it ends, by its buttons, by a typed `COMMIT` or `ROLLBACK`, or with the session. On PostgreSQL, Redshift and CockroachDB each database keeps its own connection, so two databases with open transactions show a row each. The [connections strip](/features/workspace-rail) marks the entry with an hourglass, so you see it from another connection.
+
+**Transaction Failed** means a statement inside it failed and it can no longer commit, so only **Roll Back** is offered. **Roll Back** asks first at every [Safe Mode](/features/safe-mode) level. **Commit** asks what a typed `COMMIT` asks: nothing at **Silent**, a confirmation at the Alert levels, a confirmation and Touch ID at the Safe Mode levels. At **Read-Only** it is hidden.
+
+Both act on the connection the bar names. When other work ran there after you clicked, they do nothing and say so: check the transaction and try again.
+
 ### Statements a transaction cannot hold
 
 One of these anywhere in the batch leaves the whole of it unwrapped. The engine either refuses the statement inside a block, as PostgreSQL refuses `VACUUM`, or applies it and quietly throws it away, as SQLite does with `PRAGMA foreign_keys`.
