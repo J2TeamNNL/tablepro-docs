@@ -30,7 +30,7 @@ A failure that happens on one engine only is on that engine's page, which ends w
 A failed connect paints the window with **Could not connect to `…`**, the driver's own message, and three buttons: **Try Again**, **Manage Connections…**, **Copy Details**.
 
 - **Refused** means something answered and said no: the server is not listening on that port, or it is bound to `127.0.0.1` only. **Timed out** means nothing answered, which points at a firewall, a security group or a VPN. Tell them apart with `nc -zv host port`.
-- **Still on Connecting**: after 12 seconds on one step the pane says "This is taking longer than usual." **Cancel** gives up at once and drops that connection from **Reopen Last Session**; a connect that fails on its own keeps its place there.
+- **Still on Connecting**: after 12 seconds on one step the pane says "This is taking longer than usual." **Cancel** gives up at once. **Reopen Last Session** brings that connection back as **Not connected** without dialing it; a connect that fails on its own dials again.
 - On macOS 15 and later, a database at a local network address (`192.168.x.x`, `.local`) needs the Local Network permission. Grant it to TablePro under **System Settings > Privacy & Security > Local Network**. Loopback and internet hosts are unaffected.
 - Authentication failures are engine-specific. See [PostgreSQL](/databases/postgresql), [MySQL](/databases/mysql) or [SQL Server](/databases/mssql).
 

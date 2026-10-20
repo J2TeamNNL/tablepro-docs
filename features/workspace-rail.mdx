@@ -68,11 +68,11 @@ Right-click an entry and choose **Close Database “\<name\>”** to close that 
 
 **Close Connection “\<name\>”**, below it, closes the whole connection: every tab across every database it has open, its session, and all of its entries. The window closes too if that was its last connection, and **File > Close Connection** does the same for the connection on screen. A connection down to one entry has nothing else left, so closing that entry closes it. Nothing is lost for good: reopen the connection, from the connection list or **Database > Switch Connection…**, and its tabs come back as they were.
 
-**Disconnect**, on the same menu while the connection is live, ends the session and keeps everything else. No window closes, no entry disappears, and the tabs are saved first; the connection shows a Reconnect pane in their place until **Database > Reconnect**, or the pane's own button, brings both back. **Database > Disconnect** does the same for the connection on screen, asking first when a transaction is open, a query is running, or changes are unsaved. Nothing reconnects on its own, and a connection you disconnected is not reopened at the next launch.
+**Disconnect**, on the same menu while the connection is live, ends the session and keeps everything else. No window closes, no entry disappears, and the tabs are saved first; the connection shows a Reconnect pane in their place until **Database > Reconnect**, or the pane's own button, brings both back. **Database > Disconnect** does the same for the connection on screen, asking first when a transaction is open, a query is running, or changes are unsaved. Nothing reconnects on its own, a relaunch included: a connection you disconnected comes back on the strip as **Not connected**.
 
 ## Reordering
 
-Drag entries to arrange them. The order is shared by every window, kept across launches, and an entry returns to its slot when you reopen it. Until you drag anything, entries follow the order their connections opened, one connection's databases grouped by name, and a connection you disconnect keeps its place.
+Drag entries to arrange them. The order is shared by every window, kept across launches, and an entry returns to its slot when you reopen it. Until you drag anything, entries follow the order their connections opened, one connection's databases grouped by name, and a connection you disconnect keeps its place. Reopening the last session keeps that order.
 
 Deleting a connection takes its entries out of the saved order. The rest is kept to 500 entries, dropping the ones you no longer have open, oldest first, so a database renamed or dropped on the server does not hold a slot forever.
 
