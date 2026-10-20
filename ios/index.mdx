@@ -123,6 +123,13 @@ A save, insert, delete, truncate or drop runs inside a read-write transaction. M
 
 ### Querying
 
+Suggestions fill the bar above the keyboard as you type, in front of the fixed keys. After `FROM`, `JOIN`, `INTO` or `UPDATE` they are tables and views; after `SELECT`, `WHERE`, `ON` or `SET`, the columns of the tables the statement names; elsewhere, keywords. An alias and a dot, as in `i.`, give that table's columns. Tap one to replace the word you are typing, quoted when the engine needs it. A table's columns load the first time it needs them and again after each run. On iPad with a hardware keyboard, `Tab` inserts the first suggestion and `Escape` hides the bar until you type or move the cursor.
+
+<Frame caption="Tables after FROM, columns after an alias">
+  <img className="block dark:hidden" src="/images/ios-query-suggestions.png" alt="Query editor on iPhone suggesting Invoice and InvoiceLine for SELECT * FROM Inv, beside Total and InvoiceId suggested for WHERE i." />
+  <img className="hidden dark:block" src="/images/ios-query-suggestions-dark.png" alt="Query editor on iPhone suggesting Invoice and InvoiceLine for SELECT * FROM Inv, beside Total and InvoiceId suggested for WHERE i." />
+</Frame>
+
 **Run** sends every statement in the editor, in order, and each one commits as it runs unless your script opened a transaction. The result area shows the last statement's rows, or how many rows the run changed. The first statement that fails ends the run: the error names its position, as in `Statement 2/3 failed`, and, where the connection reports its transaction state, whether the statements before it stay applied or wait in your open transaction. On SQL Server, a line holding only `GO` splits the text into batches, each batch goes to the server whole, and `GO 5` runs its batch five times.
 
 **Stop** cancels the running statement and starts no other. On MySQL and Redis the statement keeps running on the server until it finishes. Results copy or export as JSON, CSV, or SQL `INSERT`.

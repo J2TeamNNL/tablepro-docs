@@ -186,6 +186,10 @@ Field names come from a sample of the collection's documents, nested paths inclu
 
 Comments suppress completion, and a brace or bracket inside a string literal does not open a document.
 
+## On iPhone and iPad
+
+The iOS query editor completes keywords, tables, views, columns and aliases by the same rules, in the bar above the keyboard: see [Querying](/ios#querying). Functions, operators, schema names, enum values and favorite keywords are Mac only.
+
 ## My new table does not complete
 
 Table names are cached when a connection opens, and column names the first time a query tab on that database is on screen. Moving between connections in the window keeps the cache. A change made from TablePro reloads it on its own: a statement run in the SQL editor, a save from the sidebar, an import, a restore, Copy Objects, Compare & Sync, and statements run through MCP or the AI assistant. A migration or a `CREATE TABLE` run from another client stays invisible until the cache reloads. Press `Cmd+R` (**Database > Refresh**), or right-click the sidebar's Tables header and choose **Refresh**. Switching databases reloads it too.
