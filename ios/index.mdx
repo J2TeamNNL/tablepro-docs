@@ -97,6 +97,31 @@ Picking a SQLite file copies it into the app, and edits go to that copy, so the 
 
 A database created with **Create New Database**, or copied in by picking it, stays with its connection through an app update and a restore from backup. A file that is gone is reported as unavailable, and so is a file connection synced from another iPhone or iPad; the connection never opens an empty database, or a file of the same name on this device, in its place.
 
+## IAM sign-in
+
+Short-lived tokens replace the password for [AWS IAM](/connections/aws-iam) on Amazon RDS and Aurora (MySQL, MariaDB, PostgreSQL) and ElastiCache (Redis), and for [Google Cloud IAM](/connections/cloud-sql-proxy#iam-sign-in-without-the-proxy) on Cloud SQL (MySQL, PostgreSQL). Pick the method under **Authentication** in the connection's form, and the **Password** field goes away. Each connect signs a fresh token and never saves it.
+
+The methods match the Mac's, but two of them read files that only the Mac has:
+
+| Method | What this device needs |
+| --- | --- |
+| **AWS IAM (Access Key)** | The access key in the form. With **Sync Passwords** on, a key saved on the Mac comes over |
+| **AWS IAM (Profile)** | A key under **Access Key for This Device**, since the profile is read from files on the Mac |
+| **AWS IAM (SSO)** | **Start URL** and **SSO Region** under **IAM Identity Center**, then **Sign In with IAM Identity Center** and an **Account** and **Role** |
+| **Google Cloud IAM (Service Account)** | The JSON key: tap **Service Account Key** to paste it or choose the file. A key pasted on the Mac comes over with **Sync Passwords**; a key file on the Mac does not |
+| **Google Cloud IAM (Application Default)** | A service account key under **Key for This Device**, since the `gcloud` credentials are files on the Mac |
+
+A key for this device and the IAM Identity Center settings stay on this device. They never sync, whatever **Sync Passwords** says, and the connection on the Mac does not change. Opening a connection that still needs one says which, with **Edit Connection** to add it.
+
+<Frame caption="A Profile connection signs in once this device has its own access key">
+  <img className="block dark:hidden" src="/images/ios-iam-sign-in.png" alt="AWS Profile Is on the Mac error with Edit Connection and Retry, beside the connection form's Authentication section set to AWS IAM (Profile) with an empty Access Key for This Device section" />
+  <img className="hidden dark:block" src="/images/ios-iam-sign-in-dark.png" alt="AWS Profile Is on the Mac error with Edit Connection and Retry, beside the connection form's Authentication section set to AWS IAM (Profile) with an empty Access Key for This Device section" />
+</Frame>
+
+**Sign In with IAM Identity Center** shows a code and opens the browser; confirm the code there. When that sign-in expires, opening the connection offers to sign in again.
+
+A token needs an encrypted connection. A MySQL, MariaDB or PostgreSQL connection with **SSL Mode** on **Disabled** connects with **Required**, and a MySQL server that offers no TLS is refused before the token is sent. A Redis connection with SSL off fails until you turn SSL on.
+
 ## What works
 
 An open connection fills the screen and carries four sections: **Tables**, **Query**, **History**, **Info**. They sit in a tab bar on iPhone and in a sidebar on iPad.
