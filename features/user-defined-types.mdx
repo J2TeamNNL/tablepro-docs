@@ -1,9 +1,11 @@
 ---
 title: User-Defined Types
-description: Browse the types a schema or keyspace declares, read each definition, and drop one
+description: Browse the types a schema or keyspace declares, create and edit PostgreSQL types, and drop them
 ---
 
-Expand a schema, or a keyspace on Cassandra and ScyllaDB, and **Types** sits beside **Functions** and **Triggers**, one row per type it declares. Select a row and press Return, or double-click it, and the type's `CREATE` statement opens in a tab.
+import StagedUntilSave from "/snippets/staged-until-save.mdx";
+
+Expand a schema, or a keyspace on Cassandra and ScyllaDB, and **Types** sits beside **Functions** and **Triggers**, one row per type it declares. Select a row and press Return, or double-click it, and the type opens in a tab.
 
 <Frame caption="An enum open from the Types section">
   <img className="block dark:hidden" src="/images/user-defined-types-sidebar.png" alt="Sidebar tree with the Types section expanded under a PostgreSQL schema, and a tab showing the rebuilt CREATE TYPE statement" />
@@ -12,18 +14,18 @@ Expand a schema, or a keyspace on Cassandra and ScyllaDB, and **Types** sits bes
 
 ## Engine support
 
-| Engine | Types listed |
-|---|---|
-| PostgreSQL, PGlite | Enums, composites, domains, ranges |
-| SQL Server | Alias types, table types, CLR types |
-| Cassandra, ScyllaDB | User-defined types |
-| Every other engine | None |
+| Engine | Types listed | Created and edited |
+|---|---|---|
+| PostgreSQL, PGlite | Enums, composites, domains, ranges | Enums, composites and domains. A range is renamed, commented and dropped |
+| SQL Server | Alias types, table types, CLR types | Dropped only |
+| Cassandra, ScyllaDB | User-defined types | Dropped only |
+| Every other engine | None | None |
 
 A table's own row type, the array type created beside every type, the multirange created beside every range, and any type an extension installed are left out. A type in another schema is listed under that schema. On SQL Server the built-in types are left out too, so the section holds only what the database declares.
 
 ## Reading a definition
 
-The definition is rebuilt from the catalog rather than read back as typed: comments inside the original statement are gone, names are quoted, and a domain's constraints appear in name order. The tab carries the same toolbar as a routine's source, **Copy**, **Export…**, **Open in Editor** and **Reload**, and beside the statement sit the properties the catalog reports: a domain's base type, a range's subtype, the owner, and the comment.
+On an engine that edits types, the statement is under **Definition** in the tab; elsewhere it is the whole tab. It is rebuilt from the catalog rather than read back as typed: comments inside the original statement are gone, names are quoted, and a domain's constraints appear in name order. A domain check added without validating the stored values follows the `CREATE DOMAIN` as its own `ALTER DOMAIN … NOT VALID`, because `CREATE DOMAIN` has no `NOT VALID`. The view carries the same toolbar as a routine's source, **Copy**, **Export…**, **Open in Editor** and **Reload**, and beside the statement sit the properties the catalog reports: a domain's base type, a range's subtype, the owner, and the comment.
 
 Hover a row in the sidebar for the same facts without opening it: an enum's labels, a composite's fields, a domain's base type.
 
@@ -33,13 +35,42 @@ A SQL Server table type is a table-valued parameter and cannot declare a column,
 
 On Cassandra the statement is rebuilt from `system_schema.types`: the fields in declaration order, each with the type the server reports.
 
-## Changing or creating a type
+## Creating a type
 
-The tab is read-only. **Open in Editor** puts the definition in a query tab; write the `ALTER TYPE` or `CREATE TYPE` there and run it, then choose **Refresh** on the **Types** section. On PostgreSQL, `ALTER TYPE … ADD VALUE` adds an enum label and, from PostgreSQL 10, `RENAME VALUE` renames one. No statement removes a label or moves an existing one.
+Right-click **Types** and choose **New Type…**. Pick **Enum Type**, **Composite Type** or **Domain**, name it, and fill in its labels, its fields, or its base type with an optional default, **Not Null** and checks. The statement **Create** runs is shown at the bottom of the sheet, and the new type opens in a tab once it exists. The type goes in the schema whose **Types** section you right-clicked.
 
-## Dropping a type
+## Editing a type
 
-Right-click a type and choose **Drop Type…**. The `DROP TYPE` statement (`DROP DOMAIN` for a PostgreSQL domain) is shown for confirmation before it runs, and the **Types** section refreshes once it has. The server refuses while a table, or another type, still uses the type, and its reason is shown. A read-only connection has no **Drop Type…**.
+<StagedUntilSave what="Type changes" />
+
+**General** holds the name and the comment, and for a domain its default and **Not Null**. Beside it, **Labels**, **Fields** or **Constraints** lists the type's members as they will be once the queue runs, and the **Change** column marks each one **New**, **Was "…"**, **Dropped** or **Validated on save**.
+
+| Kind | What changes |
+|---|---|
+| Enum | Add a label at the end, or before or after an existing one. Rename a label, on PostgreSQL 10 and later |
+| Composite | Add, drop and rename a field. **Edit…** renames a field and changes its type |
+| Domain | Set or clear the default and **Not Null**. Add a check, drop a constraint, and **Validate** a check added without checking the stored values |
+| Range | The name and the comment |
+
+An enum label cannot be removed or moved once it exists. To drop or reorder one, create a new type with the labels in the order you want, and convert the columns that use the old type.
+
+The queue under the tab lists the changes in the order they run; the cross beside one takes it out. A rename always runs last. A change that no longer fits, such as a label placed after one whose addition you took out, says why in red, and **Save Changes** refuses until you fix or remove it.
+
+### Saving changes
+
+**Save Changes** asks at most once, on a sheet showing the statements, as the connection's [Safe Mode](/features/safe-mode) level requires. A save that drops a field or a constraint, or changes a field's type, asks even at **Silent**.
+
+The save runs on a connection of its own, in one transaction, so a change the server refuses saves nothing. A save that adds an enum label runs each statement on its own instead, because PostgreSQL before 12 refuses `ALTER TYPE … ADD VALUE` inside a transaction block. Then the changes before the refused one are saved and leave the queue.
+
+The server's message appears under the change it refused, and the rest stay queued. A check the stored values break reports `column "…" of table "…" contains values that violate the new constraint`: fix those rows, or add the check with **Check the values already stored** turned off and **Validate** it later.
+
+A composite that a table column uses cannot change a field's type. PostgreSQL answers `cannot alter type "…" because column "…" uses it`.
+
+Once a save runs, the **Types** section, the column type picker and every table tab on that database read the type again, in every window.
+
+## Renaming and dropping a type
+
+Right-click a type in the sidebar. **Rename** edits the name in place. **Drop Type…** asks first; on PostgreSQL, select **Cascade** to drop the columns, functions and other objects that use the type along with it. Without **Cascade**, and always on SQL Server, Cassandra and ScyllaDB, the server refuses while a table or another type still uses the type, and its reason is shown. The **Types** section refreshes once the drop runs, and a tab open on the dropped type closes. A read-only connection has no **New Type…**, **Rename** or **Drop Type…**.
 
 ## Using a type in a column
 
