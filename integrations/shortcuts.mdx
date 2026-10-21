@@ -84,10 +84,10 @@ statement goes to the history drawer under **Shortcuts** and to the execution au
   </Step>
 </Steps>
 
-On a Mac, a row goes in as an `INSERT` on any engine queried with SQL. On iPhone and iPad, inserts
-work on MySQL, MariaDB, TiDB, OceanBase, PostgreSQL, Redshift, SQL Server, SQLite, DuckDB and
-Oracle. Any other type, Redis for example, fails with *"Redis connections do not support adding
-rows from Shortcuts."*
+On a Mac, rows go in the way a row added in the data grid does, so any engine whose grid adds rows
+takes them. On iPhone and iPad, inserts work on MySQL, MariaDB, TiDB, OceanBase, PostgreSQL,
+Redshift, SQL Server, SQLite, DuckDB and Oracle. An engine that cannot take them fails with
+*"Redis connections do not support adding rows from Shortcuts."*, naming its own type.
 
 Siri takes "Open [connection] in TablePro", "Connect to [connection] in TablePro", "Add a row in
 TablePro" and "Add rows in TablePro", with a connection name in place of the brackets. On a Mac it
@@ -154,7 +154,7 @@ Nothing is inserted, except where the message says rows stay in.
 | *"Too many rows. Add up to 10000 rows at a time."* | Over the cap. |
 | *"Add Row to Table expects one row. Use Add Rows to Table for multiple rows."* | An array reached the single-row action. |
 | *"…check the server's SSH host key first."* or *"…Open this connection in TablePro to check it."* | The SSH server is new, or its host key changed. A Shortcut has no screen to show the question on. |
-| *"Added … of the rows before one failed, and those stay in the table: …"* | A row failed on a Mac engine without transactions. The rows before it stay in. |
+| *"… of … statements were already written, and … cannot roll them back."* | A row failed on a Mac engine without transactions. The rows before it stay in, and running the shortcut again adds them a second time. |
 
 On iPhone and iPad the action also fails while the device is locked, because it reads the
 connection's password from the Keychain.
