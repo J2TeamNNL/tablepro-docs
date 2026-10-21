@@ -113,7 +113,7 @@ Choose **File > Import > Import from Other App…**, pick the source, then revie
 | Beekeeper Studio | MySQL, PostgreSQL, SQLite, SQL Server, Oracle, and more | Decrypted from its `app.db` store | Saved queries, global, in a folder named Beekeeper Studio | Brings SSH bastion hosts across |
 | Navicat | MySQL, MariaDB, PostgreSQL, SQLite, SQL Server, Oracle, MongoDB | Decrypted from `.ncx` file | None: the `.ncx` file has no saved queries | Export from Navicat first, with **Export Password** on, then pick the `.ncx` |
 
-Saved queries keep their folders inside the app's folder. A query keeps one keyword: a Sequel Ace tab trigger, or the first keyword without spaces from a TablePlus favorite. A DBeaver script with no connection lands in a global folder named DBeaver. A script or console whose connection is not part of the import lands in a global DBeaver or DataGrip folder, deselected. Scripts and consoles that still carry the name the app gave them, such as `Script-3` or `console_2`, also start deselected. Empty files are skipped, and placeholders such as `${1:name}` arrive as written.
+Saved queries keep their folders inside the app's folder. A query keeps one keyword: a Sequel Ace tab trigger, or the first keyword without spaces from a TablePlus favorite. A DBeaver script with no connection lands in a global folder named DBeaver. A script or console whose connection is not part of the import lands in a global DBeaver or DataGrip folder, deselected. Scripts and consoles that still carry the name the app gave them, such as `Script-3` or `console_2`, also start deselected. Empty files are skipped, and placeholders such as `${1:name}` arrive as written and work as [fields](/features/favorites#fields) when the keyword expands.
 
 ## Import from AWS
 
