@@ -80,6 +80,12 @@ The default is **Disabled**, which sends plain HTTP. Any other mode switches the
 
 The CA file may be PEM or DER. **Verify CA** needs one, since it checks no hostname, and a connection without it is refused. If **Verify CA** or **Verify Identity** cannot read the file, the connection fails rather than falling back to the public root store. An imported URL with `ssl=true` opens as Verify Identity, and `sslmode=none` as Required. See [SSL/TLS](/connections/ssl).
 
+## On iPhone and iPad
+
+The ClickHouse driver is compiled into TablePro Mobile and talks to the same HTTP interface. Browsing, queries, and row editing work, with edits matched on every value of the row; creating or altering tables stays on the Mac. Unlike the Mac grid, a save or delete there waits for its mutation to finish, and one is refused when another row holds the same values. See [iPhone and iPad](/ios).
+
+Behind an SSH tunnel, **Verify Identity** checks the certificate against the server's own host name, not the local end of the tunnel.
+
 ## Limitations
 
 - No foreign keys and no multi-statement transactions.

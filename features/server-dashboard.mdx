@@ -1,9 +1,17 @@
 ---
 title: Server Dashboard
-description: Monitor active sessions, server metrics, and slow queries in real time
+description: Monitor active sessions, server metrics, slow queries, and your own saved queries in real time
 ---
 
-What this screen shows is what your account is allowed to see. A MySQL user without the `PROCESS` privilege gets only its own connections in the session list. A PostgreSQL role that is neither a superuser nor a member of `pg_monitor` gets everyone's backends with the Query column blank. An empty or half-blank dashboard is nearly always a privilege, not a fault.
+What this screen shows is what your account is allowed to see. An empty or half-blank dashboard is nearly always a privilege, not a fault:
+
+| Database | Without it | Grant |
+|---|---|---|
+| MySQL / MariaDB | Only your own connections | `PROCESS` |
+| PostgreSQL | Everyone's backends with the Query column blank | superuser, or membership in `pg_monitor` |
+| Oracle | Every panel fails with `ORA-00942` on `"SYS"."V_$SESSION"` | `SELECT_CATALOG_ROLE` or `SELECT ANY DICTIONARY` to read, `ALTER SYSTEM` to cancel or terminate |
+| MongoDB | Only your own operations; metrics and slow queries fail | `clusterMonitor`, `dbAdmin` on the database you browse for its profiler, and `hostManager` to cancel another user's operation |
+| Redis | A panel fails with `NOPERM` naming the command | `+client\|list`, `+client\|id`, `+info` and `+slowlog\|get` in the user's ACL, plus `+client\|kill` and `+client\|unblock` to act on a client |
 
 Open it from **Database > Server Dashboard**, or from **Server Dashboard** under **Actions** in the toolbar.
 
@@ -20,7 +28,7 @@ Open it from **Database > Server Dashboard**, or from **Server Dashboard** under
   />
 </Frame>
 
-The panels stack top to bottom. Drag the dividers between Active Sessions, Server Metrics, and Slow Queries to resize them; the positions are remembered across launches.
+The panels stack top to bottom: Active Sessions, Server Metrics, Saved Queries, and Slow Queries. Drag the dividers between them to resize them; the positions are remembered across launches.
 
 ## Active Sessions
 
@@ -28,7 +36,7 @@ Every connection to the server except this one, sortable, one row each.
 
 | Column | Holds |
 |---|---|
-| PID | Process or session ID |
+| PID | Process or session ID: `SID,SERIAL#` on Oracle, the operation ID on MongoDB, the client ID on Redis |
 | User, Database | Who is connected, and to what |
 | State | active, idle or sleeping, in the engine's own wording |
 | Duration | How long the current operation has been running |
@@ -36,17 +44,45 @@ Every connection to the server except this one, sortable, one row each.
 
 On PostgreSQL 9.1 an idle session shows an empty Query: that server keeps only the running statement, not the last one.
 
-Two buttons sit on each row. **Cancel Query** stops the running statement and leaves the connection up: `pg_cancel_backend` on PostgreSQL, `KILL QUERY` on MySQL. MySQL before 5.0 has no `KILL QUERY`, so those rows offer only **Terminate Session**. **Terminate Session** ends the connection itself with `pg_terminate_backend` or `KILL`, and the server rolls back any transaction that session had open. Both confirm first, and a refusal from the server comes back as an **Action Failed** alert.
+Two buttons sit on each row. **Cancel Query** stops the running statement and leaves the connection up: `pg_cancel_backend` on PostgreSQL, `KILL QUERY` on MySQL, `ALTER SYSTEM CANCEL SQL` on Oracle, `killOp` on MongoDB, `CLIENT UNBLOCK … ERROR` on Redis. **Terminate Session** ends the connection itself with `pg_terminate_backend`, `KILL`, `ALTER SYSTEM KILL SESSION … IMMEDIATE` or `CLIENT KILL ID`, and the server rolls back any transaction that session had open. Both confirm first, and a refusal from the server comes back as an **Action Failed** alert.
+
+MySQL before 5.0 and Oracle before 18c have no way to cancel a statement, so their rows offer only **Terminate Session**. MongoDB has no command that closes another client's connection, and an idle MongoDB connection has no operation to cancel. On Redis only a blocked client, one waiting in `BLPOP`, `XREAD` or the like, has a command to cancel, from Redis 5.0: its wait ends with an error.
+
+On MongoDB, State is `active` or `idle`. On Redis, Duration is how long the client has been idle, Query is its last command, and State names a blocked, `MULTI`, Pub/Sub, replica or master client.
 
 ## Slow Queries
 
 Queries still running after 1 second, longest first, with elapsed time, SQL, user, and database.
 
-ClickHouse is the exception: its list comes from `system.query_log`, so it holds the 20 most recent *finished* queries that took over a second, newest first, and no database.
+ClickHouse, MongoDB and Redis list finished queries instead, newest first, up to 20:
+
+- **ClickHouse** reads `system.query_log`: queries that took over a second, with no database.
+- **MongoDB** reads the profiler of the database you are browsing. Turn it on with `db.setProfilingLevel(1)`, which records operations slower than `slowms`, 100 ms unless changed. What it recorded stays listed after you turn it off.
+- **Redis** reads `SLOWLOG GET`: commands over `slowlog-log-slower-than`, 10 ms unless changed, with the client address in the User column.
+
+## Saved Queries
+
+Put a number you watch next to the server's own: a queue depth, a row count, a replication lag. Click **+** in the Saved Queries panel and pick one of the connection's [saved queries](/features/favorites#working-with-saved-queries); folders open as submenus. The tile runs the saved query itself, so editing the query in the sidebar changes the tile, and deleting it leaves the tile saying so.
+
+What the tile draws depends on what comes back:
+
+| Result | Tile |
+|---|---|
+| One row, one column | The value, large |
+| Two or more rows, a date or time in the first column, and a numeric column | A line of the first numeric column over time. Needs a plan that includes Result Charts; without one the tile shows the table |
+| Anything else | The first five rows, with the row count under them |
+
+A tile fetches at most 2,000 rows, the most a chart draws, so a query that returns a whole table costs one page of it per refresh.
+
+A tile runs one statement, and only a read. A saved query that writes, holds more than one statement, or reads files on the server is refused on the tile with the reason and never runs. So is every tile on a connection whose [Safe Mode level](/features/safe-mode#levels) asks before reads, **Alert (Full)** and **Safe Mode (Full)**, since nobody is there to confirm a refresh.
+
+Each tile refreshes with the dashboard unless you slow it down: open its **Tile Options** menu, the circled ellipsis, and pick **Every Minute**, **Every 5 Minutes**, **Every 15 Minutes**, or **Every Hour** under **Refresh**. An expensive count then runs once a minute instead of every second. A failed run keeps the last result on the tile and shows the error beneath it.
+
+Drag a tile by its title to move it, or choose **Move Left** or **Move Right** in the same menu. **Remove from Dashboard** removes the tile and keeps the saved query. The tiles, their order, and their intervals are kept per connection on this Mac.
 
 ## Refreshing
 
-The interval menu offers 1s, 2s, 5s (the default), 10s, 30s, and Off. **Pause** stops the cycle without changing the interval and is dimmed while the interval is Off. **Refresh Now** runs a single pass. The time of the last refresh sits on the right.
+The interval menu offers 1s, 2s, 5s (the default), 10s, 30s, and Off. **Pause** stops the cycle, tiles included, without changing the interval, and is dimmed while the interval is Off. **Refresh Now** runs a single pass and runs every tile, whatever its own interval. The time of the last refresh sits on the right.
 
 ## What each engine reports
 
@@ -57,5 +93,11 @@ The interval menu offers 1s, 2s, 5s (the default), 10s, 30s, and Off. **Pause** 
 | MySQL / MariaDB | Yes | Connected threads, running threads, uptime, total queries, slow queries, max connections, bytes received, bytes sent | Yes | Yes | Yes |
 | SQL Server | Yes | User sessions, uptime, database size | Yes | - | Yes |
 | ClickHouse | Yes | Active queries, active merges, part mutations, disk usage | Yes | - | Yes |
+| Oracle | Yes | User sessions, database CPU, logical reads per second, uptime | Yes | 18c and later | Yes |
+| MongoDB | Yes | Connections, uptime, resident memory, query, insert, update, delete and command counters | Profiler | Yes | - |
+| Redis | Yes | Connected clients, used memory, operations per second, keyspace hit ratio, uptime | Slow log | Blocked clients, 5.0 and later | Yes |
+| Typesense | - | System and process memory, memory fragmentation, disk, requests per second, search and write latency, pending write batches, cache hit ratio | - | - | - |
+
+On Oracle, a pluggable database shows its own sessions and metrics, and the root container shows every container's. On a Redis Cluster, the sessions and metrics come from one primary, the node TablePro sends commands without a key to, and the slow log comes from every node. While a `MULTI` block is open on a Redis connection, the panels say so and send nothing into it until it ends.
 
 Every other engine, SQLite and DuckDB included, has no dashboard. The menu item dims and **Actions** leaves the entry out.

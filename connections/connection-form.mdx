@@ -25,10 +25,10 @@ The bar along the bottom carries **Test Connection**, **Cancel** and **Save**, p
 |-------|-------------|
 | **Name** | Display name in the connection list |
 | **Type** | The database type. **Change…** retypes the connection and resets the fields the old type owned |
-| **Connect Using** | MySQL and MariaDB. **Host and Port**, or **Socket** for a server on this Mac. See [Unix socket](/databases/mysql#unix-socket) |
+| **Connect Using** | MySQL, MariaDB, and PostgreSQL. **Host and Port**, or **Socket** for a server on this Mac. See Unix socket for [MySQL](/databases/mysql#unix-socket) and [PostgreSQL](/databases/postgresql#unix-socket) |
 | **Host** | Empty falls back to the driver's own default, usually `localhost` |
 | **Port** | Pre-filled from the database type |
-| **Socket** | Replaces Host and Port when **Connect Using** is **Socket**. The full path of the server's socket file, such as `/tmp/mysql.sock` |
+| **Socket** | Replaces Host when **Connect Using** is **Socket**. MySQL and MariaDB take the socket file, such as `/tmp/mysql.sock`, and drop Port. PostgreSQL takes the folder, such as `/tmp`, and keeps Port, which names the file |
 | **Database** | Optional on drivers that browse every database from one session. PostgreSQL and Redshift do not connect without one |
 | **Username** | Not pre-filled. Empty means the driver's own default |
 | **Password** | Stored in the macOS Keychain. **Show password** reveals a saved one after Touch ID or your Mac's password. A connection whose password comes from a [password source](/features/connection-sharing#password-sources) shows the source here, with **Test Source** |
@@ -53,7 +53,7 @@ SQLite, DuckDB, libSQL, and Beancount replace the host fields with a file path. 
 
 Leave it on **Direct** unless the database is unreachable from this Mac. Switching to another transport keeps what you typed into the previous one, so switching back costs nothing.
 
-A connection set to **Socket** on General offers only **Direct**, since a tunnel cannot reach a socket file on this Mac.
+A connection set to **Socket** on General offers only **Direct**, since a tunnel cannot reach a socket file on this Mac. A PostgreSQL socket also has no SSL settings.
 
 **Socket Path**, under **SSH Tunnel**, forwards to a unix socket instead of Host and Port, which are then unused. See [Forwarding to a unix socket](/connections/ssh-tunneling#forwarding-to-a-unix-socket).
 
@@ -69,11 +69,15 @@ Encryption sits below the transport. [SSL/TLS](/connections/ssl) covers the mode
 | **Extensions** | SQLite, and libSQL in Local File mode. Libraries loaded into the database file on every connect. See [Extensions](/databases/sqlite#extensions) |
 | **Connect timeout** | Maximum seconds for the network transport and remote database to finish connecting. Empty uses 30 seconds; valid values are 1 to 600 |
 | **Query timeout** | Override of **Settings > General** for this connection. Empty inherits the global value; `0` means no limit. Only drivers that support query timeouts enforce it |
+| **Load binary values up to** | MySQL and MariaDB. A binary value above this many KB loads when you open, copy or export it. Empty uses 64; valid values are 1 to 1048576. See [Large binary values](/features/data-grid#large-binary-values) |
+| **Identifier case** | PostgreSQL, PGlite, Oracle and Snowflake. The case table, column and schema names take in autocomplete and in **Copy as INSERT Statements** and **Copy as UPDATE Statements**. See [Identifier case](/features/autocomplete#identifier-case) |
 | **Startup Commands** | SQL to run after every connect. See [Startup commands](#startup-commands) |
-| **Pre-Connect Script** | Shell script run before connecting. A non-zero exit aborts the connect |
+| **Pre-Connect Script** | Shell script run before connecting. A non-zero exit aborts the connect. See [Connection scripts](#connection-scripts) |
+| **Timeout** | Seconds each connection script may run. Empty uses 10; valid values are 1 to 300 |
+| **Post-Disconnect Script** | Shell script run once the session ends, after a pre-connect script ran. See [Connection scripts](#connection-scripts) |
 | **Safe Mode** | Confirms, authenticates or refuses queries before they run. See [Safe Mode](/features/safe-mode) |
 | **AI Policy** | Per-connection override for the in-app AI agents. **Never** also refuses external clients. Shown while **Enable AI Features** is on |
-| **External Clients** | **Blocked**, **Read Only** (the default), or **Read & Write** for MCP clients such as Raycast, Cursor, and Claude Desktop, and for [AppleScript](/developers/applescript). A token's own scope cannot raise it. See the [integration security model](/developers#security-model) |
+| **External Clients** | **Blocked**, **Read Only** (the default), or **Read & Write** for MCP clients such as Raycast, Cursor, and Claude Desktop, and for [AppleScript](/developers/applescript) and [Shortcuts](/integrations/shortcuts). A token's own scope cannot raise it. See the [integration security model](/developers#security-model) |
 | **AI Rules** | Guidance the AI reads on every chat turn for this connection: table conventions, columns to avoid, join hints. Shown while **Enable AI Features** is on. See [AI Assistant](/features/ai-assistant) |
 | **Local only** | Keeps this connection off iCloud Sync. Shown while **Sync this Mac with iCloud** is on. See [iCloud Sync](/features/icloud-sync) |
 
@@ -88,10 +92,6 @@ session picks it up.
   <img className="hidden dark:block" src="/images/connection-timeouts-dark.png" alt="PostgreSQL connection Options pane in dark appearance with Connect timeout and Query timeout fields using their inherited defaults" />
 </Frame>
 
-A pre-connect script never runs unprompted. A **Pre-Connect Script** alert shows the script itself and waits for **Run Script**, every time, whatever opens the connection: its window, a link, Compare, **Copy To**, the AI assistant, an MCP client or a script. With no answer in 60 seconds the alert closes as **Cancel**.
-
-A connect you did not start never runs the script. A restored window at launch, a table loading on its own and a reconnect after a tunnel drops all stop at a **Connect** button instead.
-
 ## Appearance
 
 **Icon** replaces the database logo in the connection list, **Switch Connection**, the connections strip and the toolbar. Click it, type to search the symbols, then click one or press `Return`. **Default** brings the logo back. The database type stays in the row's tooltip.
@@ -100,7 +100,7 @@ A connect you did not start never runs the script. A restored window at launch, 
 
 ## Startup commands
 
-Statements split on semicolons and newlines and run in order on the connection that just opened, after every connect including an automatic reconnect. They all run on one connection, so write one dialect.
+Statements split on semicolons and newlines outside quotes and comments, and run in order on the connection that just opened, after every connect including an automatic reconnect. They all run on one connection, so write one dialect.
 
 <CodeGroup>
 ```sql MySQL
@@ -114,6 +114,39 @@ SET search_path TO myschema, public;
 </CodeGroup>
 
 A statement that fails is logged and skipped, and the connection still opens.
+
+## Connection scripts
+
+Put whatever has to happen before the database answers in **Pre-Connect Script**: a VPN profile coming up, `aws sso login`, a credential refresh. The script runs in `bash`, and a non-zero exit stops the connect with the script's standard error in the message. Homebrew's `/opt/homebrew/bin` and `/usr/local/bin` are on `PATH` even when TablePro was opened from the Dock.
+
+Both scripts get the connection in their environment, so one script can serve every connection that needs it:
+
+| Variable | Value |
+|---|---|
+| `TABLEPRO_CONNECTION_NAME` | The connection's name |
+| `TABLEPRO_HOST` | **Host**, as typed, even when an SSH tunnel or proxy carries the connection |
+| `TABLEPRO_PORT` | **Port**, as typed |
+| `TABLEPRO_USER` | **Username**, or the linked credential profile's |
+| `TABLEPRO_DATABASE` | **Database** |
+
+The password is never passed.
+
+```bash
+scutil --nc start "Office VPN"
+until nc -z "$TABLEPRO_HOST" "$TABLEPRO_PORT"; do sleep 1; done
+```
+
+A script still running at **Timeout** is stopped and the connect fails. Raise it for a VPN that takes 15 seconds to come up or a sign-in that waits on the browser. Canceling the connect stops the script too.
+
+**Post-Disconnect Script** undoes what the pre-connect script started. It runs once per session, after the session ends by **Disconnect**, by closing its last window, by quitting TablePro, or by a connect that fails after the pre-connect script succeeded. A connection with no pre-connect script never runs it. It gets the same variables and the same timeout, and a failure goes to the log rather than an alert.
+
+```bash
+scutil --nc stop "Office VPN"
+```
+
+Neither script runs unprompted. A **Pre-Connect Script** alert shows both scripts and waits for **Run Script**, every time, whatever opens the connection: its window, a link, Compare, **Copy To**, the AI assistant, an MCP client or a script. With no answer in 60 seconds the alert closes as **Cancel**.
+
+A connect you did not start never runs the script. A restored window at launch, a table loading on its own and a reconnect after a tunnel drops all stop at a **Connect** button instead. Links, exports and the Team Library carry neither script.
 
 ## Connection health
 
@@ -156,6 +189,7 @@ Metadata connections are the extra ones opened to read a database's object list 
 | [ClickHouse](/databases/clickhouse) | 8123 | Yes | Yes | Yes | No | Yes | Yes |
 | [Teradata](/databases/teradata) | 1025 | Yes | Yes | Yes | No | Yes | Yes |
 | [Trino](/databases/trino) | 8080 | Yes | Yes | Yes | No | Yes | Yes |
+| [Presto](/databases/trino) | 8080 | Yes | Yes | Yes | No | Yes | Yes |
 | [MongoDB](/databases/mongodb) | 27017 | Yes | Yes | Yes | No | Yes | Yes |
 | [Redis](/databases/redis) | 6379 | Yes | Yes | Yes | No | Yes | Yes |
 | [Cassandra / ScyllaDB](/databases/cassandra) | 9042 | Yes | Yes | Yes | No | Yes | Yes |

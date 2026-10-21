@@ -1,6 +1,6 @@
 ---
 title: Connection window
-description: The toolbar, the Actions menu, the sidebar's list chooser, filters and folders, and the trailing pane
+description: The toolbar, the Actions menu, the sidebar's list chooser, filters, folders and temporary tables, and the trailing pane
 ---
 
 Nothing in the titlebar is fixed furniture. The toolbar carries the commands for the tab you are on, and what it leaves out is one click away under **Actions** or in the menu bar.
@@ -149,6 +149,14 @@ To take an object out, choose **Remove from Folder**, or drag it onto its **Tabl
 The filter field reaches inside folders. A folder holding a match opens to show it, and a folder without one is hidden until the field is cleared.
 
 Renaming or dropping a table keeps its folder in step, whether you do it from the sidebar or with SQL as [Drop or rename with SQL](/features/table-operations#drop-or-rename-with-sql) describes. A renamed table stays filed under its new name, and a dropped one leaves the folder.
+
+## Temporary tables
+
+A temporary table belongs to the connection that made it, so the sidebar lists it in its own **Temporary** section, under **Recent**. Run `CREATE TEMPORARY TABLE` in a query tab and the section appears. It goes when you drop the last one or disconnect, since the server drops them with the session.
+
+Click a temporary table to browse its rows, or right-click it and choose **Show Structure**. Both read the same connection your query tabs run on, and both are read-only.
+
+PostgreSQL, MySQL, MariaDB, SQL Server and SQLite list their temporary tables. On MySQL and MariaDB the section holds the tables your own `CREATE TEMPORARY TABLE` statements made, so one a stored procedure creates is not listed.
 
 ## The trailing pane
 

@@ -18,7 +18,7 @@ Right-click the empty space below the sidebar’s object list and choose **View 
   />
 </Frame>
 
-The diagram is a snapshot taken when the tab opens, and it does not follow later schema changes. After a migration, close the tab and open it again.
+After a change made elsewhere, click **Refresh** in the diagram's toolbar or press `Cmd+R`. Every table stays where it is, and a table that is new since the last load is placed to the right of the others.
 
 ## Reading the diagram
 
@@ -56,7 +56,40 @@ Drag a node to move it, toward the edge of the viewport to auto-scroll. Position
 VoiceOver reads the diagram as a layout area of tables. Each table announces its name, its column
 count and what it is joined to; step into one to hear each column with its type and whether it is a
 primary key, a foreign key, or optional. Selecting a table in the diagram moves the VoiceOver cursor
-to it.
+to it. `VO-Shift-M` on a table or a column opens its menu.
+
+## Editing the schema
+
+Right-click a table, a column, a relationship or the empty canvas for what applies there. Double-click a table to open its rows in a new tab.
+
+| Target | Menu |
+|--------|------|
+| Table | **Open Table**, **Show Structure**, **Add Column…**, **Copy Name** |
+| Column | **Add Foreign Key…**, **Rename Column…**, **Add Column…**, **Open Table**, **Show Structure**, then **Delete Foreign Key** for a key on the column and **Delete Column** |
+| Relationship | **Show Structure of** the table that holds the key, **Delete Foreign Key** |
+| Empty canvas | **New Table…**, **Refresh** |
+
+To add a foreign key, hover over the column that will hold it, drag from the dot on the table's right edge, and drop on the column it references. A sheet confirms the columns, the constraint name and the `ON DELETE` and `ON UPDATE` actions. **Add Foreign Key…** in a column's menu opens the same sheet without the drag.
+
+To drop a foreign key, click its relationship line and press `Delete`.
+
+**New Table…** opens a [Create Table](/features/table-structure#creating-a-new-table) tab on the diagram's database and schema. Once the table is created, it appears in the diagram where you right-clicked.
+
+## Saving diagram edits
+
+Nothing runs until you save. A key you add or drop is drawn dashed, red when dropped. A column you add is tinted green, a dropped one red and struck through, a renamed one yellow.
+
+- **Preview SQL** (`Cmd+Shift+P`) shows the statements, the same ones the table's [Structure tab](/features/table-structure#saving-changes) builds for the same change.
+- **Save Changes** (`Cmd+S`) applies them one table at a time, in the order you first edited them, then reloads the diagram with every table in place. Each table's save asks the way a Structure tab save does under [Safe Mode](/features/safe-mode), and on SQLite a key change is shown as a table rebuild to confirm first.
+- `Cmd+Z` undoes the last edit. **Discard Changes** in the diagram's toolbar drops all of them.
+
+Closing the tab or the window with edits staged asks to save them first.
+
+An item an engine cannot carry out is left out of the menu: on an engine that cannot add or remove foreign keys, the key items and the drag handle do not appear.
+
+## Build a join query
+
+Command-click or Shift-click tables to select more than one. Click **Build Join Query** in the toolbar, or right-click a selected table and choose **Build Join Query…**, to open the [Join Builder](/features/join-builder) on them.
 
 ## Compact mode
 
@@ -68,7 +101,21 @@ A table whose primary key is made of two foreign keys, `user_roles` and its like
 
 ## Export
 
-**Export as PNG** renders the whole diagram at twice screen resolution with 40 points of padding, whatever the current zoom and scroll position, and saves it as `er-diagram.png`. `Cmd+C` puts the same image on the clipboard. Compact mode and expanded junction tables carry into the render, so set the view up first.
+**Export**, the last button in the toolbar, opens a menu of formats. Every format holds the whole diagram, whatever the current zoom and scroll position, and compact mode and expanded junction tables carry into it, so set the view up first.
+
+| Format | File | Contents |
+|--------|------|----------|
+| PNG | `er-diagram.png` | A bitmap at twice screen resolution, with 40 points of padding |
+| SVG | `er-diagram.svg` | Shapes and text as vectors; the key, link and table icons are small embedded bitmaps |
+| PDF | `er-diagram.pdf` | One page sized to the diagram, with text that Preview can search and select |
+| Mermaid | `er-diagram.mmd` | An `erDiagram` block: each table with its columns, types and `PK` and `FK` markers, and each foreign key with the cardinality the diagram draws |
+| Graphviz DOT | `er-diagram.gv` | A table per node, one row per column, and an edge between the two column ports for each foreign key. Render it with `dot -Tsvg er-diagram.gv -o er-diagram.svg` |
+
+PNG, SVG and PDF keep the window's colors and the table positions on screen. Mermaid and DOT list tables by name and columns in table order, so exporting an unchanged schema twice writes the same file and a diff shows only real changes.
+
+**Copy as Mermaid** puts the block on the clipboard inside a `mermaid` code fence, ready to paste into a GitHub comment or any Markdown that renders Mermaid. `Cmd+C` copies the PNG image.
+
+Mermaid accepts fewer characters in a type or column name than SQL does. A space, comma or quote becomes an underscore, so `character varying(255)` reads `character_varying(255)`, and a column named `pk`, `fk` or `uk` gets a leading underscore.
 
 For the tables' DDL, choose **File > Export > Export Tables…**, pick SQL and leave **Structure** on. See [Import & Export](/features/import-export).
 

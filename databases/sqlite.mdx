@@ -49,7 +49,19 @@ The sidebar lists tables and views and hides the internal `sqlite_*` tables. Eac
 
 Change the file outside TablePro and the object list reloads on its own. Rows already loaded in a tab stay until you refresh that tab.
 
-One connection is one file, with no database to switch between, and the object list reads the main database only: a file you `ATTACH` in the editor is queryable as `alias.table` but never appears in the sidebar.
+## Attached databases
+
+A schema split across files, such as `app.db`, `auth.db` and `audit.db`, fits in one connection. Open the connection's **Options**, click **+** under **Attached Databases**, and choose the other files. Each one is named after its file without the extension, so `auth.db` attaches as `auth`. Type over the name in its row to change it; `main` and `temp` are taken.
+
+```sql
+SELECT u.email, e.action
+FROM auth.users u
+JOIN audit.events e ON e.user_id = u.id;
+```
+
+The list attaches again on every connect, before anything runs: a reconnect, **Test Connection**, a relaunch and a restored tab all see `auth.users`. Each attached database is a row of its own in the sidebar, below the main file's tables. Expand it to browse its tables and edit their rows, and the editor completes `auth.` with its tables. A file you `ATTACH` in the editor joins the sidebar after a refresh, until the next connect.
+
+A file that is missing when the connection opens is named in a warning at the top of the window, and the rest still attach.
 
 ## Extensions
 
@@ -118,6 +130,8 @@ A virtual table, such as an FTS5 table, cannot be recreated from what SQLite sto
 
 - Encrypted databases do not open. The driver's SQLite takes no key, and the form has nowhere to put one. Decrypt a SQLCipher file with the `sqlcipher` tool first.
 - Extensions load only for a file opened on this Mac. A connection that runs **On the Server** refuses a list with `Extensions load only for a database file on this Mac`: remove the list, or open the file **As a Read-Only Copy**, which loads it.
+- Attached databases also open only on this Mac, and a connection that runs **On the Server** refuses the list the same way.
+- A table in an attached database has a read-only Structure tab, and its sidebar menu offers no Export, Import, Transfer or Copy To. Do those from a connection that opens that file.
 - A column that is `INTEGER PRIMARY KEY` cannot be retyped: the key would stop generating values and start storing NULL. The save is refused and names the column.
 - A primary key cannot be added, removed or moved.
 

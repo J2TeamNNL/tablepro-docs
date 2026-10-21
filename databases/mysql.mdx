@@ -178,6 +178,8 @@ Two fields are unavailable on that path, because only `information_schema` carri
 
 New connections default to **Preferred**: TLS first, dropping to plain text only after an SSL handshake error. Pick **Verify CA** with the provider's certificate for strict validation. See [SSL/TLS](/connections/ssl).
 
+A server that asks for the password as typed, through `mysql_clear_password` (LDAP, some PAM setups) or PAM's `dialog`, gets it only over TLS. **Preferred** asks for TLS outright and drops to plain text only when the server has none; such a server, or one on **Disabled**, fails with "The server asked for the password in plain text". Set **SSL Mode** to **Required** or stricter for such a login. A [Unix socket](#unix-socket) never leaves the Mac, and the [Cloud SQL Auth Proxy](/connections/cloud-sql-proxy) and an SSH tunnel to the server's socket encrypt the way there, so they send it as before.
+
 ## Limitations
 
 - `LOAD DATA LOCAL INFILE` is refused by the driver. Load the file with **File > Import > Import Data…** instead.
