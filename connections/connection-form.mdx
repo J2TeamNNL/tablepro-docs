@@ -31,7 +31,7 @@ The bar along the bottom carries **Test Connection**, **Cancel** and **Save**, p
 | **Socket** | Replaces Host when **Connect Using** is **Socket**. MySQL and MariaDB take the socket file, such as `/tmp/mysql.sock`, and drop Port. PostgreSQL takes the folder, such as `/tmp`, and keeps Port, which names the file |
 | **Database** | Optional on drivers that browse every database from one session. PostgreSQL and Redshift do not connect without one |
 | **Username** | Not pre-filled. Empty means the driver's own default |
-| **Password** | Stored in the macOS Keychain |
+| **Password** | Stored in the macOS Keychain. **Show password** reveals a saved one after Touch ID or your Mac's password. A connection whose password comes from a [password source](/features/connection-sharing#password-sources) shows the source here, with **Test Source** |
 | **Prompt for password** | Stores nothing, asks on every connect. Reads **Prompt for API token** on API-only drivers |
 | **Use Password File** | PostgreSQL, Redshift, and CockroachDB. Reads `~/.pgpass`, and reports underneath whether the file exists, has `chmod 0600`, and holds a matching line |
 
@@ -69,6 +69,7 @@ Encryption sits below the transport. [SSL/TLS](/connections/ssl) covers the mode
 | **Extensions** | SQLite, and libSQL in Local File mode. Libraries loaded into the database file on every connect. See [Extensions](/databases/sqlite#extensions) |
 | **Connect timeout** | Maximum seconds for the network transport and remote database to finish connecting. Empty uses 30 seconds; valid values are 1 to 600 |
 | **Query timeout** | Override of **Settings > General** for this connection. Empty inherits the global value; `0` means no limit. Only drivers that support query timeouts enforce it |
+| **Load binary values up to** | MySQL and MariaDB. A binary value above this many KB loads when you open, copy or export it. Empty uses 64; valid values are 1 to 1048576. See [Large binary values](/features/data-grid#large-binary-values) |
 | **Identifier case** | PostgreSQL, PGlite, Oracle and Snowflake. The case table, column and schema names take in autocomplete and in **Copy as INSERT Statements** and **Copy as UPDATE Statements**. See [Identifier case](/features/autocomplete#identifier-case) |
 | **Startup Commands** | SQL to run after every connect. See [Startup commands](#startup-commands) |
 | **Pre-Connect Script** | Shell script run before connecting. A non-zero exit aborts the connect. See [Connection scripts](#connection-scripts) |
@@ -76,7 +77,7 @@ Encryption sits below the transport. [SSL/TLS](/connections/ssl) covers the mode
 | **Post-Disconnect Script** | Shell script run once the session ends, after a pre-connect script ran. See [Connection scripts](#connection-scripts) |
 | **Safe Mode** | Confirms, authenticates or refuses queries before they run. See [Safe Mode](/features/safe-mode) |
 | **AI Policy** | Per-connection override for the in-app AI agents. **Never** also refuses external clients. Shown while **Enable AI Features** is on |
-| **External Clients** | **Blocked**, **Read Only** (the default), or **Read & Write** for MCP clients such as Raycast, Cursor, and Claude Desktop, and for [AppleScript](/developers/applescript). A token's own scope cannot raise it. See the [integration security model](/developers#security-model) |
+| **External Clients** | **Blocked**, **Read Only** (the default), or **Read & Write** for MCP clients such as Raycast, Cursor, and Claude Desktop, and for [AppleScript](/developers/applescript) and [Shortcuts](/integrations/shortcuts). A token's own scope cannot raise it. See the [integration security model](/developers#security-model) |
 | **AI Rules** | Guidance the AI reads on every chat turn for this connection: table conventions, columns to avoid, join hints. Shown while **Enable AI Features** is on. See [AI Assistant](/features/ai-assistant) |
 | **Local only** | Keeps this connection off iCloud Sync. Shown while **Sync this Mac with iCloud** is on. See [iCloud Sync](/features/icloud-sync) |
 

@@ -1,6 +1,6 @@
 ---
 title: Server Dashboard
-description: Monitor active sessions, server metrics, and slow queries in real time
+description: Monitor active sessions, server metrics, slow queries, and your own saved queries in real time
 ---
 
 What this screen shows is what your account is allowed to see. An empty or half-blank dashboard is nearly always a privilege, not a fault:
@@ -28,7 +28,7 @@ Open it from **Database > Server Dashboard**, or from **Server Dashboard** under
   />
 </Frame>
 
-The panels stack top to bottom. Drag the dividers between Active Sessions, Server Metrics, and Slow Queries to resize them; the positions are remembered across launches.
+The panels stack top to bottom: Active Sessions, Server Metrics, Saved Queries, and Slow Queries. Drag the dividers between them to resize them; the positions are remembered across launches.
 
 ## Active Sessions
 
@@ -60,9 +60,29 @@ ClickHouse, MongoDB and Redis list finished queries instead, newest first, up to
 - **MongoDB** reads the profiler of the database you are browsing. Turn it on with `db.setProfilingLevel(1)`, which records operations slower than `slowms`, 100 ms unless changed. What it recorded stays listed after you turn it off.
 - **Redis** reads `SLOWLOG GET`: commands over `slowlog-log-slower-than`, 10 ms unless changed, with the client address in the User column.
 
+## Saved Queries
+
+Put a number you watch next to the server's own: a queue depth, a row count, a replication lag. Click **+** in the Saved Queries panel and pick one of the connection's [saved queries](/features/favorites#working-with-saved-queries); folders open as submenus. The tile runs the saved query itself, so editing the query in the sidebar changes the tile, and deleting it leaves the tile saying so.
+
+What the tile draws depends on what comes back:
+
+| Result | Tile |
+|---|---|
+| One row, one column | The value, large |
+| Two or more rows, a date or time in the first column, and a numeric column | A line of the first numeric column over time. Needs a plan that includes Result Charts; without one the tile shows the table |
+| Anything else | The first five rows, with the row count under them |
+
+A tile fetches at most 2,000 rows, the most a chart draws, so a query that returns a whole table costs one page of it per refresh.
+
+A tile runs one statement, and only a read. A saved query that writes, holds more than one statement, or reads files on the server is refused on the tile with the reason and never runs. So is every tile on a connection whose [Safe Mode level](/features/safe-mode#levels) asks before reads, **Alert (Full)** and **Safe Mode (Full)**, since nobody is there to confirm a refresh.
+
+Each tile refreshes with the dashboard unless you slow it down: open its **Tile Options** menu, the circled ellipsis, and pick **Every Minute**, **Every 5 Minutes**, **Every 15 Minutes**, or **Every Hour** under **Refresh**. An expensive count then runs once a minute instead of every second. A failed run keeps the last result on the tile and shows the error beneath it.
+
+Drag a tile by its title to move it, or choose **Move Left** or **Move Right** in the same menu. **Remove from Dashboard** removes the tile and keeps the saved query. The tiles, their order, and their intervals are kept per connection on this Mac.
+
 ## Refreshing
 
-The interval menu offers 1s, 2s, 5s (the default), 10s, 30s, and Off. **Pause** stops the cycle without changing the interval and is dimmed while the interval is Off. **Refresh Now** runs a single pass. The time of the last refresh sits on the right.
+The interval menu offers 1s, 2s, 5s (the default), 10s, 30s, and Off. **Pause** stops the cycle, tiles included, without changing the interval, and is dimmed while the interval is Off. **Refresh Now** runs a single pass and runs every tile, whatever its own interval. The time of the last refresh sits on the right.
 
 ## What each engine reports
 
