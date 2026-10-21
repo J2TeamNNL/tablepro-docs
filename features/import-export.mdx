@@ -396,3 +396,27 @@ Saved mappings stay on this Mac. They follow a renamed table and are forgotten w
 ### Row imports
 
 CSV and JSON insert in batches, and the on-error and transaction options behave as they do for SQL. They add **Delete existing rows before import**, which clears the target table inside the import transaction, so a failure in the default Stop and Rollback mode brings the rows back. A row where no field matches a mapped column writes nothing and is reported rather than counted.
+
+### Update existing rows
+
+**Import as** decides what an import into an existing table does with a row whose key the table already holds:
+
+| Import as | Key already in the table | Key not in the table |
+|---|---|---|
+| **Insert** | Inserted, so a duplicate key fails | Inserted |
+| **Update** | Mapped columns updated | Skipped |
+| **Insert or Update** | Mapped columns updated | Inserted |
+| **Insert, Skip Existing** | Skipped | Inserted |
+
+<Frame caption="Import as Update, matched on the primary key">
+  <img className="block dark:hidden" src="/images/row-import-update.png" alt="Row import sheet with Import as set to Update and Match on set to the primary key" />
+  <img className="hidden dark:block" src="/images/row-import-update-dark.png" alt="Row import sheet with Import as set to Update and Match on set to the primary key" />
+</Frame>
+
+**Match on** picks the key: the primary key, or a unique index over plain columns. Map a field to every column of the key, and for **Update** or **Insert or Update** to at least one column outside it. A table with neither a primary key nor a unique index takes **Insert** only.
+
+An update writes the mapped columns outside the key and leaves every other column as it was, so a file can correct one column of a table without carrying the rest. Each batch is looked up by key on the server first, so the database's own comparison decides what matches. A key the file repeats updates the row its first occurrence wrote. A key holding NULL matches no row. A key that matches more than one row is not written: Skip and Continue records it against its line, and the stop modes stop there.
+
+**Delete existing rows before import** works with **Insert** only. With any other choice the import stops before it writes a row.
+
+The summary counts the rows matched, updated, inserted and skipped, and under Skip and Continue the ones that failed.
