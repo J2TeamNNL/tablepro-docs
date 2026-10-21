@@ -77,6 +77,14 @@ Right-click a column's header and choose **Freeze Up to This Column** to hold it
 
 Frozen columns cover at most two thirds of the grid's width. The menu item is dimmed for a column that would freeze more, and frozen columns that no longer fit after the window narrows scroll until it widens again. Click a frozen header to sort it, or drag its edge to resize it, at any scroll position. To move a frozen column, scroll back to the first column and drag its header. On a query result they stay frozen until the tab closes or the app quits.
 
+### Large binary values
+
+On MySQL and MariaDB, a binary value larger than the connection's limit stays on the server until you need it, in any table with a primary key. The cell shows the value's size in italics, such as *5.2 MB*. Set the limit under **Options > Load binary values up to** in the [connection form](/connections/connection-form#options); it is 64 KB until you change it.
+
+The value is read by its primary key when you open the cell, copy it, show its row in the inspector with one row selected, duplicate the row, list the column's values with **Filter Values…**, or export the rows with **Export Results…**. **File > Export** reads every value as before. Set NULL, paste and **Fill Column** read the value first, so undo puts it back. A table without a primary key, a sorted column and a column under a value filter load every value with the page.
+
+Find and the selection summary skip a value until it loads, and the JSON view shows it as *Not loaded* with its size. Deleting a row whose value never loaded saves normally, but [Data Rewind](/features/change-tracking#restoring-a-save) cannot put that row back.
+
 ### Jump to a column
 
 `Cmd+Shift+J`, or **Edit > Find > Jump to Column**, lists every column of the result with its type and its place in the grid. Type part of a name; matching is fuzzy, so `crat` finds `created_at`. `Return` scrolls the selected column into view and puts the cell cursor in it, on the selected row. A hidden column is listed too, marked **Hidden**, and jumping to it shows it first. **Jump to Column** at the foot of the columns popover opens the same panel with the popover's search carried over.
