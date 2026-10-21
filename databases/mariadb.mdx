@@ -16,6 +16,14 @@ mariadb://user:password@localhost/database?socket=%2Ftmp%2Fmysql.sock
 
 `socket` works as it does on [MySQL](/databases/mysql#connection-url). See [Connection URL Reference](/connections/urls).
 
+## Kerberos
+
+For an account created `IDENTIFIED VIA gssapi`, set **Authentication** to **Kerberos (GSSAPI)** and set **Username** to the account name. Leave **Kerberos Principal** and **Password** blank to use the ticket in your credential cache, or enter `user@REALM.COM` and your domain password to have one requested at connect. Get a cached ticket with `kinit user@REALM.COM`.
+
+The server names its own service principal, set in `gssapi_principal_name`, and this Mac has to reach the realm's KDC. The option appears on MariaDB connections only: MySQL's Kerberos plugin is a different one, which the bundled connector does not have.
+
+Any other **Authentication** refuses an account `IDENTIFIED VIA gssapi` with `This account signs in with Kerberos.`, so a connection never signs in with a ticket it was not set up for.
+
 ## Differences from MySQL
 
 - The default authentication plugin is `mysql_native_password`, against `caching_sha2_password` on MySQL 8. Both connect.
