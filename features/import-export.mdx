@@ -1,9 +1,9 @@
 ---
 title: Import & Export
-description: Export to CSV, JSON, SQL, MQL, or XLSX. Import SQL, JSON, and CSV files with column mapping and transaction safety
+description: Export to CSV, JSON, SQL, MQL, XLSX, or a data dictionary. Import SQL, JSON, and CSV files with column mapping and transaction safety
 ---
 
-**File > Export** (`Cmd+Shift+E`) re-reads every table you tick with `SELECT * FROM`, so what is on screen has no bearing on the file: filters, sort, hidden columns, and the page you are on are all ignored, and table size does not matter. **Export Results…** on the grid's right-click menu writes what the tab has loaded instead. Import is `Cmd+Shift+I`.
+**File > Export** (`Cmd+Shift+E`) re-reads every table you tick with `SELECT * FROM`, so what is on screen has no bearing on the file: filters, sort, hidden columns, and the page you are on are all ignored, and table size does not matter. **Export Results…** on the grid's right-click menu writes what the tab has loaded instead. **File > Export > Export Data Dictionary…** describes the tables rather than their rows. Import is `Cmd+Shift+I`.
 
 ## Export data
 
@@ -221,6 +221,19 @@ As SQL, a results export writes `INSERT` statements only. A result set is the ou
     Parquet holds one table per file. Selecting several writes `dump.users.parquet`, `dump.orders.parquet` and so on beside the name you chose.
     </Warning>
   </Tab>
+  <Tab title="Data Dictionary">
+    A description of the schema to hand to a reviewer, an analyst or an auditor. **File > Export > Export Data Dictionary…** opens the dialog on this format, with the same tree and saved selections.
+
+    | Option | Default |
+    |--------|---------|
+    | Write as (Markdown, HTML) | Markdown |
+
+    Each table, view, materialized view and foreign table gets a section with its kind and comment, then one row per column: type, nullable, default, primary key, the foreign key it references, and comment. Indexes and foreign keys follow. A column nothing in the file fills is left out, so an engine without comments or foreign keys prints no empty Comment or References column.
+
+    Markdown opens with a contents list linking to an anchor per object. HTML is one file with its style inside it and no external assets, and its tables repeat their header on every printed page.
+
+    Only the catalog is read, never a row, so an account with metadata access is enough and a large table costs the same as an empty one. MongoDB, Firebase, Bigtable, DynamoDB and SurrealDB do not offer it: their fields come from sampling records, not from a declared schema.
+  </Tab>
 </Tabs>
 
 ## Transfer to another connection
@@ -384,6 +397,30 @@ Saved mappings stay on this Mac. They follow a renamed table and are forgotten w
 
 CSV and JSON insert in batches, and the on-error and transaction options behave as they do for SQL. They add **Delete existing rows before import**, which clears the target table inside the import transaction, so a failure in the default Stop and Rollback mode brings the rows back. A row where no field matches a mapped column writes nothing and is reported rather than counted.
 
+### Update existing rows
+
+**Import as** decides what an import into an existing table does with a row whose key the table already holds:
+
+| Import as | Key already in the table | Key not in the table |
+|---|---|---|
+| **Insert** | Inserted, so a duplicate key fails | Inserted |
+| **Update** | Mapped columns updated | Skipped |
+| **Insert or Update** | Mapped columns updated | Inserted |
+| **Insert, Skip Existing** | Skipped | Inserted |
+
+<Frame caption="Import as Update, matched on the primary key">
+  <img className="block dark:hidden" src="/images/row-import-update.png" alt="Row import sheet with Import as set to Update and Match on set to the primary key" />
+  <img className="hidden dark:block" src="/images/row-import-update-dark.png" alt="Row import sheet with Import as set to Update and Match on set to the primary key" />
+</Frame>
+
+**Match on** picks the key: the primary key, or a unique index over plain columns. Map a field to every column of the key, and for **Update** or **Insert or Update** to at least one column outside it. A table with neither a primary key nor a unique index takes **Insert** only.
+
+An update writes the mapped columns outside the key and leaves every other column as it was, so a file can correct one column of a table without carrying the rest. Each batch is looked up by key on the server first, so the database's own comparison decides what matches. A key the file repeats updates the row its first occurrence wrote. A key holding NULL matches no row. A key that matches more than one row is not written: Skip and Continue records it against its line, and the stop modes stop there.
+
+**Delete existing rows before import** works with **Insert** only. With any other choice the import stops before it writes a row.
+
+The summary counts the rows matched, updated, inserted and skipped, and under Skip and Continue the ones that failed.
+
 ### Import several files
 
 Select several files in **Import Data…**, or a folder, and each one loads into its own table in one run. A folder brings the `.csv`, `.tsv`, `.json`, `.jsonl`, `.ndjson`, and `.xlsx` files directly inside it. Files in its subfolders stay out, and a file that does not load into a table, a `.sql` dump among them, is named in the sheet and left out. A folder holding a single such file opens the one-file sheet. Drop more files or folders on the list to add them.
@@ -393,7 +430,7 @@ Select several files in **Import Data…**, or a folder, and each one loads into
   <img className="hidden dark:block" src="/images/import-several-files-dark.png" alt="Sheet listing files with a destination menu and column count per file" />
 </Frame>
 
-Each file starts on the table its name matches, ignoring case, or on a new table under the name a single import would propose. No two files get the same new name: `sales.csv` and `sales.json` propose `sales` and `sales_2`. In a file's row, pick another destination from the menu, clear the checkbox to leave the file out, or click **Edit…** for the one-file sheet: the column mapping of an existing table, starting from its saved mapping, or the columns of a new table.
+Each file starts on the table its name matches, ignoring case, or on a new table under the name a single import would propose. No two files get the same new name: `sales.csv` and `sales.json` propose `sales` and `sales_2`. In a file's row, pick another destination from the menu, clear the checkbox to leave the file out, or click **Edit…** for the one-file sheet: the column mapping of an existing table, starting from its saved mapping, or the columns of a new table. A run only inserts, so that sheet has no **Import as**: [update existing rows](#update-existing-rows) one file at a time.
 
 The options under the list apply to every file of that format. With **Auto-detect** set, the delimiter and encoding are still read from each file. A run that mixes formats shows the options of each, and their **On error** and **Wrap in transaction** have to match, because the run has one transaction.
 

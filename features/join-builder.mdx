@@ -1,0 +1,50 @@
+---
+title: Join Builder
+description: Build a multi-table SELECT from the foreign keys between your tables
+---
+
+Pick the tables and their foreign keys become the join conditions. What comes out is plain SQL in a new query tab, to edit like any other query.
+
+<Frame caption="Three tables picked from the ER diagram, joined along their foreign keys">
+  <img
+    className="block dark:hidden"
+    src="/images/join-builder.png"
+    alt="Build Join Query sheet with album, artist and track picked, two join rows, chosen columns and the SQL preview"
+  />
+  <img
+    className="hidden dark:block"
+    src="/images/join-builder-dark.png"
+    alt="Build Join Query sheet with album, artist and track picked, two join rows, chosen columns and the SQL preview"
+  />
+</Frame>
+
+## Open the builder
+
+- Choose **Database > Build Join Query…**. Tables selected in the sidebar start out picked.
+- In an [ER diagram](/features/er-diagram), click a table, then Command-click or Shift-click the others. Click the **Build Join Query** toolbar button, or right-click one of the selected tables and choose **Build Join Query…**.
+
+The builder works in the schema of the diagram or of the selected tables.
+
+## Pick tables
+
+Select a table in the list on the left to add it. The first table picked is the `FROM` table, and each one after it joins the tables before it on the shortest chain of foreign keys.
+
+| Picked table | What the query gets |
+|---|---|
+| Has a foreign key to or from a table already picked | `JOIN … ON` the key's columns |
+| Reaches a picked table only through a junction table | The junction table as well, joined to both |
+| Is reached by no foreign key | `CROSS JOIN`, with a note under the table list |
+
+Deselect a table to take it out. A table that was joined on it switches to a key that reaches a remaining table, or to a cross join when none does.
+
+## Shape the query
+
+- **Joins** shows each table with its join type, **Inner Join** or **Left Join**, and its condition. **On** lists every foreign key to an earlier table: an `orders` table with `billing_address_id` and `shipping_address_id` offers both keys to `addresses`.
+- Select columns under a picked table to list them instead of `SELECT *`.
+- **Add Filter** adds a `WHERE` condition from a column, an operator and a value. Conditions combine with `AND`, and one still missing its value is left out.
+
+**SQL Preview** follows every change, with identifiers quoted for the engine and, on an engine with schemas, each table named with its schema. Click **Open in Query Tab** to open the query in a new tab on the same database.
+
+## Database support
+
+The command needs an engine that runs SQL and whose driver reports foreign keys, and is dimmed on the others. The engines that report foreign keys are listed under [ER Diagram](/features/er-diagram#database-support).

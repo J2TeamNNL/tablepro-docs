@@ -79,6 +79,21 @@ Two favorites that reach the same connection cannot share a keyword, and the dia
 
 Typing a keyword in [Open Quickly](/features/open-quickly) finds the same query without touching the sidebar.
 
+### Fields
+
+Write fields into the SQL and `Tab` moves through them after the keyword expands:
+
+```sql
+UPDATE ${1:orders} SET ${2:status} = ${3:'shipped'} WHERE ${2:status} IS NULL
+```
+
+- `${1:orders}` is field 1 with `orders` as its text, and `${1}` is an empty field. Fields are visited by number, with the current one's text selected, so typing replaces it.
+- The same number twice is one field: typing in one changes both.
+- `${1|ASC,DESC|}` opens a menu of its choices when the field is reached.
+- `Shift+Tab` goes back a field. After the last one, `Tab` moves the cursor to `${0}`, or to the end of the SQL.
+- `Escape`, or moving the cursor outside the inserted SQL, ends the fields.
+- `$1`, `$$` and `$tag$` stay as written, so PostgreSQL parameters and dollar quoting are safe. Write `\${` for a literal `${`. A field without its closing `}` leaves the whole query as written.
+
 ### Cursor placement
 
 Put `;;` in the SQL to say where the cursor lands. The marker is removed on insert:
@@ -89,7 +104,7 @@ FROM orders
 WHERE orders.;;
 ```
 
-The cursor lands right after `orders.`, ready for a column name. Only the first `;;` counts; without one it lands at the end.
+The cursor lands right after `orders.`, ready for a column name. `;;` means the same as `${0}`. Only the first `;;` counts; without one it lands at the end.
 
 ## Working with saved queries
 
@@ -119,7 +134,7 @@ To publish your own, right-click empty space and choose **Publish Saved Queries 
 
 ## Linked SQL folders
 
-Link a folder of `.sql` files on disk and they appear next to your saved queries. The point is a Git repo of shared queries: clone it, link it, and a `git pull` keeps the team current.
+Link a folder of `.sql` files on disk and they appear next to your saved queries. The point is a Git repo of shared queries: clone it, link it, and [Pull](#commit-pull-and-push) keeps the team current.
 
 <Note>
 This is not [Linked Folders](/features/connection-sharing#linked-folders), which watches a folder of shared `.tablepro` connection files.
@@ -128,6 +143,8 @@ This is not [Linked Folders](/features/connection-sharing#linked-folders), which
 Click **+** at the foot of the sidebar, choose **Add Linked SQL Folder…**, and pick any folder. `.sql`, `.psql`, and `.pgsql` are indexed, subfolders nest the way they do on disk, and hidden files are skipped.
 
 Linked folders are global, so every connection shows them. Only the first 4 KB of each file is read to build the sidebar, so a large repo stays cheap.
+
+Commit a `.sql-formatter.json` to the folder and **Format Query** uses it for every file opened from there, so the whole team formats alike. See [Share the rules](/customization/editor-settings#share-the-rules).
 
 ### Editing files
 
@@ -164,7 +181,7 @@ Right-click a row and choose **Edit Metadata…** to change frontmatter without 
 
 Press `Delete` on a linked file, or right-click and choose **Move File to Trash**: it goes to the macOS Trash and stays recoverable. The rest of that menu is **Open in Editor**, **Edit Metadata…**, **Copy Query**, **Copy Path**, **Copy Relative Path**, and **Show in Finder**, plus the [Git commands](#git-status-and-history) inside a repository.
 
-A folder's root row carries **Show in Finder**, **Copy Path**, **Disable**, **Reload**, **Add Another SQL Folder…**, and **Remove from Sidebar**. Removing unlinks the folder and leaves the files where they are. A subfolder's row carries **Show in Finder**, **Copy Path**, and **Copy Relative Path**.
+A folder's root row carries **Show in Finder**, **Copy Path**, **Disable**, **Reload**, **Add Another SQL Folder…**, and **Remove from Sidebar**, plus [Commit…, Pull, and Push](#commit-pull-and-push) inside a repository. Removing unlinks the folder and leaves the files where they are. A subfolder's row carries **Show in Finder**, **Copy Path**, and **Copy Relative Path**.
 
 **Copy Path** copies the full path, such as `/Users/you/queries/reports/daily.sql`. **Copy Relative Path** copies the path inside the linked folder, `reports/daily.sql`. With a linked row selected, **File > Copy Path** and **File > Copy Relative Path** do the same, and `Cmd+Option+Shift+C` copies the full path.
 
@@ -197,10 +214,21 @@ Right-click a file for the Git commands:
 
 Both write the text exactly as Git stores it, without line-ending conversion or filters. A file stored with Git LFS cannot be restored or discarded here; use your Git client. If the file, or for Discard its staged version, changes while you confirm, nothing is written.
 
-Stage, commit, and push in your Git client. The sidebar reads the repository and never touches the index.
-
 Git comes from Xcode, the Command Line Tools, or Homebrew. When none is installed the letters and commands stay hidden, and the Command Line Tools installer never opens.
 
+### Commit, pull, and push
+
+Right-click a changed file, or the folder's root row, and choose **Commit…**. The sheet lists every changed file under the linked folder, each with a checkbox, and shows what changed in the selected one since the last commit. From a file, only that file starts checked; from the folder, all of them do. Type a message and click **Commit**.
+
+Only the checked files are staged and committed. Files outside the linked folder are never staged, and anything you staged elsewhere in the repository stays staged. A file with a merge conflict cannot be checked. The commit takes each file as saved on disk, so save an open tab first; the sheet marks a file whose tab has unsaved edits.
+
+**Pull** and **Push** sit on the folder's root row. Both run your own `git`, with your Git config, credential helper, and SSH agent, against the branch your current branch tracks.
+
+- **Pull** only fast-forwards. When your branch and its upstream each have commits the other lacks, it stops and leaves your branch as it was; finish that pull in your Git client.
+- **Push** never forces. A push the remote rejects shows why.
+
+While a command runs, a spinner sits on the folder's row and the Git commands are hidden. When one fails, the alert shows what Git printed.
+
 <Warning>
-Link only repositories you trust. Reading a file's status runs the repository's own content filters, exactly as `git status` in Terminal does.
+Link only repositories you trust. Reading a file's status runs the repository's own content filters, and committing, pulling, and pushing run its hooks, exactly as `git` in Terminal does.
 </Warning>

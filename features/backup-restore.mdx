@@ -110,6 +110,8 @@ MySQL's clients and MariaDB's no longer take the same flags. MySQL's take `--ssl
 
 MariaDB's clients have no flag for encrypting without verifying, so **Required** reaches them as `--ssl --ssl-verify-server-cert`. That refuses a server offering no TLS. With no CA certificate set it checks the encryption rather than the server's identity.
 
+MariaDB's clients send the password as typed whenever a server asks for it that way (`mysql_clear_password`, PAM through `dialog`, or a test plugin Homebrew ships), with or without TLS. On **Disabled**, TablePro runs them with a plugin folder that holds only the sign-in plugins that never do, so such a login fails instead. A build with those plugins compiled in ignores the folder, so TablePro asks the tool first, against a local stand-in server, and refuses one that answers. **Preferred** reads the server's greeting first, which sends no credentials: a server offering TLS gets `--ssl --skip-ssl-verify-server-cert`, and one offering none gets `--skip-ssl` and the same folder. When the greeting cannot be read, the backup or restore stops rather than guess. `--ssl` against a server without TLS falls back to plaintext and sends the typed password to `caching_sha2_password`, so it is never used there. A local socket, the Cloud SQL Auth Proxy and an SSH tunnel to the server's socket keep every plugin.
+
 ## Unloading on the server
 
 Oracle, Snowflake and BigQuery have no client-side dump. Unload to somewhere the server can write by running the engine's own statement in a query tab. It runs with your privileges, so the server's own error comes back when the destination is not writable.
@@ -163,6 +165,7 @@ A non-zero exit shows the last 64 KB of the tool's stderr in a scrollable monosp
 |---|---|
 | *"… was not found on this system"* followed by an install command | Run that command so the binaries land on `PATH`. The message names the tool and the package for your engine |
 | An authentication failure | The password goes through the environment or a config file rather than a prompt, so this is the account or the database. Check that the role can log in |
+| *"The server asked for the password in plain text …"* | The server signs in through PAM or LDAP, and the session has no TLS. Set SSL Mode to **Required**, or turn TLS on for the server |
 | *"could not tell whether … is MySQL's client or MariaDB's"* | The tool on `PATH` did not answer `--version`, and the two families take different SSL flags. Reinstall `mysql-client` or `mariadb` |
 | Objects that conflict with the dump | Restore into a fresh database, or drop the conflicting objects first |
 | *"a single transaction can only write to a single attached database"* | A DuckDB query tab has an open transaction that has already written. Commit or roll it back, then run the backup again |

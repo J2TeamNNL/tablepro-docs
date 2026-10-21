@@ -111,6 +111,8 @@ That is what the [Structure tab](/features/table-structure) shows, what the [MCP
 
 `jsonb` renders as formatted JSON, and `uuid`, `inet`, `timestamp with time zone`, `interval` and `bytea` display natively. PostGIS `geometry` and `geography` render as EWKT with the SRID kept, `SRID=4326;POINT(-73 40.7237)`, rather than raw EWKB hex; a value that fails to convert stays hex.
 
+pgvector `vector`, `halfvec` and `sparsevec` cells show their first three elements and the dimension count, `[0.0123, -0.0456, 0.0789, …] 1536 dims`. Double-click one for every element beside its index, **Copy as JSON**, and **Edit as Text** for the literal. A value of the wrong length for its `vector(1536)` column stops the save and names the column.
+
 An array column opens one of three editors, decided by its element type:
 
 | Element type | Editor |
@@ -126,6 +128,10 @@ A `jsonb[]` element gets the Text and Tree modes a `jsonb` cell gets, so the col
 A value the list cannot represent opens the text editor instead: a multi-dimensional value such as `{{1,2},{3,4}}`, or a literal carrying explicit bounds such as `[0:2]={a,b,c}`. Edit the `{…}` literal directly.
 
 `box[]` is the one column whose elements are not separated by a comma. PostgreSQL uses a semicolon there, because a box's own text contains commas, and the list reads it that way.
+
+## Sequences
+
+Each schema lists its sequences under **Sequences**, with the owning column on hover. **Set Next Value…** realigns a sequence with the highest value in its column, and **Edit Sequence…** changes its increment, bounds, cache and cycling. See [Sequences](/features/table-operations#sequences).
 
 ## User-defined types
 

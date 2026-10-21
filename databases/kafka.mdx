@@ -148,8 +148,10 @@ through the log, one page older each time.
 Row counts are approximate. The count is the end offset minus the start offset, which overcounts
 where retention has removed messages from the middle of a compacted topic.
 
-Schema Registry is not read. A topic whose values are Avro or Protobuf shows the raw bytes,
-including the five-byte Confluent wire-format prefix.
+Schema Registry is not read. A binary `value` column of Protobuf messages decodes field by field
+with **Display As > Protobuf**, which reads the five-byte Confluent wire-format prefix and shows the
+schema ID; see [Binary value viewer](/features/json-viewer#binary-value-viewer). Avro values show
+as raw bytes.
 
 Creating a topic, editing topic configuration, and resetting consumer group offsets are not
 available. Deleting a topic is, as the paragraph above describes.

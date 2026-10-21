@@ -6,7 +6,7 @@ description: Pick the surface for the job, find TablePro by bundle ID, and know 
 import StabilityMatrix from "/snippets/stability-matrix.mdx";
 
 What you need back decides the surface. Putting something on screen needs no setup at all; reading
-rows back needs AppleScript or a token.
+rows back needs AppleScript, Shortcuts or a token.
 
 ## Pick a surface
 
@@ -16,6 +16,7 @@ rows back needs AppleScript or a token.
 | Open a database nobody saved | [Database URLs](/connections/urls), opened by bundle ID | No | **Open External Database Connection?**, with **Always Allow** for a database on this Mac |
 | Hand over a connection to keep | [Connection import](/developers/connection-import) | No | A review sheet before the connection is saved |
 | List connections or run a query from a script | [AppleScript](/developers/applescript) | Yes | Automation permission, once per sending app |
+| Run a query or add rows from a shortcut | [Shortcuts](/integrations/shortcuts) | Yes | None; the connection's **External Clients** level and Safe Mode apply |
 | Give an AI client or a long-running tool schema and rows | [MCP](/developers/mcp-protocol) | Yes | A token or the bundled bridge, then each connection on first use |
 | Get a token for your own extension | [Pairing](/developers/pairing) | A token | The pairing sheet |
 | Add a database engine or a file format | [A plugin](/development/plugin-development) | Runs inside the app | Trust in the developer who signed it |
@@ -23,7 +24,7 @@ rows back needs AppleScript or a token.
 A launcher needs two of these: AppleScript or MCP to list connections, and a
 `tablepro://connect/<uuid>` link to open one. On iPhone and iPad, an integration has
 [two connection links](/developers/url-scheme#on-iphone-and-ipad) and the
-[Shortcuts actions](/integrations/ios-shortcuts).
+[Shortcuts actions](/integrations/shortcuts).
 
 ## Find the app
 
