@@ -182,7 +182,11 @@
     },
     {
       "source": "/external-api/ios-shortcuts",
-      "destination": "/integrations/ios-shortcuts"
+      "destination": "/integrations/shortcuts"
+    },
+    {
+      "source": "/integrations/ios-shortcuts",
+      "destination": "/integrations/shortcuts"
     },
     {
       "source": "/external-api/mcp-clients",
@@ -344,7 +348,7 @@
               "integrations/raycast",
               "integrations/terminal",
               "integrations/ddev",
-              "integrations/ios-shortcuts"
+              "integrations/shortcuts"
             ]
           },
           {
