@@ -68,7 +68,21 @@ A table whose primary key is made of two foreign keys, `user_roles` and its like
 
 ## Export
 
-**Export as PNG** renders the whole diagram at twice screen resolution with 40 points of padding, whatever the current zoom and scroll position, and saves it as `er-diagram.png`. `Cmd+C` puts the same image on the clipboard. Compact mode and expanded junction tables carry into the render, so set the view up first.
+**Export**, the last button in the toolbar, opens a menu of formats. Every format holds the whole diagram, whatever the current zoom and scroll position, and compact mode and expanded junction tables carry into it, so set the view up first.
+
+| Format | File | Contents |
+|--------|------|----------|
+| PNG | `er-diagram.png` | A bitmap at twice screen resolution, with 40 points of padding |
+| SVG | `er-diagram.svg` | Shapes and text as vectors; the key, link and table icons are small embedded bitmaps |
+| PDF | `er-diagram.pdf` | One page sized to the diagram, with text that Preview can search and select |
+| Mermaid | `er-diagram.mmd` | An `erDiagram` block: each table with its columns, types and `PK` and `FK` markers, and each foreign key with the cardinality the diagram draws |
+| Graphviz DOT | `er-diagram.gv` | A table per node, one row per column, and an edge between the two column ports for each foreign key. Render it with `dot -Tsvg er-diagram.gv -o er-diagram.svg` |
+
+PNG, SVG and PDF keep the window's colors and the table positions on screen. Mermaid and DOT list tables by name and columns in table order, so exporting an unchanged schema twice writes the same file and a diff shows only real changes.
+
+**Copy as Mermaid** puts the block on the clipboard inside a `mermaid` code fence, ready to paste into a GitHub comment or any Markdown that renders Mermaid. `Cmd+C` copies the PNG image.
+
+Mermaid accepts fewer characters in a type or column name than SQL does. A space, comma or quote becomes an underscore, so `character varying(255)` reads `character_varying(255)`, and a column named `pk`, `fk` or `uk` gets a leading underscore.
 
 For the tables' DDL, choose **File > Export > Export Tables…**, pick SQL and leave **Structure** on. See [Import & Export](/features/import-export).
 
