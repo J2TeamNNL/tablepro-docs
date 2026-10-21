@@ -55,6 +55,14 @@ PostgreSQL, Redshift, CockroachDB, MySQL, MariaDB, TiDB, SQLite, DuckDB, SQL Ser
 
 Two things survive a rollback in any of those four cases. MySQL, MariaDB and Oracle commit a `CREATE`, `ALTER` or `DROP` the moment it runs, along with everything before it, and CockroachDB commits the open transaction before it processes any DDL at all.
 
+### The open transaction bar
+
+While a session holds a transaction, a bar above every tab of the connection says **Transaction Open**, names the database, and offers **Roll Back** and **Commit**. It shows whoever opened the transaction, a `BEGIN` you ran, a grid save inside one, or an [MCP client's](/developers/mcp-tools) `transaction_control`, and goes once it ends, by its buttons, by a typed `COMMIT` or `ROLLBACK`, or with the session. On PostgreSQL, Redshift and CockroachDB each database keeps its own connection, so two databases with open transactions show a row each. The [connections strip](/features/workspace-rail) marks the entry with an hourglass, so you see it from another connection.
+
+**Transaction Failed** means a statement inside it failed and it can no longer commit, so only **Roll Back** is offered. **Roll Back** asks first at every [Safe Mode](/features/safe-mode) level. **Commit** asks what a typed `COMMIT` asks: nothing at **Silent**, a confirmation at the Alert levels, a confirmation and Touch ID at the Safe Mode levels. At **Read-Only** it is hidden.
+
+Both act on the connection the bar names. When other work ran there after you clicked, they do nothing and say so: check the transaction and try again.
+
 ### Statements a transaction cannot hold
 
 One of these anywhere in the batch leaves the whole of it unwrapped. The engine either refuses the statement inside a block, as PostgreSQL refuses `VACUUM`, or applies it and quietly throws it away, as SQLite does with `PRAGMA foreign_keys`.
@@ -182,19 +190,30 @@ The editor also carries multiple cursors, for editing several places at once.
 
 Press `Cmd+Shift+L` to format the statement at the cursor. The toolbar's format button and **Query > Format Query** do the same, and the shortcut is rebindable in **Settings > Keyboard**.
 
-The token-based formatter breaks a line per clause, indents two spaces, cases keywords per **Settings > Editor > Keyword case**, and keeps your comments, string literals, cursor position and dialect identifier quoting (MySQL backticks, PostgreSQL double quotes). JOINs, subqueries, CASE expressions, recursive CTEs, window functions and set operations are all handled. Procedural blocks pass through with minimal changes: PL/pgSQL `DO`, stored procedures, T-SQL `BEGIN`/`END`.
+The formatter breaks a line per clause and keeps your comments, string literals, cursor position and dialect identifier quoting (MySQL backticks, PostgreSQL double quotes). Indentation, keyword and function case, comma position, line width, the join condition and alias alignment are set in **Settings > Editor > Formatter**; see [Formatter](/customization/editor-settings#formatter). A `.sql-formatter.json` in a [linked SQL folder](/features/favorites#linked-sql-folders) sets them for the files in that folder. JOINs, subqueries, CASE expressions, recursive CTEs, window functions and set operations are all handled. Procedural blocks pass through with minimal changes: PL/pgSQL `DO`, stored procedures, T-SQL `BEGIN`/`END`.
 
 **Before**:
 ```sql
 select u.id,u.name,count(o.id) as order_count from users u left join orders o on u.id=o.user_id where u.status='active' group by u.id,u.name having count(o.id)>5 order by order_count desc;
 ```
 
-**After**:
+**After**, with the default rules:
 ```sql
-SELECT
-  u.id,
-  u.name,
-  COUNT(o.id) AS order_count
+SELECT u.id,
+       u.name,
+       count(o.id) AS order_count
+FROM users u
+LEFT JOIN orders o
+  ON u.id = o.user_id
+WHERE u.status = 'active'
+GROUP BY u.id, u.name
+HAVING count(o.id) > 5
+ORDER BY order_count DESC;
+```
+
+**After**, with a line width of 80, the join condition on the JOIN line and function case `UPPERCASE`:
+```sql
+SELECT u.id, u.name, COUNT(o.id) AS order_count
 FROM users u
 LEFT JOIN orders o ON u.id = o.user_id
 WHERE u.status = 'active'
@@ -231,7 +250,7 @@ Invisible characters around a statement, such as a byte order mark in front of `
 
 A database often quotes the offending character back in its error message. Error messages show each marked character as its short name in angle brackets, so SQLite's reply to a stray backspace reads `unrecognized token: "<BS>"`. The error banner, query history and the other panes that show a database error also color the name orange and tint a special space. In an error alert, a special space shows as an ordinary space. The banner's copy button copies the database's text as it arrived, for a search or a bug report.
 
-To hide the marks in the editor, turn off **Show invisible characters** in **Settings > Editor**. Read-only views, such as the AI assistant's code blocks, and error messages always show them.
+To hide the marks in the editor, turn off **Show invisible characters** in **Settings > Editor**. Read-only views, such as the AI assistant's code blocks, and error messages always show them. The data grid and the value fields have a switch of their own; see [Invisible characters](/features/data-grid#invisible-characters).
 
 ## AI assistance
 
@@ -241,6 +260,6 @@ For the execution plan rather than an opinion, press `Cmd+Option+E` and see [Exp
 
 ## Editor settings
 
-**Settings > Editor** holds line numbers, current-line and current-statement highlighting, word wrap, [code folding](/features/code-folding), the per-statement run button, [invisible characters](#invisible-characters), tab width, [keyword case](/features/autocomplete#keyword-case), [query parameters](/features/query-parameters), and [vim mode](/features/vim-mode). Editor font family and size are on that same tab.
+**Settings > Editor** holds line numbers, current-line and current-statement highlighting, word wrap, [code folding](/features/code-folding), the per-statement run button, [invisible characters](#invisible-characters), tab width, [keyword case](/features/autocomplete#keyword-case), [query parameters](/features/query-parameters), and the [Vim](/features/vim-mode) or [Emacs](/features/emacs-mode) key bindings. Editor font family and size are on that same tab.
 
 The font size set by `Cmd+=` and `Cmd+-` is the Editor Font setting, so it is kept between launches. See [Query Tabs](/features/tabs#switching-tabs).

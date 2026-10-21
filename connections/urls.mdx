@@ -44,6 +44,7 @@ Two readers take these URLs, and not the same set. The **Import from URL…** sh
 | `ch://` | ClickHouse (alias) | Yes |
 | `teradata://` | Teradata | No |
 | `trino://` | Trino | No |
+| `presto://` | Presto | No |
 | `duckdb://` | DuckDB file | Yes |
 | `quack://` | DuckDB remote (Quack protocol) | No |
 | `beancount://` | Beancount ledger file | No |
@@ -116,6 +117,7 @@ Names are matched case-insensitively. Anything unrecognized is ignored, except o
 | `statusColor` | Connection color as hex, matched to the nearest palette color | `?statusColor=FF3B30` |
 | `env` | Assign an existing tag by name. `environment` is accepted too | `?env=production` |
 | `socket` | MySQL and MariaDB. Socket file path, in place of host and port. Alias `unix_socket`. See [Unix socket](#unix-socket) | `?socket=%2Ftmp%2Fmysql.sock` |
+| `host`, `port` | PostgreSQL. Override the URL's own host and port. A host starting with `/` is the socket folder. See [PostgreSQL socket](#postgresql-socket) | `?host=/var/run/postgresql` |
 
 ### Unix socket
 
@@ -133,16 +135,32 @@ mariadb://root@/shop?socket=(/tmp/mysql.sock)
 - Other engines and `+ssh` URLs ignore `socket`.
 - **Copy Connection String** writes this form, with no port.
 
+### PostgreSQL socket
+
+```text
+postgresql://user@localhost:5433/shop?host=/var/run/postgresql
+postgresql:///shop?host=%2Ftmp&port=5433
+postgresql://%2Ftmp:5433/shop
+```
+
+- A host starting with `/` is the folder holding the socket, as in `psql`. Write it in `host=`, or percent-encoded in place of the host.
+- `host=` and `port=` win over the host and port before the path.
+- The port picks the socket file, `.s.PGSQL.5433` for `5433`. A host naming that file sets the port from its name.
+- Only `%` escapes decode: `+` stays a `+`.
+- A folder with a comma, a control or invisible character, or a socket file path over 103 bytes refuses the URL.
+- `socket` is not read: it is MySQL's name.
+- **Copy Connection String** writes the first form, with the port when it is not `5432`.
+
 ### SSL/TLS
 
 | Parameter | Values | Description |
 |-----------|--------|-------------|
 | `sslmode` | `disable`, `prefer`, `require`, `verify-ca`, `verify-full` | SSL mode under libpq's names, in any case and with `_` for `-`, so `VERIFY_FULL` works too. ClickHouse JDBC's `strict` and `none` read as Verify Identity and Required |
 | `tlsmode` | `0`-`4` | The same modes as integers: 0=disable, 1=prefer, 2=require, 3=verify-ca, 4=verify-full |
-| `tls` / `ssl` | `true`, `false` | `true` turns TLS on: Verify Identity for Trino and ClickHouse, Required for every other database. `false` sets Disabled, even on a port that means TLS |
+| `tls` / `ssl` | `true`, `false` | `true` turns TLS on: Verify Identity for Trino, Presto and ClickHouse, Required for every other database. `false` sets Disabled, even on a port that means TLS |
 | `SSLVerification` | `FULL`, `CA`, `NONE` | Trino's certificate check once TLS is on: Verify Identity, Verify CA, Required. Ignored while TLS is off. Verify CA also needs a CA certificate file |
 
-`sslmode` or `tlsmode` wins over `ssl`, `tls` and `SSLVerification`. With none of them, a Trino URL on port `443` and a ClickHouse URL on `443` or `8443` import as Verify Identity, as in [Ports that mean TLS](/connections/ssl#ports-that-mean-tls), and every other URL takes the driver's default from [Per-driver defaults](/connections/ssl#per-driver-defaults). **Import from URL…** and a link opened from a browser or `open` resolve the mode the same way, so `ssl=false` or `sslmode=disable` is how a link asks for plain TCP. A URL that turns TLS on and names no port opens on the driver's TLS port, `443` for Trino and `8443` for ClickHouse, and a port written in the URL is kept.
+`sslmode` or `tlsmode` wins over `ssl`, `tls` and `SSLVerification`. With none of them, a Trino or Presto URL on port `443` and a ClickHouse URL on `443` or `8443` import as Verify Identity, as in [Ports that mean TLS](/connections/ssl#ports-that-mean-tls), and every other URL takes the driver's default from [Per-driver defaults](/connections/ssl#per-driver-defaults). **Import from URL…** and a link opened from a browser or `open` resolve the mode the same way, so `ssl=false` or `sslmode=disable` is how a link asks for plain TCP. A URL that turns TLS on and names no port opens on the driver's TLS port, `443` for Trino and Presto and `8443` for ClickHouse, and a port written in the URL is kept.
 
 ```text
 postgresql://user:pass@host/db?sslmode=require
@@ -237,7 +255,7 @@ When another client also handles the scheme, `open -b com.TablePro "mysql://…"
 
 Every URL opened from outside the app raises an **Open External Database Connection?** alert naming the database type, host and port or socket, user, and database. **Connect** does not answer the Return key. Escape is the only keyboard answer, and it cancels.
 
-**Always Allow** appears only for a database on this machine (`localhost`, `127.x.x.x`, `::1`, or a socket). A trusted link is matched on database type, host, socket, database, username, and the URL's `name` parameter, never the port, so the same link on a different port still connects without asking again. Trusting `localhost` does not cover a socket link. Trusting one socket does not cover another. Remote hosts always prompt, and so does a link through an SSH tunnel, whose database is on the SSH server.
+**Always Allow** appears only for a database on this machine (`localhost`, `127.x.x.x`, `::1`, or a socket). A trusted link is matched on database type, host, socket, database, username, and the URL's `name` parameter, never the port, so the same link on a different port still connects without asking again. Trusting `localhost` does not cover a socket link. Trusting one socket does not cover another, and a PostgreSQL socket on another port is another socket. Remote hosts always prompt, and so does a link through an SSH tunnel, whose database is on the SSH server.
 
 A link with a [filter](#filtering) asks every time and offers no **Always Allow**. Read the filter in the box under the target before choosing **Connect**: it runs on the table as soon as the connection opens.
 

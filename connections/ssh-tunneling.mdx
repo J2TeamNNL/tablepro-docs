@@ -63,9 +63,13 @@ A first connection shows the server's key type and SHA-256 fingerprint, in `ssh-
 
 If a trusted server's key later changes, an **SSH Host Key Changed** alert lists the previous and current fingerprints. **Connect Anyway** does not answer the Return key. Escape picks **Disconnect**, which is what to take unless you know the server was reinstalled. With jump hosts, every hop's key is verified the same way.
 
+The tunnel offers the post-quantum key exchange `mlkem768x25519-sha256` first, so a server that allows only post-quantum key exchange connects too. A server that allows only `sntrup761x25519-sha512` does not.
+
 ## Using ~/.ssh/config
 
 Pick an alias from the **Config Host** picker and `HostName`, `User`, `Port`, `IdentityFile`, `IdentitiesOnly`, `IdentityAgent`, and `ProxyJump` are resolved from the config at connect time. Anything typed into the form overrides the file, which is re-read whenever it or an `Include`d file changes.
+
+`Match` blocks take the criteria ssh does, `localnetwork` and `tagged` included. A tunnel counts as `sessiontype none` with an empty `command`, and a criterion TablePro does not know keeps its block from applying.
 
 `IdentityFile` picks which agent key is offered, not only which key file is read, and a `.pub` is enough. That is how a 1Password or Secretive key gets pinned to a host. `IdentitiesOnly yes` then drops every agent key the config did not name, which is what keeps a thirty-key agent inside a server's `MaxAuthTries`.
 
@@ -101,7 +105,7 @@ For a database behind more than one bastion, expand **Jump Hosts** and add each 
 | **Auth** | **Private Key** or **SSH Agent**. Password auth is not offered for a hop |
 | **Key File** | Private key path, under Private Key auth |
 
-With the list left empty and an SSH host that matches a config entry carrying `ProxyJump`, that directive is followed instead.
+With the list left empty and an SSH host that matches a config entry carrying `ProxyJump`, that directive is followed instead. A hop's own `ProxyJump` is followed too, but in a list only the first hop's, as `ssh -J a,b` does. `ProxyJump none` turns it off, a hop written as `ssh://user@host:port` reads the same as `user@host:port`, and a hop with no `User` is named in the error before anything is dialed.
 
 A connection with hops syncs to [iPhone and iPad](/ios#jump-hosts) with every hop, its port and its key path intact. A key path names a file on the Mac, so give each hop a key on the device before the connection opens there. The tunnel's own port and auth method make the same round trip: a port you left empty stays empty, so `~/.ssh/config` still decides it.
 
@@ -153,6 +157,8 @@ Nothing is listening where that socket points, and the message names which of th
 
 A jump host has no **Agent Socket** field of its own, so its agent comes from `IdentityAgent` or `SSH_AUTH_SOCK`.
 
+`IdentityAgent SSH_AUTH_SOCK` means that variable, as it does for ssh. `IdentityAgent none` turns the agent off: a jump host from `~/.ssh/config` then signs in with its `IdentityFile` keys, and a tunnel set to **SSH Agent** stops with an error naming that line.
+
 ### "The SSH agent from … holds no keys."
 
 The agent answered and offered nothing. 1Password serves keys only while it is running and unlocked, and Secretive only while its agent is loaded; unlock it and add the key there. `ssh-add` loads keys into the `SSH_AUTH_SOCK` agent alone, so it is the fix only when that is the socket in the message.
@@ -183,7 +189,7 @@ The local end of the tunnel listens on a port between 60000 and 65000. Allow it.
 
 ### SSH fails instantly against a server on your own network
 
-macOS 15 and later put outbound connections to local network addresses behind a Local Network permission, and a denied app fails fast with "no route to host". Check TablePro under **System Settings > Privacy & Security > Local Network**. Servers over the internet, and anything on `127.0.0.1`, are unaffected.
+macOS 15 and later put outbound connections to local network addresses behind a Local Network permission. With it off, the window reads **Local Network Access Required** and names the SSH server, or the first jump host, it could not reach. **Open System Settings** takes you to **Privacy & Security**, where **Local Network** lists TablePro. Servers over the internet, and anything on `127.0.0.1`, are unaffected.
 
 ### SSH itself fails
 

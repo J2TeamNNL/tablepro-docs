@@ -182,7 +182,11 @@
     },
     {
       "source": "/external-api/ios-shortcuts",
-      "destination": "/integrations/ios-shortcuts"
+      "destination": "/integrations/shortcuts"
+    },
+    {
+      "source": "/integrations/ios-shortcuts",
+      "destination": "/integrations/shortcuts"
     },
     {
       "source": "/external-api/mcp-clients",
@@ -283,6 +287,7 @@
               "features/autocomplete",
               "features/query-parameters",
               "features/vim-mode",
+              "features/emacs-mode",
               "features/query-history",
               "features/query-insights"
             ]
@@ -294,6 +299,7 @@
               "features/data-grid",
               "features/query-results",
               "features/filtering",
+              "features/search-database",
               "features/change-tracking",
               "features/json-viewer",
               "features/data-files"
@@ -308,6 +314,7 @@
               "features/user-defined-types",
               "features/table-operations",
               "features/er-diagram",
+              "features/join-builder",
               "features/explain-visualization",
               "features/server-dashboard",
               "features/users-roles"
@@ -342,7 +349,7 @@
               "integrations/raycast",
               "integrations/terminal",
               "integrations/ddev",
-              "integrations/ios-shortcuts"
+              "integrations/shortcuts"
             ]
           },
           {

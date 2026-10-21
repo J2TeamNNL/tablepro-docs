@@ -122,7 +122,7 @@ Toggle the filter bar to search keys by pattern. Patterns are Redis glob (`*` an
 
 ## Redis CLI
 
-Each statement is one command; separate several with `;`. Commands the driver does not recognize go through too, and only the result formatting is type-aware. A recognized command with arguments its result view does not model, such as `FLUSHDB ASYNC` or `CONFIG SET a 1 b 2`, is also sent exactly as typed, so the server answers it as `redis-cli` would. Arguments are quoted the way `redis-cli` quotes them, so `"` and `'` both work and `\xHH` writes a raw byte; unbalanced quotes are rejected rather than guessed at. Redis has no comment syntax and none is stripped, so a `--` or `#` line is sent to the server and fails.
+A command ends at a `;` or a line break outside quotes, so each line is its own command and a quoted value may run across lines. Commands the driver does not recognize go through too, and only the result formatting is type-aware. A recognized command with arguments its result view does not model, such as `FLUSHDB ASYNC` or `CONFIG SET a 1 b 2`, is also sent exactly as typed, so the server answers it as `redis-cli` would. Arguments are read the way `redis-cli` reads them: `"` and `'` both quote, `\n` and `\xHH` inside double quotes write a byte, only `\'` is an escape inside single quotes, and a backslash outside quotes is part of the argument, so `DEL victim\` deletes `victim\`. Unbalanced quotes are rejected rather than guessed at. Redis has no comment syntax and none is stripped, so a `--` or `#` line is a command of its own and fails at the server.
 
 ```redis
 SET mykey "hello" EX 60

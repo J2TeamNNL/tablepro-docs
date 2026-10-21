@@ -3,7 +3,7 @@ title: AI Assistant
 description: "Built-in AI for SQL: chat with tool calling, inline suggestions, and review, explain, optimize, and fix-error across 15 providers"
 ---
 
-One provider is active at a time and answers every AI request in the app, from the chat panel to the ghost text in the editor. Switch it and all of them switch with it. Keys are yours and live in the macOS Keychain, so every request bills to your own account with that provider.
+One provider is active at a time and answers every AI request in the app, from the chat panel to the ghost text in the editor. Switch it and all of them switch with it. The one exception is [Apple Intelligence](#apple-intelligence), which takes over the editor's requests when you turn it on. Keys are yours and live in the macOS Keychain, so every request bills to your own account with that provider.
 
 ## Configure a provider
 
@@ -47,6 +47,14 @@ With no preference, start with Claude or OpenAI on an API key: both take a key, 
 Install Claude Code, run `claude /login` in Terminal, then pick Opus, Sonnet, or Haiku. Replies bill against your Claude subscription instead of an API key. The provider answers from your schema when the MCP server is on in **Settings > MCP**, and falls back to plain chat when it is off.
 
 The `claude` tool runs headless here. Claude Code is built for you to use directly rather than as a backend for other apps, so this path can break with any Claude Code release. Your subscription is governed by Anthropic's [Consumer Terms](https://www.anthropic.com/legal/consumer-terms) and [Usage Policy](https://www.anthropic.com/legal/aup), which TablePro cannot grant rights under. Replies also count against the limits you share with claude.ai and your own Claude Code sessions, so running out here stops your work there. For a metered path on commercial terms, add the **Claude** provider with an API key.
+
+## Apple Intelligence
+
+Under **Apple Intelligence** in **Settings > AI**, turn on **Use for inline suggestions and query actions**. Inline suggestions and **Review**, **Explain**, **Optimize**, and **Fix** then run on the model built into macOS: no key, no account, no server, and nothing sent over the network. The chat and [Agent mode](/features/agent-mode) stay on the active provider.
+
+The switch needs macOS 26 or later, a Mac that supports Apple Intelligence, Apple Intelligence turned on in **System Settings > Apple Intelligence & Siri**, and its model downloaded. Until all four hold, the switch is dimmed and the line under it names the one missing.
+
+The model reads a few thousand tokens at most, so every request is measured before it goes. An action sends the statement and the structure of its tables; when that is too large, only the columns the statement names go. When even that is too large, nothing is generated: the error says so and offers **Send to** the active provider, which answers the same request with the full structure. Replies from Apple Intelligence come back as plain messages, not walkthroughs, with **Apple Intelligence** under them.
 
 ## Chat
 
@@ -132,7 +140,7 @@ Start with **Review with AI** when you are unsure what to ask: it checks correct
 
 The request carries the structure of the tables the statement names, read from the tab's own database and schema: columns and types, keys, indexes with their predicates, foreign keys, and estimated row counts. Up to 12 tables go, in the order the statement names them. The chip above your message lists them; hover it to see any table that could not be read or was not found. If the tab already shows an EXPLAIN plan for the same statement, the plan goes too. Building this reads only the database's catalog: your statement never runs, and no rows are sent. Turn off **Include database schema** in **Settings > AI** to send the statement alone.
 
-With no provider set up the actions are dimmed. With AI turned off, or on a connection whose AI policy is **Never**, they are hidden.
+With no provider set up and Apple Intelligence off, the actions are dimmed. With Apple Intelligence on, they are dimmed while it cannot run, and the tooltip says why. With AI turned off, or on a connection whose AI policy is **Never**, they are hidden.
 
 The reply comes back as a walkthrough. Optimize and Fix diff your statement against the rewritten one, switchable between **Unified** and **Split**; Review and Explain anchor their steps to the statement as it stands. Each numbered step carries a one-line reason and a tag (**Critical**, **Change**, or **Context**), expands to the lines it refers to, and offers **Jump to lines** and **Ask about this change**, which keeps a follow-up anchored to that step. **Apply to Editor** replaces the statement you sent after you confirm. If you edited that statement since, the suggestion opens as a new query instead. A model that answers in prose renders as a normal message.
 
@@ -142,7 +150,7 @@ Pin plain-text context to a connection so the AI sees it every turn: open the co
 
 ## Inline suggestions
 
-Turn on **Enable inline suggestions while typing** in the AI tab; it is off by default. Pause typing and the active provider suggests a completion as ghost text at the cursor. `Tab` accepts, `Escape` dismisses, and typing anything else dismisses it too.
+Turn on **Enable inline suggestions while typing** in the AI tab; it is off by default. Pause typing and the active provider, or Apple Intelligence when it is on, suggests a completion as ghost text at the cursor. `Tab` accepts, `Escape` dismisses, and typing anything else dismisses it too.
 
 The pause is the **Debounce** setting beside the toggle: 500 ms by default, adjustable from 100 to 3,000 ms in 50 ms steps. With Copilot active the suggestions come from Copilot's inline-completion model; every other provider serves them through chat completions.
 
@@ -159,6 +167,6 @@ Every message carries a system prompt built from **Settings > AI > Context**, so
 | Include query results | Off | The rows in the results grid |
 | Max schema tables | 20 | |
 
-Ollama, llama.cpp, and MLX run on your own machine, so nothing reaches a third party. Every other provider is a network call to that vendor under the terms of your account with them.
+Apple Intelligence runs inside macOS and sends nothing over the network. Ollama, llama.cpp, and MLX run on your own machine, so nothing reaches a third party. Every other provider is a network call to that vendor under the terms of your account with them.
 
 Per connection, **AI Policy** under **Access** on the connection form's **Options** tab takes **Use Default**, **Always Allow**, **Ask Each Time**, or **Never**. A change applies to an open connection from the next message or tool call. The app-wide default is **Ask Each Time**: the chat asks before its first message on a connection, and one **Allow** covers every chat and the inline suggestions on that connection until it disconnects. **Never** also blocks external AI tool calls against that connection. External clients such as Raycast and Claude Desktop reach the same tools through the [MCP server](/features/mcp), bounded by the connection's **External Clients** level and the token's scope.

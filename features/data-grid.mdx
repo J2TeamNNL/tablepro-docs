@@ -69,7 +69,21 @@ Drag a border to resize a column, or double-click it to fit the content; **Size 
 
 Hide columns from the columns button in the status bar or from the header menu. A hidden column is not fetched, so hiding a large one makes the table load faster; the primary key and the sorted column are fetched either way. On a schemaless store the popover lists every field the grid can draw, including ones that turn up only in later documents.
 
-Widths, order, and hidden columns are remembered per table, scoped to the connection, database, and schema; **Reset Columns** in the popover puts them back. Right-click a header and choose **Display As** to read a column's stored values in a different form; [Cell and Row Viewers](/features/json-viewer) lists the formats.
+Widths, order, hidden and frozen columns are remembered per table, scoped to the connection, database, and schema; **Reset Columns** in the popover puts them back. Right-click a header and choose **Display As** to read a column's stored values in a different form; [Cell and Row Viewers](/features/json-viewer) lists the formats.
+
+### Freeze columns
+
+Right-click a column's header and choose **Freeze Up to This Column** to hold it and every column before it beside the row numbers. The rest scroll under them, and a line marks where the frozen columns end. Select, copy, edit, and jump to a frozen column as to any other. **Unfreeze Columns** on the header menu lets them scroll again.
+
+Frozen columns cover at most two thirds of the grid's width. The menu item is dimmed for a column that would freeze more, and frozen columns that no longer fit after the window narrows scroll until it widens again. Click a frozen header to sort it, or drag its edge to resize it, at any scroll position. To move a frozen column, scroll back to the first column and drag its header. On a query result they stay frozen until the tab closes or the app quits.
+
+### Large binary values
+
+On MySQL and MariaDB, a binary value larger than the connection's limit stays on the server until you need it, in any table with a primary key. The cell shows the value's size in italics, such as *5.2 MB*. Set the limit under **Options > Load binary values up to** in the [connection form](/connections/connection-form#options); it is 64 KB until you change it.
+
+The value is read by its primary key when you open the cell, copy it, show its row in the inspector with one row selected, duplicate the row, list the column's values with **Filter Values…**, or export the rows with **Export Results…**. **File > Export** reads every value as before. Set NULL, paste and **Fill Column** read the value first, so undo puts it back. A table without a primary key, a sorted column and a column under a value filter load every value with the page.
+
+Find and the selection summary skip a value until it loads, and the JSON view shows it as *Not loaded* with its size. Deleting a row whose value never loaded saves normally, but [Data Rewind](/features/change-tracking#restoring-a-save) cannot put that row back.
 
 ### Jump to a column
 
@@ -158,12 +172,14 @@ Click a cell to select it, drag or `Shift`-click for a range, and `Cmd`-click to
 
 | Shortcut | Copies |
 |---|---|
-| `Cmd+C` | The focused cell, or the selected rows as TSV |
+| `Cmd+C` | A cell range as cells, a clicked cell as its value, selected rows in the **Copy rows as** format |
 | `Cmd+Shift+C` | The selected rows as TSV |
 | `Cmd+Option+C` | The same, with a header row |
 | `Cmd+Option+J` | The selected rows as JSON |
 
-Right-click and open **Copy as** for CSV, CSV with Headers, Markdown, and **IN Clause**, which writes `('a', 'b', 'c')` for a `WHERE col IN (…)`. **INSERT Statement(s)** and **UPDATE Statement(s)** appear when the result comes from a single table whose structure has loaded, and never on MongoDB or Redis. UPDATE is also missing on a table without a primary key that has a column no match can compare, such as a SQL Server `sql_variant`. **Copy Column Values** on the header menu copies one column, one value per line.
+**Copy rows as** in [Settings > Data](/customization/data-settings#copying) sets what `Cmd+C` writes for whole rows, picked by their row numbers or with `Cmd+A`: TSV, TSV with Headers, JSON, CSV, CSV with Headers or Markdown. Whatever the format, `Cmd+V` in a table pastes the copied rows, not the text. To copy one value out of a selection, choose **Edit > Copy Special > Copy Cell Value** for the cell the cursor is on, or **Copy Cell Value** in the right-click menu for the cell under the pointer.
+
+Right-click and open **Copy as** for CSV, CSV with Headers, Markdown, and **IN Clause**, which writes `('a', 'b', 'c')` for a `WHERE col IN (…)`. **INSERT Statement(s)** and **UPDATE Statement(s)** appear when the result comes from a single table whose structure has loaded, and never on MongoDB or Redis. UPDATE is also missing on a table without a primary key that has a column no match can compare, such as a SQL Server `sql_variant`. **Copy Column Values** on the header menu copies one column, one value per line. Every format is also in **Edit > Copy Special**, where IN Clause takes the one column a cell selection covers, or the cursor's column. Those items have no shortcut until you record one in **Settings > Keyboard**.
 
 Every copy follows the grid as shown: hidden columns are left out, columns keep their current order, and over a cell selection only those columns go out. INSERT and UPDATE write what a save of the same row would. They leave out the columns the server fills in, such as identity and computed columns. INSERT leaves a cell set to `DEFAULT` to the server, and UPDATE assigns it `DEFAULT`. The table name carries its schema. UPDATE finds the row as it is stored, not as you have edited it: by every column of the primary key, whether or not those cells are selected, or on a table without one by every column, hidden ones included, which also changes any identical copy of the row. A row you added and have not saved gets no UPDATE.
 
@@ -211,10 +227,18 @@ Any other SRID, such as the projected 27700 or 32633, draws nothing: the pane na
 
 The map is one element to VoiceOver and does not publish its shapes, so the grid stays the readable representation of spatial rows.
 
-SQL Server, Oracle, SpatiaLite, Teradata, Trino, Spanner, Cassandra and BigQuery hand geometry over in formats the reader does not cover yet. Their spatial columns show text and carry no Map segment, because the segment follows what the values are rather than what the column is called.
+SQL Server, Oracle, SpatiaLite, Teradata, Trino, Presto, Spanner, Cassandra and BigQuery hand geometry over in formats the reader does not cover yet. Their spatial columns show text and carry no Map segment, because the segment follows what the values are rather than what the column is called.
 
 ## Editing and display
 
 Double-click a cell to edit it. A long value stays on one line and scrolls sideways rather than wrapping into the column's width. Nothing reaches the database until you save, and [Change Tracking](/features/change-tracking) covers the type-specific editors, the row operations, and what a Save runs.
 
 NULL renders as styled `NULL` text. That text, the date format, row height, row numbers, and alternate row backgrounds are [data settings](/customization/data-settings). Every shortcut the grid answers to, and how to rebind it, is in [Keyboard Shortcuts](/features/keyboard-shortcuts).
+
+### Invisible characters
+
+A value that will not match a `WHERE` clause it looks right for often holds a character that draws as nothing. Cells mark those characters the way the [SQL editor](/features/sql-editor#invisible-characters) does: a zero-width space, a byte order mark, a soft hyphen or a bidirectional control shows as a box with its short name, such as `ZWSP`, `BOM`, `SHY` or `RLO`, and a non-breaking or other special space is outlined. A carriage return with no line feed after it shows as `CR`. Other line breaks still read as a space.
+
+The inspector's text fields, the viewer and editor that open on a cell, and the [text window](/features/json-viewer#row-details-inspector) mark the same characters. The text window's status bar also counts the value's characters and bytes.
+
+To hide the marks, turn off **Show invisible characters** in [Settings > Data](/customization/data-settings).
