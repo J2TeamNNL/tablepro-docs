@@ -278,7 +278,7 @@ The extension picks the format, so one command covers all of them. A file no for
 
 <Steps>
   <Step title="Pick the file">
-    Choose **File > Import > Import Data…** and select the file. The sheet that opens depends on what you picked.
+    Choose **File > Import > Import Data…** and select the file. The sheet that opens depends on what you picked. Select several files, or a folder, to [import them together](#import-several-files).
   </Step>
   <Step title="Set the options">
     Encoding, transaction wrapping, and error handling for SQL; parsing and column mapping for CSV and JSON. TablePro remembers the options from your last successful import, and **Reset to Defaults** restores the stock ones.
@@ -420,3 +420,26 @@ An update writes the mapped columns outside the key and leaves every other colum
 **Delete existing rows before import** works with **Insert** only. With any other choice the import stops before it writes a row.
 
 The summary counts the rows matched, updated, inserted and skipped, and under Skip and Continue the ones that failed.
+
+### Import several files
+
+Select several files in **Import Data…**, or a folder, and each one loads into its own table in one run. A folder brings the `.csv`, `.tsv`, `.json`, `.jsonl`, `.ndjson`, and `.xlsx` files directly inside it. Files in its subfolders stay out, and a file that does not load into a table, a `.sql` dump among them, is named in the sheet and left out. A folder holding a single such file opens the one-file sheet. Drop more files or folders on the list to add them.
+
+<Frame caption="Three files of a folder, each on its own table">
+  <img className="block dark:hidden" src="/images/import-several-files.png" alt="Sheet listing files with a destination menu and column count per file" />
+  <img className="hidden dark:block" src="/images/import-several-files-dark.png" alt="Sheet listing files with a destination menu and column count per file" />
+</Frame>
+
+Each file starts on the table its name matches, ignoring case, or on a new table under the name a single import would propose. No two files get the same new name: `sales.csv` and `sales.json` propose `sales` and `sales_2`. In a file's row, pick another destination from the menu, clear the checkbox to leave the file out, or click **Edit…** for the one-file sheet: the column mapping of an existing table, starting from its saved mapping, or the columns of a new table. A run only inserts, so that sheet has no **Import as**: [update existing rows](#update-existing-rows) one file at a time.
+
+The options under the list apply to every file of that format. With **Auto-detect** set, the delimiter and encoding are still read from each file. A run that mixes formats shows the options of each, and their **On error** and **Wrap in transaction** have to match, because the run has one transaction.
+
+| On error | What a failure in one file does |
+|---|---|
+| **Stop and Rollback** | Stops there and rolls back the rows of every file, the finished ones included |
+| **Stop and Commit** | Stops there, keeping every file before it and the rows of the failing file that went in |
+| **Skip and Continue** | Skips the failing row, or the whole file when it cannot be read, and carries on. No transaction |
+
+New tables are created before any rows go in, so a run that rolls back leaves them empty, and running it again from the same sheet reuses them. [Safe Mode](/features/safe-mode) asks once for the whole run. The summary lists each file with its table and row count, and **Copy Details** adds every skipped row's error.
+
+Two files can fill one existing table, except with **Delete existing rows before import** on: the second file would clear the first one's rows.
