@@ -31,7 +31,7 @@ The bar along the bottom carries **Test Connection**, **Cancel** and **Save**, p
 | **Socket** | Replaces Host when **Connect Using** is **Socket**. MySQL and MariaDB take the socket file, such as `/tmp/mysql.sock`, and drop Port. PostgreSQL takes the folder, such as `/tmp`, and keeps Port, which names the file |
 | **Database** | Optional on drivers that browse every database from one session. PostgreSQL and Redshift do not connect without one |
 | **Username** | Not pre-filled. Empty means the driver's own default |
-| **Password** | Stored in the macOS Keychain |
+| **Password** | Stored in the macOS Keychain. **Show password** reveals a saved one after Touch ID or your Mac's password. A connection whose password comes from a [password source](/features/connection-sharing#password-sources) shows the source here, with **Test Source** |
 | **Prompt for password** | Stores nothing, asks on every connect. Reads **Prompt for API token** on API-only drivers |
 | **Use Password File** | PostgreSQL, Redshift, and CockroachDB. Reads `~/.pgpass`, and reports underneath whether the file exists, has `chmod 0600`, and holds a matching line |
 
