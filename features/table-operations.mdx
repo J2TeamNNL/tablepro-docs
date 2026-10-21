@@ -71,7 +71,7 @@ No other engine has a rename, so the item never appears on Bigtable, Cassandra, 
 
 ## Drop or rename with SQL
 
-A `DROP TABLE`, `DROP VIEW`, `ALTER TABLE ... RENAME TO`, `RENAME TABLE` or SQL Server `sp_rename` run in a query tab, or by an MCP client, counts as a sidebar drop or rename once it commits. Tabs on the table close or take the new name, and its saved filters, column layout, highlight rules, value formats, foreign key label columns, folder, saved import mapping, favorite and Recent entry go with it. A drop that is rolled back leaves all of them in place. So does every drop in a run that ends inside a transaction, every drop on a SQL Server session with `IMPLICIT_TRANSACTIONS` on, and every drop in a SQL Server script that uses `IF`, `WHILE`, `GOTO`, `RETURN` or `TRY...CATCH`. A SQL file run through **Import Data**, or a restored backup, refreshes the sidebar and keeps every table's settings.
+A `DROP TABLE`, `DROP VIEW`, `ALTER TABLE ... RENAME TO`, `RENAME TABLE` or SQL Server `sp_rename` run in a query tab, or by an MCP client, counts as a sidebar drop or rename once it commits. Tabs on the table close or take the new name, and its saved filters, column layout, highlight rules, value formats, foreign key label columns, folder, saved import mapping, Generate Rows settings, favorite and Recent entry go with it. A drop that is rolled back leaves all of them in place. So does every drop in a run that ends inside a transaction, every drop on a SQL Server session with `IMPLICIT_TRANSACTIONS` on, and every drop in a SQL Server script that uses `IF`, `WHILE`, `GOTO`, `RETURN` or `TRY...CATCH`. A SQL file run through **Import Data**, or a restored backup, refreshes the sidebar and keeps every table's settings.
 
 This works on MySQL, MariaDB, PostgreSQL, Redshift, SQLite, SQL Server, Oracle, ClickHouse and DuckDB. On PostgreSQL, Redshift and SQL Server, name the schema, as in `public.orders`, and on DuckDB the database and the schema, because a bare name there resolves through session state such as the search path or the login's default schema. On the other engines a name stops being followed once something on the connection could have redirected it: a temporary table of the same name, a procedure call or anonymous block, or a statement that changes the current schema, whether it ran in a query tab, in the connection's **Startup Commands** or in an imported SQL file. A rename written with `IF EXISTS` is never followed, since it succeeds when there was nothing to rename.
 
@@ -89,6 +89,45 @@ Each operation lists the object kinds it applies to, so a view offers only the o
 | DynamoDB | Point-in-Time Recovery, Deletion Protection, Stream, Table Class, Switch to On-Demand Capacity, Turn Off Time to Live |
 
 PostgreSQL VACUUM carries FULL (rewrites the table and blocks access), ANALYZE, and VERBOSE toggles. MySQL CHECK TABLE offers QUICK, FAST, MEDIUM (the default), EXTENDED, and CHANGED. The options come from the driver, so an engine that adds one shows it without an app change. No other engine reports maintenance operations, so the submenu is hidden there, and in read-only safe mode.
+
+## Generate test rows
+
+Right-click a table and choose **Generate Rows…** to fill it with made-up data. Set the number of rows, from 1 to 1,000,000, pick a generator for each column on the left, and check the first 10 rows in the preview before anything runs.
+
+<Frame caption="Generate Rows with a column's generator and the preview">
+  <img className="block dark:hidden" src="/images/generate-rows.png" alt="The Generate Rows sheet listing a table's columns, the options for the selected column and a preview of ten rows" />
+  <img className="hidden dark:block" src="/images/generate-rows-dark.png" alt="The Generate Rows sheet listing a table's columns, the options for the selected column and a preview of ten rows" />
+</Frame>
+
+Each column starts from its type and name: an `email` column gets addresses on the reserved example.com, example.net and example.org domains, `created_at` gets dates in this year and the four before it, an enum gets its own labels, and an integer key gets a sequence that starts after its largest value. Keep those unless the data needs a shape of its own.
+
+| Generator | Writes |
+|-----------|--------|
+| Sequence | Numbers from a start, by a step |
+| Number Range, Decimal Range | Random numbers between a minimum and a maximum |
+| Text | Lorem ipsum, between a shortest and a longest length |
+| First Name, Last Name, Full Name, Email, Phone Number, Street Address, City, Country | Realistic values, cut to the column's length |
+| Date, Date and Time, Time | Values between two dates |
+| UUID | Version 4, or version 7 in insert order |
+| Boolean | True at the ratio set |
+| List of Values | One of the values entered, one per line |
+| Pattern | `#` a digit, `?` a letter, `*` either, `\` the next character as is |
+| JSON | A small object |
+| Referenced Value | A key that exists in the table the foreign key points at |
+| Server Default | Nothing: the column is left out of the `INSERT` |
+
+The sheet keeps every constraint the table declares, and stops **Generate** with the column's name when a setting cannot:
+
+- A primary key or unique column never repeats, and neither does a key over several columns. A range or list with fewer values than rows is refused up front.
+- A foreign key column picks from the first 10,000 keys of the referenced table. A `NOT NULL` key into an empty table is refused.
+- Identity, auto-increment, `serial`, SQLite `INTEGER PRIMARY KEY` and generated columns are left to the server.
+- A nullable column takes a NULL ratio.
+
+The same seed and settings give the same rows, as long as the referenced tables hold the same keys. After a run that adds rows, the sheet moves to a new seed and starts each key sequence after the rows just added, so a second run does not collide with the first. The result names the seed that made the rows; type it back in to make them again.
+
+**Generate** inserts the rows in batches inside one transaction, with a progress bar. **Cancel** rolls the transaction back and nothing is kept, except on an engine without transactions, where the rows inserted so far stay. The run is a write like any other for [Safe Mode](/features/safe-mode): a read-only connection has no **Generate Rows…**, and a mode that confirms writes asks first.
+
+**Open in Query Editor** puts the `INSERT` statements in a new query tab instead, for up to 10,000 rows. The settings are saved per table for the next time.
 
 ## Views
 
