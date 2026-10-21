@@ -76,7 +76,7 @@ A connection opens one database named after the file: `analytics.duckdb` becomes
 ATTACH 'warehouse.duckdb' AS warehouse;
 ```
 
-Press `Cmd+K` to move between them, in place, with no reconnect. An `ATTACH` typed in the editor lasts until the next connect. To keep a file attached, add it under **Attached Databases** in the connection's **Options**: every connect attaches it again, named after its file without the extension, and a file that is missing is named in a warning while the rest attach. `system` and `temp` are hidden, and with them `information_schema` and `pg_catalog`.
+Press `Cmd+K` to move between them, in place, with no reconnect. An `ATTACH` typed in the editor lasts until the next connect. To keep a file attached, add it under **Attached Databases** in the connection's **Options**: every connect attaches it again, named after its file without the extension, and a file that is missing is named in a warning while the rest attach. With **Open the File Read-Only** on, they attach read-only as well. `system` and `temp` are hidden, and with them `information_schema` and `pg_catalog`.
 
 Any connection can also read a file straight from SQL:
 
