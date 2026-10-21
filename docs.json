@@ -295,6 +295,7 @@
               "features/data-grid",
               "features/query-results",
               "features/filtering",
+              "features/search-database",
               "features/change-tracking",
               "features/json-viewer",
               "features/data-files"
