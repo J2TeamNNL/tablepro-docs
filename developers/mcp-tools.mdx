@@ -134,7 +134,7 @@ A lost connection, or a database where no schema could be read, fails the call i
 |------|-----------|---------|
 | `browse_table` | `connection_id`, `table` (`columns`, `filters`, `logic`, `sort`, `limit`, `offset`, `timeout_seconds`, `database`, `schema`) | A result set |
 | `count_rows` | `connection_id`, `table` (`exact`, `filters`, `logic`, `database`, `schema`) | `table`, `row_count`, `is_approximate`, `filter_count` |
-| `execute_query` | `connection_id`, `query` (`max_rows`, `timeout_seconds`, `database`, `schema`) | A result set, plus `result_sets[]` when a SQL Server script returns more than one |
+| `execute_query` | `connection_id`, `query` (`max_rows`, `timeout_seconds`, `database`, `schema`, `read_only`) | A result set, plus `result_sets[]` when a SQL Server script returns more than one |
 | `explain_query` | `connection_id`, `query` (`analyze`, `variant`, `timeout_seconds`, `database`, `schema`) | `statement` as actually sent, `execution_time_ms`, `columns[]`, `rows[][]`, and where available `plan_text`, `plan` and `available_variants[]` (`id`, `label`, `sql_prefix`, `runs_statement`). On Oracle and SQL Server the driver builds the plan from several statements, so `statement` is the query alone and `sql_prefix` is empty |
 | `export_data` | `connection_id`, `format` (`query` **or** `tables`, `sql_table`, `output_path`, `max_rows`, `database`, `schema`) | `format`, `rows_exported`, `is_truncated`, `path` when a file was written, and `exports[]` (`label`, `row_count`, `is_truncated`, `data`) |
 | `quote_identifiers` | `connection_id` and at least one of `identifiers`, `literals` (`database`, `schema`) | `identifiers[]` as `{ input, quoted }` and `literals[]` as `{ input, escaped }`, in the order supplied |
@@ -155,7 +155,7 @@ Without filters this returns the engine's fast estimate unless `exact` is set. W
 
 ### `execute_query`
 
-One statement, 100 KB at most. `DROP` and `TRUNCATE` are refused here; use `confirm_destructive_operation`. On MongoDB, a statement is a read only when it is one call with literal arguments, as [Safe Mode](/features/safe-mode#what-counts-as-a-read) describes; any other JavaScript is a write and needs `tools:write`. When the request carries a `progressToken`, the tool emits progress at 0.0 (resolving), 0.3 (executing) and 1.0 (done).
+One statement, 100 KB at most. `DROP` and `TRUNCATE` are refused here; use `confirm_destructive_operation`. With `read_only: true`, a statement that is not a read gets `-33007` before the user is asked anything, even on a connection set to **Read & Write** and with a token that carries `tools:write`. On MongoDB, a statement is a read only when it is one call with literal arguments, as [Safe Mode](/features/safe-mode#what-counts-as-a-read) describes; any other JavaScript is a write and needs `tools:write`. When the request carries a `progressToken`, the tool emits progress at 0.0 (resolving), 0.3 (executing) and 1.0 (done).
 
 On SQL Server, send the whole script instead. A variable exists only in the batch that declares it, so a `DECLARE` and the `SELECT`s that read it belong in one call. The script is cut into batches at its `GO` lines, as the query editor cuts it, and `GO 5` runs a batch five times. The gates judge the script by its worst statement: one write anywhere needs `tools:write` and Safe Mode, and one `DROP` refuses the call. `DECLARE` counts as a write.
 
