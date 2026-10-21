@@ -308,6 +308,7 @@
               "features/user-defined-types",
               "features/table-operations",
               "features/er-diagram",
+              "features/join-builder",
               "features/explain-visualization",
               "features/server-dashboard",
               "features/users-roles"
