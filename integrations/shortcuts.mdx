@@ -1,0 +1,160 @@
+---
+title: Shortcuts
+description: Open a connection, run a query, or add rows from the Shortcuts app on a Mac, iPhone or iPad
+---
+
+Every action starts from a saved connection picked from a list. Find them in Shortcuts under
+**Apps > TablePro**, in Spotlight, and in Siri.
+
+| Action | Does | Mac | iPhone and iPad |
+| --- | --- | --- | --- |
+| **Open Connection** | Opens the connection's window. | Yes | Yes |
+| **Run Query** | Runs one statement and passes the result to the next action. | Yes | No |
+| **Add Row to Table** | Inserts one row from a JSON object or a CSV row. | Yes | iOS app build 17 |
+| **Add Rows to Table** | Inserts many rows from a JSON array, CSV text, or a file. | Yes | iOS app build 17 |
+
+On a Mac the actions need macOS 14.2 or later. On macOS 13, use [AppleScript](/developers/applescript).
+The iOS app's build is under **Settings > About**; it ships on its own schedule, see
+[iPhone and iPad](/ios).
+
+## Run a query on a Mac
+
+<Steps>
+  <Step title="Add the action">
+    In a new shortcut, add **Run Query** and type the statement, such as `SELECT count(*) FROM orders`.
+  </Step>
+  <Step title="Pick the connection">
+    **Connection** lists every saved connection whose **External Clients** level is not Blocked.
+    **Database or Schema** is optional and works as it does for the insert actions.
+  </Step>
+  <Step title="Choose the result">
+    Set **Result** to the shape the next action needs.
+  </Step>
+</Steps>
+
+| Result | The next action gets |
+| --- | --- |
+| **Rows**, the default | A list with a dictionary for each row, keyed by column name. |
+| **First Value** | The first column of the first row, as text. Nothing when there are no rows or the value is NULL. |
+| **CSV** | A CSV file with a header row. |
+| **JSON** | A JSON file holding an array of objects keyed by column name. |
+
+Pick **First Value** for a count or a sum: `SELECT count(*) FROM orders` hands the number straight
+to **Calculate** or **Show Notification**. Pick **Rows** with **Repeat with Each** and **Get
+Dictionary Value**. Every value arrives as text, NULL as `null` in JSON and as an empty field in
+CSV, and binary as Base64. Two columns with the same name come back as `id` and `id 2`.
+
+**Row Limit** defaults to 500 and goes up to 10,000. A statement stops after 30 seconds.
+
+## What a shortcut may do
+
+The connection's **External Clients** level and [Safe Mode](/features/safe-mode) decide, exactly as
+for [AppleScript](/developers/applescript#what-a-script-may-do).
+
+| Level on the connection | A shortcut may |
+| --- | --- |
+| Blocked | Nothing. The pickers leave it out, and a shortcut saved before it was blocked fails with *"External access is disabled for this connection"* |
+| Read only | Read. A write, including **Add Row to Table**, fails with *"This connection is read only for external clients."* |
+| Read & Write | Read and write, subject to Safe Mode |
+
+A statement that drops or truncates always asks first, in a TablePro dialog that names Shortcuts.
+Under a Safe Mode that confirms writes, the insert actions ask once for the whole batch. Every
+statement goes to the history drawer under **Shortcuts** and to the execution audit log.
+
+## Add rows
+
+<Steps>
+  <Step title="Add the action">
+    In a new shortcut, add **Add Row to Table**.
+  </Step>
+  <Step title="Point it at a table">
+    Pick a **Connection**, then a **Table** read live from it. **Database or Schema** is optional and
+    lists schemas on PostgreSQL and the like, databases elsewhere; empty means the connection's own.
+    SQLite has neither, so it stays empty there. When the connection cannot open, both pickers
+    show why, such as an SSH host key to check, instead of an empty list.
+  </Step>
+  <Step title="Supply the row">
+    Feed **Row (JSON or CSV)** from a Shortcuts **Dictionary** action keyed by column name, which
+    builds the row without typing JSON. **Add Rows to Table** has **Rows (JSON or CSV)** and a
+    **File** field instead.
+  </Step>
+  <Step title="Run it">
+    It returns the number of rows inserted, ready for a later step, and speaks *"Added one row to
+    bookmarks."*
+  </Step>
+</Steps>
+
+On a Mac, a row goes in as an `INSERT` on any engine queried with SQL. On iPhone and iPad, inserts
+work on MySQL, MariaDB, TiDB, OceanBase, PostgreSQL, Redshift, SQL Server, SQLite, DuckDB and
+Oracle. Any other type, Redis for example, fails with *"Redis connections do not support adding
+rows from Shortcuts."*
+
+Siri takes "Open [connection] in TablePro", "Connect to [connection] in TablePro", "Add a row in
+TablePro" and "Add rows in TablePro", with a connection name in place of the brackets. On a Mac it
+also takes "Run a query in TablePro".
+
+## Data formats
+
+Keys match columns by name. A column you leave out stays out of the `INSERT` and takes its default,
+and an empty or `null` primary key is dropped for the same reason, so auto-increment still fires.
+
+### JSON
+
+An object is one row; an array of objects is many, for **Add Rows to Table**.
+
+```json
+{ "title": "TablePro docs", "url": "https://docs.tablepro.app", "tags": "reference" }
+```
+
+```json
+[
+  { "title": "First", "url": "https://example.com/1" },
+  { "title": "Second", "url": "https://example.com/2" }
+]
+```
+
+`null` inserts a SQL `NULL`, and numbers and booleans are inserted as text. Quote anything that has
+to stay exact: a bare JSON number past 64-bit integer range is read as floating point and loses
+digits, while `"18446744073709551615"` keeps every one.
+
+### CSV
+
+The first row is the header and names the columns. Quoting follows the usual rules. A file can be
+UTF-8, UTF-16, Shift JIS, EUC-JP, GB 18030, Big5, EUC-KR or Windows-1252; the encoding is read
+from the file.
+
+```text
+title,url
+First,https://example.com/1
+Second,https://example.com/2
+```
+
+## Limits
+
+Up to 10,000 rows per run. **Add Rows to Table** runs the batch in one transaction wherever the
+engine supports it, so a row that fails rolls back the whole batch instead of leaving half of it in.
+On a Mac, an engine without transactions keeps the rows that went in before the failure, and the
+error says how many. The action never joins a transaction that is already open: it stops instead.
+
+## When it refuses
+
+Nothing is inserted, except where the message says rows stay in.
+
+| Message | Cause |
+| --- | --- |
+| *"External access is disabled for this connection"* | The Mac connection's **External Clients** level is Blocked. |
+| *"This connection is read only for external clients."* | The Mac connection's **External Clients** level is Read Only. |
+| *"A transaction is open on this connection. Commit or roll it back in TablePro, then run the shortcut again."* | A query tab holds a transaction open on a Mac connection whose engine allows only one connection, such as DuckDB. |
+| *"This connection's startup commands leave a transaction open…"* | A startup command such as `BEGIN` leaves a transaction open on the Mac connection. |
+| *"…is read-only, so rows cannot be added."* | The iOS connection's safe mode blocks writes. A connection set to Confirm Writes asks first instead. |
+| *"…has no column named …"* | A key in the data matches no column. |
+| *"The data has no values to insert into …"* | Nothing in the data maps to a column. |
+| *"No data was provided to add."* | Both the text field and the file were empty. |
+| *"Line … of the file is not valid … text."* | That line holds bytes the file's encoding cannot read. |
+| *"Too many rows. Add up to 10000 rows at a time."* | Over the cap. |
+| *"Add Row to Table expects one row. Use Add Rows to Table for multiple rows."* | An array reached the single-row action. |
+| *"…check the server's SSH host key first."* or *"…Open this connection in TablePro to check it."* | The SSH server is new, or its host key changed. A Shortcut has no screen to show the question on. |
+| *"Added … of the rows before one failed, and those stay in the table: …"* | A row failed on a Mac engine without transactions. The rows before it stay in. |
+
+On iPhone and iPad the action also fails while the device is locked, because it reads the
+connection's password from the Keychain.
