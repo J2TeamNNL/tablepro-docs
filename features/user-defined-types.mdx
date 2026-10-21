@@ -1,11 +1,11 @@
 ---
 title: User-Defined Types
-description: Browse, create and edit a schema's enums, composites, domains and ranges
+description: Browse the types a schema or keyspace declares, create and edit PostgreSQL types, and drop them
 ---
 
 import StagedUntilSave from "/snippets/staged-until-save.mdx";
 
-Expand a schema and **Types** sits beside **Functions** and **Triggers**, one row per enum, composite, domain and range the schema declares. Select a row and press Return, or double-click it, and the type opens in a tab.
+Expand a schema, or a keyspace on Cassandra and ScyllaDB, and **Types** sits beside **Functions** and **Triggers**, one row per type it declares. Select a row and press Return, or double-click it, and the type opens in a tab.
 
 <Frame caption="An enum open from the Types section">
   <img className="block dark:hidden" src="/images/user-defined-types-sidebar.png" alt="Sidebar tree with the Types section expanded under a PostgreSQL schema, and a tab showing the rebuilt CREATE TYPE statement" />
@@ -18,6 +18,7 @@ Expand a schema and **Types** sits beside **Functions** and **Triggers**, one ro
 |---|---|---|
 | PostgreSQL, PGlite | Enums, composites, domains, ranges | Enums, composites and domains. A range is renamed, commented and dropped |
 | SQL Server | Alias types, table types, CLR types | Dropped only |
+| Cassandra, ScyllaDB | User-defined types | Dropped only |
 | Every other engine | None | None |
 
 A table's own row type, the array type created beside every type, the multirange created beside every range, and any type an extension installed are left out. A type in another schema is listed under that schema. On SQL Server the built-in types are left out too, so the section holds only what the database declares.
@@ -31,6 +32,8 @@ Hover a row in the sidebar for the same facts without opening it: an enum's labe
 On SQL Server nothing is stored to read back at all, because a type has no `sys.sql_modules` row. A table type's statement is rebuilt from its columns and indexes, keeping identity, defaults, computed columns, inline indexes and any collation that differs from the database's; an alias type's is rebuilt from its base type and nullability. A CLR type names the assembly it came from, since its body is compiled .NET rather than T-SQL.
 
 A SQL Server table type is a table-valued parameter and cannot declare a column, so it is left out of the column type picker. Alias types appear there.
+
+On Cassandra the statement is rebuilt from `system_schema.types`: the fields in declaration order, each with the type the server reports.
 
 ## Creating a type
 
@@ -67,11 +70,13 @@ Once a save runs, the **Types** section, the column type picker and every table 
 
 ## Renaming and dropping a type
 
-Right-click a type in the sidebar. **Rename** edits the name in place. **Drop Type…** asks first; select **Cascade** to drop the columns, functions and other objects that use the type along with it. Without **Cascade** the drop fails while anything still uses the type. A tab open on a dropped type closes.
+Right-click a type in the sidebar. **Rename** edits the name in place. **Drop Type…** asks first; on PostgreSQL, select **Cascade** to drop the columns, functions and other objects that use the type along with it. Without **Cascade**, and always on SQL Server, Cassandra and ScyllaDB, the server refuses while a table or another type still uses the type, and its reason is shown. The **Types** section refreshes once the drop runs, and a tab open on the dropped type closes. A read-only connection has no **New Type…**, **Rename** or **Drop Type…**.
 
 ## Using a type in a column
 
 In a table's **Structure** tab, the column type picker opens with a **User-Defined** group listing the types of every schema the sidebar's [schema filter](/features/connection-window#filtering-schemas) keeps, and of the table's own schema, ahead of the engine's. Every entry is schema-qualified and quoted where the name needs it, `sales.status` or `app."Order Status"`, so the column definition names the type and never a built-in of the same name. See [Table Structure](/features/table-structure#columns-tab).
+
+On Cassandra and ScyllaDB the group lists the types of the table's own keyspace, the only one a column can use, by name, quoted where the name needs it. An entry comes wrapped as `frozen<address>` where a plain column cannot hold the type: when a field is a collection that is not frozen, on Cassandra before 3.6, and on ScyllaDB.
 
 ## Finding a type
 

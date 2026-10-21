@@ -18,7 +18,7 @@ A queued change also marks the value itself, so it stays legible once the row is
 
 ## Editing a cell
 
-Double-click a cell, or press `Enter` on it. `Enter` commits the edit to the queue, `Escape` cancels. Setting a value back to what it was drops it from the queue again. Delete the text of a date, number, boolean, JSON or array cell to store NULL. In a NOT NULL column of those types the cell keeps its value, and an emptied text cell stores an empty string. Some types open an editor of their own:
+Double-click a cell, or press `Enter` on it. `Enter` commits the edit to the queue, `Escape` cancels. Setting a value back to what it was drops it from the queue again. Delete the text of a date, number, boolean, JSON, array or vector cell to store NULL. In a NOT NULL column of those types the cell keeps its value, and an emptied text cell stores an empty string. Some types open an editor of their own:
 
 | Column type | Editor |
 |---|---|
@@ -29,6 +29,7 @@ Double-click a cell, or press `Enter` on it. `Enter` commits the edit to the que
 | `SET` (MySQL/MariaDB) | Multi-select checkboxes |
 | Array of a simple type (PostgreSQL) | Ordered list, one row per element |
 | `jsonb[]`, `json[]` (PostgreSQL) | Ordered list, the selected element in the [JSON viewer](/features/json-viewer) |
+| `vector`, `halfvec`, `sparsevec` (pgvector) | Element list with **Copy as JSON**, and **Edit as Text** for the literal |
 | `JSON`, `JSONB`, `BLOB`, binary | [Cell viewers](/features/json-viewer) |
 
 <Frame caption="Type-specific cell editor">
@@ -36,15 +37,18 @@ Double-click a cell, or press `Enter` on it. `Enter` commits the edit to the que
   <img className="hidden dark:block" src="/images/date-picker-editor-dark.png" alt="Cell editor" />
 </Frame>
 
-Right-click an editable cell and open **Set Value** to set it without typing. Each item appears only where the column takes it:
+Right-click an editable cell and open **Set Value**. Each item appears only where the column takes it:
 
 - **Empty** on text, `SET` and binary columns.
 - **NULL** on a nullable column.
 - **Default** on a column the server fills in. SQLite, libSQL, Turso, Cloudflare D1, ClickHouse, Databend, Snowflake, Trino, Cassandra and ScyllaDB take it on a new row only.
 - The database's own date and time functions on a date or time column, such as `NOW()` on MySQL or `CURRENT_TIMESTAMP` on SQLite.
 - **Generate UUID** (version 4) and **Generate UUIDv7** (ordered by creation time) on a `uuid` or `uniqueidentifier` column, and on a text or binary column whose display format is UUID. A foreign key column and a Cassandra `timeuuid` column get neither.
+- **Set Cells to Value…** on any cell you could type into. Type the value once and click **Set**. It is read the way a typed value is, so an empty value stores NULL in a date or number column, and a function such as `NOW()` in a date or time column runs on the server.
 
-Select several cells first to set all of them at once; Generate UUID gives each cell its own value. With whole rows selected, the clicked column changes on every selected row. **Edit > Set Value** holds the same items for the focused cell or the selection, and [Settings > Keyboard](/features/keyboard-shortcuts#customizing-shortcuts) assigns them shortcuts.
+Select several cells first to set all of them at once; Generate UUID gives each cell its own value. With whole rows selected, the clicked column changes on every selected row. Cells that cannot take the value keep what they hold: **Set Cells to Value…** skips a column the server owns, a binary column and a deleted row, and says how many cells it sets before you confirm. **Edit > Set Value** holds the same items for the focused cell or the selection, and [Settings > Keyboard](/features/keyboard-shortcuts#customizing-shortcuts) assigns them shortcuts.
+
+To copy one value into many cells, copy it, select the cells and press `Cmd+V`. A copied block of several cells pastes from the focused cell rightward and down instead.
 
 On MongoDB, Firestore and the Firebase Realtime Database a document can lack a field altogether, and on Bigtable a row can lack a cell; the grid shows either as **No Field**. **Remove Field** on the same right-click menu deletes the field rather than storing NULL. Bigtable stores no NULL, so **NULL** and **Remove Field** both delete the cell. See [missing fields and null](/databases/mongodb#missing-fields-and-null).
 
@@ -52,13 +56,25 @@ On MongoDB, Firestore and the Firebase Realtime Database a document can lack a f
 
 - **Add Row** (`Cmd+Shift+N`), the **+** button, or **Edit > Add Row**. The row appears at the bottom with the cursor in its first writable cell. A UUID primary key the server does not fill gets a new UUID, and the cursor skips it. Later edits fold into the INSERT rather than queueing as updates.
 - **Duplicate Row** (`Cmd+Shift+D`) on the right-click menu copies a row and resets its primary key and its identity columns to `DEFAULT`, so the database assigns new ones. A UUID primary key the server does not fill gets a new UUID instead.
-- **Delete**: select rows by their row numbers (`Shift`-click for a range, `Cmd`-click for separate rows) and press `Delete`. They stay visible with a strikethrough, and saving asks "Delete 5 rows?" before they go.
+- **Delete**: select rows by their row numbers (`Shift`-click for a range, `Cmd`-click for separate rows) and press `Delete`. They stay visible with a strikethrough, and saving asks "Delete 5 rows from customers?" before they go.
 - **Paste** on the right-click menu inserts copied rows as new rows, with a new UUID in a UUID primary key the server does not fill.
 - **Fill Column** on the header right-click menu writes one value, NULL, or a new UUID or UUIDv7 per row into every loaded row. It is absent on primary key columns and on columns the server owns.
 
 A new row starts at `DEFAULT` in every column the server fills in. That covers a column with a default expression, and an identity or `AUTO_INCREMENT` column, which carries no default of its own. The INSERT leaves those columns out, so the server assigns them.
 
 Add Row and Duplicate Row stay dimmed until the table's schema has loaded, which is what says which columns the server fills in. On a table opened for the first time that is a fraction of a second.
+
+### Rows other tables hold
+
+When foreign keys point at the table, the delete prompt lists what the delete does to other tables before anything is sent:
+
+- Rows an `ON DELETE CASCADE` key deletes, followed up to 5 keys deep.
+- Rows an `ON DELETE SET NULL` or `SET DEFAULT` key rewrites, with the column it sets.
+- Rows a `RESTRICT` or `NO ACTION` key protects. These make the save fail, and the prompt says so.
+
+Click **Show** beside a line to open those rows in a new tab, filtered. The save is cancelled and the deleted rows stay queued, so press `Cmd+S` again when you are done looking.
+
+The counts come from `SELECT COUNT(*)` queries under the connection's query timeout. Counting stops after 5 seconds, and a table not counted by then, or whose count failed, shows as not counted rather than as a number. Only foreign keys declared in the table's own schema are checked, and the prompt says so when the database has other schemas. When a transaction is open on the connection and the counts cannot see its uncommitted rows, the prompt says that too. SQLite and libSQL enforce foreign keys only on a connection that ran `PRAGMA foreign_keys = ON`, and MySQL and MariaDB skip them while `foreign_key_checks` is 0. With the keys off nothing cascades, and the prompt says the referencing rows stay as they are.
 
 ## When the grid will not edit
 
@@ -94,7 +110,9 @@ A table without a primary key is matched on every original column value instead,
 
 On an engine with transactions, the statements run inside one, so a failure rolls the whole save back and the table is left as it was. Without them, the statements that ran before the failure stand. Either way a failed save reports **Save Failed** with the server's message and keeps the queue intact, so correct the value and save again. A save that succeeds clears the queue, clears undo, and reloads the grid at the same place, with its sort, value filter and selection. In a query tab the reload runs the statement behind the result again, not the one at the caret.
 
-Every queued change has to become a statement before anything is sent. When a change cannot, such as a new Redis row with no key, or it holds a value the driver cannot write, such as an edit to one leaf of an Elasticsearch nested array or to a column the server owns made before the table's structure finished loading, the save stops, names what it could not write, and keeps the whole queue. Undo that change, or make it with a query, then save again.
+Every queued change has to become a statement before anything is sent. When a change cannot, such as a new Redis row with no key, or it holds a value the driver cannot write, such as an edit to one leaf of an Elasticsearch nested array or to a column the server owns made before the table's structure finished loading, or a pgvector value whose length differs from its `vector(n)` column, the save stops, names what it could not write, and keeps the whole queue. Undo that change, or make it with a query, then save again.
+
+The statements a driver writes for itself, as SQL Server, Oracle and ClickHouse do, are read before anything is sent. An `UPDATE` or `DELETE` with no `WHERE` of its own would reach every row of the table, so the save stops, names the table, and keeps the whole queue. A `WHERE` inside a comment, a string or a subquery does not count.
 
 Each generated SQL statement is held to the number of rows it was written for. On a table with no primary key, two identical rows cannot be told apart, so a statement meant for one of them matches both; the save stops there and reports what happened instead of rewriting the other row.
 

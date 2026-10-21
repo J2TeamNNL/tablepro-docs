@@ -76,7 +76,7 @@ A connection opens one database named after the file: `analytics.duckdb` becomes
 ATTACH 'warehouse.duckdb' AS warehouse;
 ```
 
-Press `Cmd+K` to move between them, in place, with no reconnect. DuckDB does not persist attachments, so a reconnect starts again from the one file. `system` and `temp` are hidden, and with them `information_schema` and `pg_catalog`.
+Press `Cmd+K` to move between them, in place, with no reconnect. An `ATTACH` typed in the editor lasts until the next connect. To keep a file attached, add it under **Attached Databases** in the connection's **Options**: every connect attaches it again, named after its file without the extension, and a file that is missing is named in a warning while the rest attach. With **Open the File Read-Only** on, they attach read-only as well. `system` and `temp` are hidden, and with them `information_schema` and `pg_catalog`.
 
 Any connection can also read a file straight from SQL:
 
@@ -99,7 +99,7 @@ Three ways out, in **Options** on the connection:
 
 **Database ▸ Release File Lock** hands it back now, without ending the session. The tabs, the schema cache and the row you were on all stay; the next query takes the file again.
 
-A release is refused, with the reason, while the session holds anything reopening would destroy: an open transaction, a temporary table or view, an attached database, or a changed setting. Commit the transaction or drop the temporary table and the release goes through.
+A release is refused, with the reason, while the session holds anything reopening would destroy: an open transaction, a temporary table or view, a database attached from the editor, or a changed setting. The connection's own **Attached Databases** attach again on reopen. Commit the transaction or drop the temporary table and the release goes through.
 
 Read-only is not a way to keep writing from somewhere else. A read-write connection blocks every other process, read-only ones included; a read-only connection blocks writers. Two readers work, a reader and a writer do not.
 

@@ -111,7 +111,7 @@ The two `switch_` tools move what the user sees in TablePro. To run one statemen
 
 `get_database_statistics` leaves out a field the engine does not report. On PostgreSQL, `table_count` comes back only when `database` names the database the connection is browsing, and `size_bytes` only for a database the role has `CONNECT` on.
 
-`list_routines` takes `kind` as `procedure` or `function`, omitted for both, and its `signature` is the argument list, not the return type. `list_triggers` takes `table` to scope to one table, omitted for every trigger in the schema. `list_types` takes `kind` as `enum`, `composite`, `domain` or `range`, omitted for all four; `labels` is set for an enum, `fields` for a composite and `base_type` for a domain or range, and only PostgreSQL and PGlite answer with rows.
+`list_routines` takes `kind` as `procedure` or `function`, omitted for both, and its `signature` is the argument list, not the return type. `list_triggers` takes `table` to scope to one table, omitted for every trigger in the schema. `list_types` takes `kind` as `enum`, `composite`, `domain`, `range`, `aliasType`, `tableType`, `clrType` or `udt`, omitted for every kind; `labels` is set for an enum, `fields` for a composite or a `udt`, and `base_type` for a domain or range. PostgreSQL and PGlite answer with the first four kinds, SQL Server with `aliasType`, `tableType` and `clrType`, Cassandra and ScyllaDB with `udt`, and every other engine with no rows.
 
 ### `search_schema`
 
@@ -134,8 +134,8 @@ A lost connection, or a database where no schema could be read, fails the call i
 |------|-----------|---------|
 | `browse_table` | `connection_id`, `table` (`columns`, `filters`, `logic`, `sort`, `limit`, `offset`, `timeout_seconds`, `database`, `schema`) | A result set |
 | `count_rows` | `connection_id`, `table` (`exact`, `filters`, `logic`, `database`, `schema`) | `table`, `row_count`, `is_approximate`, `filter_count` |
-| `execute_query` | `connection_id`, `query` (`max_rows`, `timeout_seconds`, `database`, `schema`) | A result set, plus `result_sets[]` when a SQL Server script returns more than one |
-| `explain_query` | `connection_id`, `query` (`analyze`, `variant`, `timeout_seconds`, `database`, `schema`) | `statement` as actually sent, `execution_time_ms`, `columns[]`, `rows[][]`, and where available `plan_text`, `plan` and `available_variants[]` |
+| `execute_query` | `connection_id`, `query` (`max_rows`, `timeout_seconds`, `database`, `schema`, `read_only`) | A result set, plus `result_sets[]` when a SQL Server script returns more than one |
+| `explain_query` | `connection_id`, `query` (`analyze`, `variant`, `timeout_seconds`, `database`, `schema`) | `statement` as actually sent, `execution_time_ms`, `columns[]`, `rows[][]`, and where available `plan_text`, `plan` and `available_variants[]` (`id`, `label`, `sql_prefix`, `runs_statement`). On Oracle and SQL Server the driver builds the plan from several statements, so `statement` is the query alone and `sql_prefix` is empty |
 | `export_data` | `connection_id`, `format` (`query` **or** `tables`, `sql_table`, `output_path`, `max_rows`, `database`, `schema`) | `format`, `rows_exported`, `is_truncated`, `path` when a file was written, and `exports[]` (`label`, `row_count`, `is_truncated`, `data`) |
 | `quote_identifiers` | `connection_id` and at least one of `identifiers`, `literals` (`database`, `schema`) | `identifiers[]` as `{ input, quoted }` and `literals[]` as `{ input, escaped }`, in the order supplied |
 
@@ -155,7 +155,7 @@ Without filters this returns the engine's fast estimate unless `exact` is set. W
 
 ### `execute_query`
 
-One statement, 100 KB at most. `DROP` and `TRUNCATE` are refused here; use `confirm_destructive_operation`. On MongoDB, a statement is a read only when it is one call with literal arguments, as [Safe Mode](/features/safe-mode#what-counts-as-a-read) describes; any other JavaScript is a write and needs `tools:write`. When the request carries a `progressToken`, the tool emits progress at 0.0 (resolving), 0.3 (executing) and 1.0 (done).
+One statement, 100 KB at most. `DROP` and `TRUNCATE` are refused here; use `confirm_destructive_operation`. With `read_only: true`, a statement that is not a read gets `-33007` before the user is asked anything, even on a connection set to **Read & Write** and with a token that carries `tools:write`. On MongoDB, a statement is a read only when it is one call with literal arguments, as [Safe Mode](/features/safe-mode#what-counts-as-a-read) describes; any other JavaScript is a write and needs `tools:write`. When the request carries a `progressToken`, the tool emits progress at 0.0 (resolving), 0.3 (executing) and 1.0 (done).
 
 On SQL Server, send the whole script instead. A variable exists only in the batch that declares it, so a `DECLARE` and the `SELECT`s that read it belong in one call. The script is cut into batches at its `GO` lines, as the query editor cuts it, and `GO 5` runs a batch five times. The gates judge the script by its worst statement: one write anywhere needs `tools:write` and Safe Mode, and one `DROP` refuses the call. `DECLARE` counts as a write.
 
@@ -215,9 +215,9 @@ On Redis the three actions are `MULTI`, `EXEC` and `DISCARD`. Every command betw
 | `list_grants` | `connection_id`, `principal` (`host`) | `principal`, `grants[]` (`privilege`, `scope`, `is_grantable`). `scope` is a dotted path, `*` for a server-wide grant |
 | `list_session_contexts` | `connection_id` | `is_supported`, `contexts[]` (`id`, `label`, `value`, `options[]`) |
 
-`get_server_dashboard` reads the live panels TablePro shows, and runs on PostgreSQL, MySQL, SQL Server, ClickHouse and Typesense. Name the panels in `panels[]` or omit it for all three. A session carries `id` (the process id `stop_server_session` takes), `user`, `database`, `state`, `duration_seconds`, `query`, `can_kill` and `can_cancel`; a metric carries `id`, `label`, `value`, `unit`; a slow query carries `duration`, `query`, `user`, `database`. A panel the server could not answer is left out, and `errors` names it: one fixed sentence per panel, keyed by panel name. The server's own message is not sent to the client; it goes to the app's log, where the user can read it. When every requested panel fails, the call fails.
+`get_server_dashboard` reads the live panels TablePro shows, and runs on every engine with a [Server Dashboard](/features/server-dashboard#what-each-engine-reports). Name the panels in `panels[]` or omit it for all three. A session carries `id` (the process id `stop_server_session` takes), `user`, `database`, `state`, `duration_seconds`, `query`, `can_kill` and `can_cancel`; a metric carries `id`, `label`, `value`, `unit`; a slow query carries `duration`, `query`, `user`, `database`. A panel the server could not answer is left out, and `errors` names it: one fixed sentence per panel, keyed by panel name. The server's own message is not sent to the client; it goes to the app's log, where the user can read it. When every requested panel fails, the call fails.
 
-`stop_server_session` takes `mode` as `cancel` (default) to stop the running query or `kill` to end the session. SQL Server, ClickHouse and MySQL before 5.0 take only `kill`: their sessions report `can_cancel` false, and `cancel` fails with `invalid_argument`. The user always approves this one, whatever Safe Mode says.
+`stop_server_session` takes `mode` as `cancel` (default) to stop the running query or `kill` to end the session. SQL Server, ClickHouse, MySQL before 5.0 and Oracle before 18c take only `kill`: their sessions report `can_cancel` false, and `cancel` fails with `invalid_argument`. MongoDB takes only `cancel`, and `kill` fails the same way. The user always approves this one, whatever Safe Mode says.
 
 `list_session_contexts` reports session-level contexts the engine exposes, such as a Snowflake warehouse or role, with the value the session currently holds.
 

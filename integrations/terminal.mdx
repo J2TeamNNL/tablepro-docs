@@ -1,6 +1,6 @@
 ---
 title: Terminal
-description: Open database URLs, database files and SQL files in TablePro from a shell or a script
+description: Open database URLs and files in TablePro from a shell, and run queries from a script
 ---
 
 `open "mysql://…"` goes to whichever app claims the `mysql://` scheme, and with another database
@@ -18,8 +18,9 @@ temporary and never written to disk. Running `tablepro` with no argument opens t
 
 ## Add the tablepro command to your PATH
 
-The command ships inside the app at `TablePro.app/Contents/SharedSupport/bin/tablepro`, a script
-whose whole body is `exec open -b com.TablePro "$@"`. Link it into `/usr/local/bin` once:
+The command ships inside the app at `TablePro.app/Contents/SharedSupport/bin/tablepro`. It runs
+`query` and `connections` itself and hands anything else to `open -b com.TablePro`. Link it into
+`/usr/local/bin` once:
 
 ```bash
 sudo mkdir -p /usr/local/bin && sudo rm -f /usr/local/bin/tablepro && sudo ln -s /Applications/TablePro.app/Contents/SharedSupport/bin/tablepro /usr/local/bin/tablepro
@@ -53,6 +54,97 @@ tablepro app.db
   `.sl3`, `.sqlite`, `.sqlite3` and `.sqlitedb` open with SQLite, `.duckdb` and `.ddb` with the
   DuckDB plugin. A window already connected to that file comes to front instead of a second one
   opening.
+
+## Run a query
+
+```bash
+tablepro query --connection Staging --format csv "SELECT id, email FROM users LIMIT 5"
+tablepro query -c Staging -f report.sql > report.csv
+echo "SELECT count(*) FROM orders" | tablepro query -c Staging --format json
+```
+
+`--connection` takes a saved connection's name or its id, and `tablepro connections` lists both. The
+SQL comes from the argument, from `-f <file>`, or from standard input. Rows go to standard output,
+messages and errors to standard error.
+
+| Option | |
+|---|---|
+| `--database`, `--schema` | Where the statement runs. Without them, the connection's current database and schema |
+| `--format` | `csv`, `tsv`, `json`, `jsonl` or `table`. `table` on a terminal, `csv` into a pipe or a file |
+| `--limit` | Rows to return. Defaults to **Default row limit** under **Settings > MCP**, 500, and stops at **Maximum row limit** |
+| `--timeout` | Seconds the statement may run, 1 to 300. Defaults to **Query timeout** under **Settings > MCP**, 30 |
+| `--read-only` | Refuse any statement that is not a read, even on a connection set to **Read & Write** |
+
+Pass `--format` in a script rather than relying on the terminal check. A result cut short by
+`--limit` says so on standard error.
+
+| Exit status | Meaning |
+|---|---|
+| 0 | The statement ran |
+| 1 | The database returned an error, or TablePro could not be reached |
+| 2 | A usage error: a missing option, an unknown connection name, several statements in one run |
+| 3 | Refused by a setting: the connection's level, Safe Mode, `--read-only`, a declined prompt, or a revoked pairing |
+| 4 | The statement ran past its timeout |
+
+### Output formats
+
+| Format | NULL | Other values |
+|---|---|---|
+| `csv` | An empty field. An empty string is `""` | Quoted when they hold a comma, a quote or a line break |
+| `tsv` | An empty field | Tab, line break, carriage return and backslash written as `\t`, `\n`, `\r`, `\\` |
+| `json` | `null` | An array of objects keyed by column name |
+| `jsonl` | `null` | One object per line |
+| `table` | `NULL` | Columns padded to line up. A control character shows as an escape, such as `\n` or `\x1B` |
+
+Every value is text, as in the grid. Binary columns come out as Base64. Two columns with the same
+name become `name` and `name_2` in JSON.
+
+### Pair the command
+
+The command reaches TablePro through its MCP server, so turn on **Enable MCP Server** under
+**Settings > MCP** first. With it off, every run exits 3. When TablePro is not running, the command
+starts it in the background, with no window.
+
+<Steps>
+  <Step title="Run any query in Terminal">
+    TablePro asks **Allow tablepro command to access TablePro?**
+  </Step>
+  <Step title="Choose what the command may do">
+    The sheet starts at **Read Only**. Pick **Read & Write** if your scripts write, and limit the
+    connections or set an expiry if you want.
+  </Step>
+  <Step title="Approve">
+    Your browser opens a page saying the command is paired. Close it. The query you ran continues.
+  </Step>
+</Steps>
+
+The token lives in your login Keychain. Revoke it under **Settings > MCP** and the next run exits 3;
+the run after that asks to pair again. A run whose standard error is not a terminal, such as a cron
+job, exits 3 instead of opening the sheet.
+
+### What a query may do
+
+A query clears the same gates as any [MCP client](/features/mcp#connection-access):
+
+- The connection's **External Clients** level: **Blocked** hides it, **Read Only** refuses writes.
+- A connection whose AI policy is **Never** is refused.
+- The first query on each connection asks you, as often as **Approval** under **Settings > MCP** says.
+- [Safe Mode](/features/safe-mode) confirms or authenticates writes on your Mac.
+- `DROP` and `TRUNCATE` are refused. Run them in TablePro.
+- One statement per run. A SQL Server script runs batch by batch at its `GO` lines and prints
+  every result set, separated by a blank line, or in JSON as one array per result set.
+
+Every statement goes to the execution audit log, and to the [history drawer](/features/query-history#sources)
+under **Command Line**.
+
+### List connections
+
+```bash
+tablepro connections --format json
+```
+
+Each entry has the connection's `name`, `id` and `type`, never a host, user or password. The list
+leaves out connections the command may not reach.
 
 ## Trusting a link
 
