@@ -89,7 +89,7 @@ IAM also requires encryption in transit, so an [SSL mode](/connections/ssl) of *
 
 `web_identity_token_file` is not supported and says so rather than reporting the profile incomplete.
 
-A connect that fails on an expired IAM Identity Center session offers the browser sign-in; `aws sso login --profile <name>` does the same from the shell.
+A token from IAM Identity Center renews itself with its refresh token in its last 15 minutes, as the AWS CLI does, and the renewed token goes back into `~/.aws/sso/cache`. A connect that fails because the session itself ended offers the browser sign-in; `aws sso login --profile <name>` does the same from the shell.
 
 ## Tunnels and port forwards
 
