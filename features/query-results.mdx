@@ -31,15 +31,37 @@ The chooser sits at the left of the bar under the grid and reads **Result 2 of 4
 |---|---|
 | Switch result | `Cmd+Option+[` and `Cmd+Option+]`, or pick it from the chooser |
 | Pin | Chooser > **Pin Result**, `Cmd+Option+P`, or **View > Pin Result** |
+| Compare with another result | Chooser > **Compare Result With…**, or **View > Compare Result With…** |
 | Close | Chooser > **Close Result**, or `Cmd+Shift+W` |
 | Close the rest | Chooser > **Close Other Results** |
 | Show or hide the panel | `Cmd+Option+R`, or **View > Show Results** |
 
-The next query opens a new result instead of overwriting a pinned one. Pinned results cannot be closed or cleared until you unpin them, which is what makes them useful for comparing two runs.
+The next query opens a new result instead of overwriting a pinned one. Pinned results cannot be closed or cleared until you unpin them.
 
 Picking a result moves the editor cursor to the statement that produced it and unfolds that statement if it was collapsed. Picking the result already showing does nothing, so clicking between pinned results never moves the editor under you. A statement you have since edited away leaves the cursor where it is.
 
 The results panel expands itself when a query runs. **Query > Clear Results** empties it and leaves the query alone; **Query > Clear Query** empties the editor and leaves the results. Both are also on the **Run** button's menu.
+
+## Comparing two results
+
+To check that a rewritten query returns the same rows, run the old one and pin its result, run the new one, then choose **Compare Result With…**. The result on screen is the left side. Pick the right side from any other result in the same tab, or from a pinned result in another query tab on any connection.
+
+| Status | Meaning |
+|---|---|
+| **Only Left** | No row on the right has the same key. The row is underlined |
+| **Only Right** | No row on the left has the same key. The row is struck through |
+| **Changed** | The key matches and a value differs. The left line underlines it, the right line strikes it through |
+| **Same** | Every compared value matches |
+
+- **Key columns** picks the columns that identify a row. A result read from one table with a primary key starts on that key.
+- With no key column, whole rows match, and a row that appears twice on one side and once on the other leaves one copy unmatched. A row that differs in one value then shows as **Only Left** and **Only Right**.
+- A key that matches more than one row in either result stops the comparison and names the key.
+- Columns match by name. A column in one result only is listed over the grid and not compared.
+- NULL matches only NULL. Two spellings of the same timestamp match.
+- **Show** narrows the grid to differences, one status, or every row.
+- A result cut off at the row cap is compared on the rows it holds, and the window says so. Click **Fetch All** first to compare every row.
+
+The comparison reads only the rows the two results already hold, runs no SQL, and works on results that cannot be edited. It keeps the rows as they were when the window opened.
 
 ## How long it took
 
