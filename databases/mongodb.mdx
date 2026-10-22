@@ -33,7 +33,7 @@ The query tab is a JavaScript shell. Write `db.orders.find({status: "new"})` the
 
 Naming a **Database** skips listing every database on the server, which is worth doing on a cluster with hundreds. Leave it empty and the first non-system database opens instead. `Cmd+K` switches either way, on the same connection, with no reconnect.
 
-**Auth Database** is a separate question: it says where your account is defined, not what you browse. Left empty, it follows the **Database** field. An account defined in `admin` needs **Auth Database** set to `admin` whenever **Database** names something else, or authentication fails. SRV connections authenticate against `admin` regardless, unless told otherwise. Switching databases in the app never changes it, so browsing a database your user has no account in is fine.
+**Auth Database** is a separate question: it says where your account is defined, not what you browse. Left empty, it follows the **Database** field, except under X.509 and AWS IAM, which authenticate against `$external`. An account defined in `admin` needs **Auth Database** set to `admin` whenever **Database** names something else, or authentication fails. SRV connections authenticate against `admin` regardless, unless told otherwise. Switching databases in the app never changes it, so browsing a database your user has no account in is fine.
 
 Also on the Options tab: **Read Preference**, **Write Concern**, **Use SRV Record**, **Replica Set** name, and **Legacy UUID Encoding**. The server has to be MongoDB 4.0 or later; the driver refuses to connect to anything older.
 
@@ -58,6 +58,8 @@ mongodb+srv://user:password@cluster.mongodb.net/database
 ## MongoDB Atlas (SRV)
 
 An Atlas connection needs the cluster hostname, a username, and a password. Atlas requires SRV and TLS, so a host ending in `.mongodb.net` gets both turned on for you, TLS only if the SSL mode was still Disabled. Elsewhere the **Use SRV Record** toggle in Advanced does the same job. Add your current IP to the cluster's access list in the Atlas console first: traffic from an address that is not on it times out rather than failing.
+
+An SRV connection does not open through an SSH tunnel or another tunnel. The record names the cluster's own servers, which the driver would dial around the tunnel, so the connection is refused: turn the tunnel off, or list the servers under **Hosts** and turn off **Use SRV Record**.
 
 ## Replica sets
 
@@ -368,6 +370,14 @@ valid at the cursor; see [Autocomplete](/features/autocomplete#mongodb). For a q
 ## SSL/TLS
 
 New connections default to **Disabled**, and the driver has no TLS fallback: **Preferred** behaves exactly as **Required**, which is what the Network tab warns about. For an unencrypted local instance use **Disabled** or [SSH tunneling](/connections/ssh-tunneling). See [SSL/TLS](/connections/ssl).
+
+The driver reads a client certificate and its private key from one file. A key chosen in its own file is joined with the certificate in a temporary file only your user can read, removed when the connection closes.
+
+## On iPhone and iPad
+
+The MongoDB driver is compiled into TablePro Mobile, with the same C driver and the same shell as the Mac. Collections browse with paging, sorting, filters and search, documents edit field by field, insert and delete, and the Query section runs the same JavaScript. Creating collections and indexes, **Edit Document…** and field renames stay on the Mac. See [iPhone and iPad](/ios).
+
+**Verify CA** and **Verify Identity** need the server's CA certificate added on the device, under SSL in the connection form: iOS gives the driver no system trust store. Behind an SSH tunnel, **Verify Identity** still checks the certificate chain against that CA, and not the host name, since the driver dials the local end of the tunnel.
 
 ## Limitations
 
