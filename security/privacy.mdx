@@ -59,7 +59,7 @@ One provider is marked active and answers inline suggestions and the editor acti
 A chat turn carries:
 
 - The database type and the name of the database you are connected to.
-- The schema, while **Include database schema** is on (the default): table names, estimated row counts, column names and types, primary key and NOT NULL flags, DEFAULT values, and foreign keys, for up to **Max schema tables** tables (20 by default).
+- The schema, while **Include database schema** is on (the default): table names, estimated row counts, column names and types, primary key and NOT NULL flags, DEFAULT values, and foreign keys, for up to **Max schema tables** tables (20 by default). With more tables than that, the ones your question and current query use come first, and the rest are sent as a count, not by name.
 - The query in the current tab, while **Include current query** is on (the default), truncated at 2,000 characters.
 - Result rows, only if you turn on **Include query results**, which is off by default. It attaches the first 10 rows of the current result, each value cut at 200 characters.
 - The connection's [AI Rules](/features/ai-assistant#per-connection-ai-rules) text, if you wrote any.
