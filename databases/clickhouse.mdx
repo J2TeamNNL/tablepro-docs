@@ -68,6 +68,12 @@ Grid edits go out as INSERT, `ALTER TABLE … UPDATE`, and `ALTER TABLE … DELE
 ClickHouse mutations run in the background, so the grid reports the statement as accepted rather than applied, and a large table can take a long time. Watch `SELECT * FROM system.mutations WHERE is_done = 0` for progress.
 </Warning>
 
+## Updating rows outside the grid
+
+An [import](/features/import-export#update-existing-rows) as **Update** or **Insert or Update** and a [data compare](/features/compare-sync) sync change rows with `ALTER TABLE … UPDATE`, and the sync removes them with `ALTER TABLE … DELETE`. **Copy as > UPDATE Statement(s)** writes the same form. Each statement carries `SETTINGS mutations_sync = 1`, so it returns once the rows have changed, and a failure stops the run instead of waiting in `system.mutations`. Where your settings profile does not let you change `mutations_sync`, the plain `UPDATE` and `DELETE` go out instead. They finish before they return, and ClickHouse takes that `UPDATE` only on a table with lightweight updates turned on. **Delete existing rows** before an import or a copy writes `TRUNCATE TABLE`.
+
+ClickHouse refuses to update a column of the sorting, primary or partition key, with `Cannot UPDATE key column`, even to the value it holds. An import leaves such a column out of its updates, and a sync leaves it out unless its value differs, in which case the statement fails with that error.
+
 ## SSL/TLS
 
 The default is **Disabled**, which sends plain HTTP. Any other mode switches the URL scheme to `https`. Port `443` or `8443` turns on **Verify Identity**; see [Ports that mean TLS](/connections/ssl#ports-that-mean-tls).

@@ -419,6 +419,8 @@ An update writes the mapped columns outside the key and leaves every other colum
 
 **Delete existing rows before import** works with **Insert** only. With any other choice the import stops before it writes a row.
 
+On ClickHouse an update is an `ALTER TABLE … UPDATE` mutation, and the import waits for each one to apply before it reads the next batch. A column of the sorting, primary or partition key keeps its value on a matched row, since ClickHouse cannot change it, and is written only for an inserted row. See [ClickHouse](/databases/clickhouse#updating-rows-outside-the-grid).
+
 The summary counts the rows matched, updated, inserted and skipped, and under Skip and Continue the ones that failed.
 
 ### Import several files
