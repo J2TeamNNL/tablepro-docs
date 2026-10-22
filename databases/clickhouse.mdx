@@ -67,11 +67,13 @@ Grid edits go out as INSERT, `ALTER TABLE … UPDATE`, and `ALTER TABLE … DELE
 ClickHouse's primary key is its sorting key, and rows can share it. An edit or a delete finds its row by every value the row was loaded with: right before the statement runs, the row is looked up, and the statement is limited to the data part that holds it (`_part`), so a row inserted in the meantime is left alone.
 
 - A row that another row matches in every column cannot be edited or deleted on its own. The save stops before anything is written. Deleting all of the identical rows at once works.
-- A row whose part was merged away between the lookup and the statement is reported as not changed, and the edit stays pending. Save again.
+- When the row still holds its old values after the statement, because its part was merged away or another client inserted the same values, the save reports it. Refresh the table before saving again.
 - A row holding an `AggregateFunction` column cannot be found by its values, so its edits are refused.
 - A table with no data parts, such as `Memory`, cannot be edited from the grid. Use the SQL editor.
 
 Where your settings profile does not let you change `mutations_sync`, the plain `UPDATE` and `DELETE` go out, limited to the row's part the same way.
+
+Values too long for the URL travel inside the statement in the request body, so a long text value or a large import is not held to the server's URL limits. A statement longer than your user's `max_query_size` raises that setting for its own request, unless the user is read-only or a settings constraint caps it lower.
 
 ## Updating rows outside the grid
 

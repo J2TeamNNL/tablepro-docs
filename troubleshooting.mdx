@@ -74,7 +74,7 @@ The server presented a key that does not match the stored one, or you declined t
 
 The tunnel binds a local port between 60000 and 65000 and found none free. List what holds them with `lsof -nP -iTCP -sTCP:LISTEN`, quit those processes, reconnect.
 
-Failures on the far side start with "The SSH server could not reach …". Those and the authentication rejections are in [SSH Tunneling](/connections/ssh-tunneling).
+Failures on the far side start with "The SSH server could not reach …". Those, the authentication rejections, and a server limited to algorithms TablePro no longer supports ("TablePro and the SSH server have no … in common.") are in [SSH Tunneling](/connections/ssh-tunneling#troubleshooting).
 
 ## A query is slow, or the results stop short
 
