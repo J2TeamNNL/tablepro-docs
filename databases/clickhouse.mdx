@@ -62,11 +62,16 @@ Click the Explain dropdown in the query editor to choose:
 
 Each request carries a query id and asks for progress in the HTTP headers, so a long query reports rows read as it goes. Cancelling sends `KILL QUERY` for that id, stopping the query on the server rather than only dropping the connection. The [query timeout](/customization/general-settings#query-timeout) bounds each request at the timeout plus 30 seconds.
 
-Grid edits go out as INSERT, `ALTER TABLE … UPDATE`, and `ALTER TABLE … DELETE`.
+Grid edits go out as INSERT, `ALTER TABLE … UPDATE`, and `ALTER TABLE … DELETE`, each with `SETTINGS mutations_sync = 1`, so a save returns once the rows have changed. A large table can take a long time.
 
-<Warning>
-ClickHouse mutations run in the background, so the grid reports the statement as accepted rather than applied, and a large table can take a long time. Watch `SELECT * FROM system.mutations WHERE is_done = 0` for progress.
-</Warning>
+ClickHouse's primary key is its sorting key, and rows can share it. An edit or a delete finds its row by every value the row was loaded with: right before the statement runs, the row is looked up, and the statement is limited to the data part that holds it (`_part`), so a row inserted in the meantime is left alone.
+
+- A row that another row matches in every column cannot be edited or deleted on its own. The save stops before anything is written. Deleting all of the identical rows at once works.
+- A row whose part was merged away between the lookup and the statement is reported as not changed, and the edit stays pending. Save again.
+- A row holding an `AggregateFunction` column cannot be found by its values, so its edits are refused.
+- A table with no data parts, such as `Memory`, cannot be edited from the grid. Use the SQL editor.
+
+Where your settings profile does not let you change `mutations_sync`, the plain `UPDATE` and `DELETE` go out, limited to the row's part the same way.
 
 ## Updating rows outside the grid
 

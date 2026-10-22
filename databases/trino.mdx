@@ -73,9 +73,7 @@ Identifiers are quoted with double quotes. Results page with `OFFSET n ROWS FETC
 
 Cell edits become `INSERT`, `UPDATE`, and `DELETE`. Values carry their Trino type, so a `varchar` holding digits stays quoted, and columns that cannot be compared with `=` (`array`, `map`, `row`) stay out of the `WHERE` clause.
 
-<Danger>
-Editing one of two identical rows changes both, and deleting one deletes both. With no primary keys reported, a row edit matches on every column of the row as it was read, and there is no transaction to roll it back. Check for duplicates before editing a table with no unique column.
-</Danger>
+An edit or a delete matches the row on its primary key, or on every column it was read with when none is reported, and first looks the row up. When another row matches too, the save stops before anything is written, since there is no transaction to roll it back. Edit such rows with a query.
 
 The Structure tab creates tables and adds, drops, renames, and retypes columns, in autocommit. A type change is the operation fewest connectors accept.
 
