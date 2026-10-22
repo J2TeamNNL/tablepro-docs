@@ -86,7 +86,7 @@ No **SSL Mode**, and no plaintext option. Every request is HTTPS to the account 
 ## Limitations
 
 - No SSH tunnel. The form has no Network tab, and the endpoint is reached over HTTPS only.
-- A grid edit keys on the declared primary key, or on every column when there is none, and a duplicate key value updates or deletes every row that matches it. Snowflake never enforces key constraints, so check a table for duplicates before editing it.
+- A grid edit keys on the declared primary key, or on every column when there is none. Snowflake never enforces key constraints, so an edit or delete first looks its row up, and when another row matches too, the save stops before anything is written. Edit such rows with a query.
 - `TIMESTAMP_LTZ` values read as the UTC instant, marked `Z`, rather than converted to the session's `TIMEZONE`.
 
 ## Troubleshooting

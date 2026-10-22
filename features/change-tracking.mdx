@@ -118,6 +118,8 @@ Each generated SQL statement is held to the number of rows it was written for. O
 
 Such a statement is held to the other end too. Finding fewer rows than it was written for means the row it meant to write is no longer there, so the save rolls back and keeps the edits rather than reporting a success that wrote nothing. Engines whose drivers report no real count, ClickHouse among them, are not held to it. Of the drivers that write their own statements, SQL Server and Oracle are held to it on a table without a primary key, and MongoDB and Redis are not. SQL Server bounds that match with `TOP (1)` and Oracle with `ROWNUM = 1`, so of two identical rows they write one.
 
+Where a count cannot hold a statement to its row, the row is looked up right before the statement runs instead: on ClickHouse, Snowflake and Trino for every edit and delete, and on Dameng for a table without a primary key. Finding no row, or more than the change was made on, stops the save before anything is written and keeps the queue. A ClickHouse statement is also limited to the data part its row was found in, and the row is checked after it runs. See [ClickHouse](/databases/clickhouse#running-queries).
+
 There is no discard button. Undo the edits, or take the **Discard Unsaved Changes?** prompt that appears when you refresh, sort, filter, change page, or close the tab with edits pending.
 
 ## Previewing the SQL
