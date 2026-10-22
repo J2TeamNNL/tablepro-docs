@@ -1,6 +1,6 @@
 ---
 title: iPhone and iPad
-description: Browse tables, run queries, and edit rows on eleven database engines from a synced connection list
+description: Browse tables, run queries, and edit rows on twelve database engines from a synced connection list
 ---
 
 You need iOS 18 or later. Builds ship on their own schedule, so a feature in a Mac release note may not be on your phone yet. Your version and build are under **Settings > About**. Connections and saved queries from a Mac come over iCloud; the rest of your Mac setup stays on the Mac.
@@ -28,7 +28,7 @@ Both answers can change later, under **Settings > iCloud** and **Settings > Priv
 
 ## Supported databases
 
-Every driver is compiled in, so there is no plugin system and nothing to install. The type picker offers these eleven:
+Every driver is compiled in, so there is no plugin system and nothing to install. The type picker offers these twelve:
 
 | Type | Notes |
 | --- | --- |
@@ -39,6 +39,7 @@ Every driver is compiled in, so there is no plugin system and nothing to install
 | **SQL Server** | TDS, including Microsoft Entra ID sign-in on a connection synced from the Mac |
 | **Oracle** | Service name or SID |
 | **ClickHouse** | Port 8123 by default, the HTTP interface |
+| **MongoDB** | Port 27017 by default. **Hosts** takes every server of a replica set |
 | **Redis** | Port 6379 by default |
 | **SQLite** | Copies the file you pick into the app |
 | **DuckDB** | A file on the device, or in-memory |
@@ -47,11 +48,11 @@ Every driver is compiled in, so there is no plugin system and nothing to install
 Redshift is not in the picker, but the driver is present: a Redshift connection created on the Mac connects once it syncs over.
 </Info>
 
-MongoDB, Cassandra, BigQuery, Spanner, Snowflake and the rest have no iOS driver. Their connections still sync and sit in the list dimmed, marked **Opens on Mac only**. A tap says why and connects nothing. Rename, move, edit or delete one as usual; the fields you leave alone sync back to the Mac intact. Importing a `.tablepro` file marks these rows the same way.
+Cassandra, BigQuery, Spanner, Snowflake and the rest have no iOS driver. Their connections still sync and sit in the list dimmed, marked **Opens on Mac only**. A tap says why and connects nothing. Rename, move, edit or delete one as usual; the fields you leave alone sync back to the Mac intact. Importing a `.tablepro` file marks these rows the same way.
 
 <Frame caption="Tap a Mac-only connection to see why it stays closed">
-  <img className="block dark:hidden" src="/images/ios-mac-only-connections.png" alt="Connection list with the MongoDB and ClickHouse rows dimmed and marked Opens on Mac only, beside the Opens on Mac Only alert for the MongoDB connection" />
-  <img className="hidden dark:block" src="/images/ios-mac-only-connections-dark.png" alt="Connection list with the MongoDB and ClickHouse rows dimmed and marked Opens on Mac only, beside the Opens on Mac Only alert for the MongoDB connection" />
+  <img className="block dark:hidden" src="/images/ios-mac-only-connections.png" alt="Connection list with the Cassandra row dimmed and marked Opens on Mac only, beside the Opens on Mac Only alert for the Cassandra connection" />
+  <img className="hidden dark:block" src="/images/ios-mac-only-connections-dark.png" alt="Connection list with the Cassandra row dimmed and marked Opens on Mac only, beside the Opens on Mac Only alert for the Cassandra connection" />
 </Frame>
 
 ## The connection list
@@ -150,6 +151,8 @@ To follow a foreign key, tap the link under its value on a row, or long-press a 
 
 **Table Structure** lists columns, indexes, and foreign keys, read only. An index shows its key columns and expressions in key order, then any `INCLUDE` columns and a partial index's `WHERE` clause. On Redshift the index list holds the DISTKEY and SORTKEY columns.
 
+On MongoDB a collection opens as a table: its top-level fields are the columns, `_id` first, and a nested document or array reads as one line of JSON. Search matches text fields, the filters offer every operator except the LIKE patterns, and **Table Structure** lists the fields found in a sample of documents and the indexes.
+
 On Redis the list holds the current database's keys. A key opens by type: a string's value, a hash's fields, a list's elements by index, a set's members, a sorted set's members and scores, a stream's entries. There is no search, sort, filter or **Table Structure** for a key.
 
 ### Editing
@@ -158,9 +161,11 @@ Tap a row to open it full screen, page between rows, edit values, toggle one to 
 
 A ClickHouse key is not unique, so a ClickHouse row is matched on every value it holds: a save is an `ALTER TABLE … UPDATE` and a delete an `ALTER TABLE … DELETE`, and a row holding a value over 4 KB or binary data opens read only, with no **Load full value**. Each one waits until the server has applied it. When another row holds the same value in every column, the save or delete is refused with **Identical Rows**, since it would change both.
 
+A MongoDB document is found by its `_id`: a save sets the fields you changed, a delete removes that document, and a nested value edits as JSON. A save or delete is refused when the `_id` text reads as two of the types the collection holds, such as an ObjectId and a string, since the row could be either.
+
 A new row starts with every column on **DEFAULT**, which leaves that column out of the `INSERT` so the database fills it in. The badge beside a field switches it between **DEFAULT**, **NULL** and a typed value, and **NULL** is offered on nullable columns only. Generated columns are never written, and an auto-increment key stays on **DEFAULT** until you type one.
 
-A save, insert, delete, truncate or drop runs inside a read-write transaction, except on ClickHouse, which has none. MySQL, MariaDB, TiDB, PostgreSQL, Redshift, Oracle and SQLite report what their session is already holding, and a write there runs inside that rather than under a transaction of its own, so the rows wait for whoever opened it. A server that starts its sessions read-only is a different problem: see [Server read-only is not Safe Mode](/features/safe-mode#server-read-only-is-not-safe-mode). SQL typed into the Query section is yours and goes out as written.
+A save, insert, delete, truncate or drop runs inside a read-write transaction, except on ClickHouse and MongoDB, which have none. MySQL, MariaDB, TiDB, PostgreSQL, Redshift, Oracle and SQLite report what their session is already holding, and a write there runs inside that rather than under a transaction of its own, so the rows wait for whoever opened it. A server that starts its sessions read-only is a different problem: see [Server read-only is not Safe Mode](/features/safe-mode#server-read-only-is-not-safe-mode). SQL typed into the Query section is yours and goes out as written.
 
 ### JSON values
 
@@ -199,9 +204,11 @@ Safe Mode reads only the text that runs, so a `SELECT` before an `UPDATE` runs w
 
 On SQL Server, lines with no semicolon between them are one statement up to the next line holding only `GO`, so **Run** sends that batch. In a selection or **Run All Statements**, each `GO` line ends a batch, each batch goes to the server whole, and `GO 5` runs its batch five times.
 
+On MongoDB the editor takes the shell JavaScript the Mac takes. A statement ends where the program's top level does, so a loop or a function body runs whole, and Safe Mode counts a statement as a read only when every call in it reads and its arguments are plain data: see [MongoDB](/databases/mongodb#writing-queries). `use analytics` moves the table list and the database menu along with it.
+
 On Redis a command ends at a semicolon or at a line break outside quotes, so each line is its own command and a quoted value may run across lines. A command with an unclosed quote fails without running. Quotes and escapes read as they do on the Mac: see [Redis CLI](/databases/redis#redis-cli).
 
-**Stop** cancels the running statement and starts no other. On MySQL and Redis the statement keeps running on the server until it finishes. Results copy or export as JSON, CSV, or SQL `INSERT`. A value over 4 KB, or a binary value, stops the copy or export with **Cannot Export**: leave that column out of the `SELECT`. Copying rows from a table reads values over 4 KB in full first.
+**Stop** cancels the running statement and starts no other. On MySQL and Redis the statement keeps running on the server until it finishes. Results copy or export as JSON, CSV, or SQL `INSERT`, which Redis and MongoDB leave out. A value over 4 KB, or a binary value, stops the copy or export with **Cannot Export**: leave that column out of the `SELECT`. Copying rows from a table reads values over 4 KB in full first.
 
 A running query appears in a Live Activity on the lock screen and Dynamic Island, with the elapsed time and the row count so far. **Settings > Live Activities > Hide Query** replaces the SQL text there with "Running query". The card clears when the query ends. Quitting the app mid-query leaves it behind, marked interrupted, until the next launch clears it.
 
@@ -252,6 +259,7 @@ A connection that drops with a transaction open reconnects and says the server r
 
 - **Schema changes.** Truncating and dropping a table is the whole list; creating or altering tables, columns, indexes, triggers, and views is Mac only.
 - **Changing Redis data.** Keys open read only; change them in **Query**.
+- **Whole MongoDB documents.** **Edit Document…**, **Insert Document…** and renaming or removing a field are Mac only; edit field by field here, or use **Query**.
 - **Socket connections.** A MySQL or MariaDB connection that uses a socket on the Mac opens there only. The connection list shows **Mac socket** and the path, marked **Opens on Mac only**, and a tap says why. Importing a `.tablepro` file marks such a row the same way. Its socket path syncs here and back intact.
 - **AI.** No chat, no inline suggestions, no MCP server.
 
