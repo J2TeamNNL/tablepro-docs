@@ -42,7 +42,7 @@ On macOS, Windows Authentication means Kerberos. Set **Authentication** to **Win
 
 Four things have to hold:
 
-- Connect by hostname, never an IP address. Kerberos targets the service principal name `MSSQLSvc/host.domain.com:1433`, registered against the host name.
+- Connect by hostname, never an IP address. Kerberos targets the service principal name `MSSQLSvc/host.domain.com:1433`, registered against the host name. Through an SSH tunnel it still names that host and port.
 - Write the realm in uppercase, usually the DNS domain: `CONTOSO.COM`.
 - This Mac has to reach the domain's KDC, through DNS SRV records or `/etc/krb5.conf`.
 - The SQL Server service account has to own that SPN. Your administrator registers it.

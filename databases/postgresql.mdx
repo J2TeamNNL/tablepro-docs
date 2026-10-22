@@ -1,6 +1,6 @@
 ---
 title: PostgreSQL
-description: Connect to PostgreSQL 9.1 and later with the libpq driver, including PostGIS display, AWS and Google Cloud IAM auth, and pg_dump backups
+description: Connect to PostgreSQL 9.1 and later with the libpq driver, including PostGIS display, AWS and Google Cloud IAM and Kerberos auth, and pg_dump backups
 ---
 
 import DeclaredColumnType from "/snippets/declared-column-type.mdx";
@@ -74,6 +74,14 @@ Set **Authentication** to an AWS IAM option and set **Username** to a database r
 ### Google Cloud IAM
 
 For a Cloud SQL instance you reach directly, set **Authentication** to a Google Cloud IAM option and set **Username** to the IAM database user. See [IAM sign-in without the proxy](/connections/cloud-sql-proxy#iam-sign-in-without-the-proxy).
+
+### Kerberos
+
+For a server whose `pg_hba.conf` line uses `gss`, set **Authentication** to **Kerberos (GSSAPI)** and set **Username** to the role the server maps your principal to. Leave **Kerberos Principal** and **Password** blank to use the ticket in your credential cache, or enter `user@REALM.COM` and your domain password to have one requested at connect. Get a cached ticket with `kinit user@REALM.COM`; `klist` shows it.
+
+Connect by hostname, never an IP address: the ticket is for the service principal `postgres/host.domain.com@REALM.COM`, registered against the host name. Through an SSH tunnel the ticket is still for that host name. This Mac has to reach the realm's KDC, through DNS SRV records or `/etc/krb5.conf`.
+
+**GSS Encryption** sets libpq's `gssencmode`: **Preferred** encrypts the session with Kerberos when the server allows it, **Required** refuses a server that does not, **Disabled** never tries. A session encrypted this way skips TLS, so SSL Mode applies only when GSS encryption is not used. Any other sign-in never tries GSS encryption.
 
 ### Password file
 
@@ -182,6 +190,7 @@ New connections default to **Preferred** (libpq `sslmode=prefer`): TLS first, pl
 - Columns cannot be reordered. The structure editor adds, renames, retypes, and drops; changing the order of existing columns means recreating the table.
 - Session state belongs to one database. A temp table or an open transaction made on `app` is not visible from a tab on `logs`, and closing the `app` entry ends it, after asking first when a transaction is open.
 - Backup and restore need `pg_dump` and `pg_restore` on your Mac. Neither is bundled; install them with Homebrew. `pg_dump` 15 and later refuse PostgreSQL 9.1, so back one up with `pg_dump` 14 or earlier.
+- With Kerberos, backup and restore use the ticket in your credential cache, never one requested from **Kerberos Principal** and **Password**. Run `kinit` first.
 - Before PostgreSQL 12, the [`run_maintenance`](/developers/mcp-tools) tool's `REINDEX` with no `table` runs without `CONCURRENTLY` and rebuilds the system catalog indexes as well. While an index rebuilds, writes to its table wait, and so do reads that use that index. Run it when the database is quiet.
 
 ## Troubleshooting
@@ -189,6 +198,12 @@ New connections default to **Preferred** (libpq `sslmode=prefer`): TLS first, pl
 **Connection refused**: check the server is running, that `listen_addresses` in `postgresql.conf` covers remote connections, and that the firewall allows port 5432.
 
 **FATAL: password authentication failed for user "…"**: the role and password are checked against `pg_hba.conf`. Confirm the method on the matching line (`scram-sha-256` or `md5` for passwords, `trust` for local dev), and that the line matches the host you are connecting from.
+
+**No Kerberos ticket was found.**: the credential cache holds no ticket. Run `kinit user@REALM.COM`, or fill in **Kerberos Principal** and **Password**, then reconnect. **The Kerberos ticket has expired.** asks for the same.
+
+**The PostgreSQL Kerberos service principal is not registered.**: the KDC does not know `postgres/host.domain.com`. Ask your administrator to register it in the realm, and connect by the host name it is registered under. macOS keeps that answer for up to 20 minutes, so a reconnect right after the principal is registered can still fail; quitting TablePro clears it.
+
+**This server signs in with Kerberos.**: the server's `pg_hba.conf` line uses `gss`, and **Authentication** is set to something else. Set it to **Kerberos (GSSAPI)**.
 
 **ERROR: invalid byte sequence for encoding "UTF8": 0x…**: the database's encoding is `SQL_ASCII`, which stores bytes without checking them, and a value in the result is not UTF-8. Run `SHOW server_encoding` to confirm. Move the data to a `UTF8` database: dump it with `pg_dump --encoding=` and the encoding the text was written in, such as `EUC_JP` or `WIN1252`, then restore that dump into a database created with `ENCODING 'UTF8'`.
 
