@@ -183,7 +183,22 @@ The server reached `MaxAuthTries`, 6 by default, before a key it accepts came up
 
 ### "TablePro and the SSH server have no … in common."
 
-The server allows only key exchange methods, host key types, ciphers or MAC algorithms TablePro lacks. The message names the step that found nothing in common, the software in the server's banner, and every method TablePro has for that step. Ask the server's administrator to add one of those to `KexAlgorithms`, `HostKeyAlgorithms`, `Ciphers` or `MACs` in `sshd_config`.
+The server allows only key exchange methods, host key types, ciphers or MAC algorithms TablePro lacks. The message names the step that found nothing in common, the software in the server's banner, and every method TablePro has for that step. Run `sudo sshd -T` on the server to see what it allows, and ask its administrator to add one of TablePro's methods to `KexAlgorithms`, `HostKeyAlgorithms`, `Ciphers` or `MACs` in `sshd_config`.
+
+When the message goes on with "The server offers only … TablePro no longer supports", the server allows nothing but methods built on SHA-1, MD5, RIPEMD-160 or an old cipher. TablePro does not offer these:
+
+| `sshd_config` | No longer offered | Add one of |
+|---|---|---|
+| `KexAlgorithms` | `diffie-hellman-group1-sha1`, `diffie-hellman-group14-sha1`, `diffie-hellman-group-exchange-sha1` | `curve25519-sha256`, `ecdh-sha2-nistp256`, `diffie-hellman-group14-sha256` |
+| `HostKeyAlgorithms` | `ssh-rsa`, `ssh-rsa-cert-v01@openssh.com` | `ssh-ed25519`, `rsa-sha2-512`, `rsa-sha2-256` |
+| `Ciphers` | `3des-cbc`, `blowfish-cbc`, `cast128-cbc`, `arcfour`, `arcfour128` | `chacha20-poly1305@openssh.com`, `aes128-gcm@openssh.com`, `aes128-ctr` |
+| `MACs` | `hmac-sha1`, `hmac-sha1-96`, `hmac-sha1-etm@openssh.com`, `hmac-md5`, `hmac-md5-96`, `hmac-ripemd160`, `hmac-ripemd160@openssh.com` | `hmac-sha2-256-etm@openssh.com`, `hmac-sha2-256`, `hmac-sha2-512` |
+
+An RSA host key keeps working once the server signs with `rsa-sha2-512` or `rsa-sha2-256`, which takes OpenSSH 7.2 or later. DSA (`ssh-dss`) host keys are not supported.
+
+### "TablePro and the SSH server have no signature algorithm in common for this key."
+
+The key is RSA, and the server accepts RSA keys only with `ssh-rsa` signatures, which use SHA-1. TablePro signs RSA keys with `rsa-sha2-256` or `rsa-sha2-512`. Add those to `PubkeyAcceptedAlgorithms` in `sshd_config` (`PubkeyAcceptedKeyTypes` before OpenSSH 8.5), or sign in with an Ed25519 or ECDSA key. A server older than OpenSSH 7.2 cannot check either signature, so it needs a key of another type.
 
 ### "Jump host … failed: …"
 
