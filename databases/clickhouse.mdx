@@ -64,6 +64,8 @@ Each request carries a query id and asks for progress in the HTTP headers, so a 
 
 Grid edits go out as INSERT, `ALTER TABLE … UPDATE`, and `ALTER TABLE … DELETE`.
 
+Values too long for the URL travel inside the statement in the request body, so a long text value or a large import is not held to the server's URL limits. A statement longer than your user's `max_query_size` raises that setting for its own request, unless the user is read-only or a settings constraint caps it lower.
+
 <Warning>
 ClickHouse mutations run in the background, so the grid reports the statement as accepted rather than applied, and a large table can take a long time. Watch `SELECT * FROM system.mutations WHERE is_done = 0` for progress.
 </Warning>
