@@ -225,6 +225,9 @@ mongodb://user:pass@host:27017/mydb?authSource=admin
 mongodb://user:pass@host1:27017,host2:27017,host3:27017/mydb?replicaSet=rs0
 ```
 
+- `uuidRepresentation` sets **Legacy UUID Encoding**.
+- **Copy Connection String** writes an SRV connection as `mongodb+srv://` with no port, and every option percent-encoded.
+
 ## What the path component means
 
 The part after the host is the database name on most schemes. Seven read it differently:
