@@ -151,7 +151,7 @@ To follow a foreign key, tap the link under its value on a row, or long-press a 
 
 **Table Structure** lists columns, indexes, and foreign keys, read only. An index shows its key columns and expressions in key order, then any `INCLUDE` columns and a partial index's `WHERE` clause. On Redshift the index list holds the DISTKEY and SORTKEY columns.
 
-On MongoDB a collection opens as a table: its top-level fields are the columns, `_id` first, and a nested document or array reads as one line of JSON. Search matches text fields, the filters offer every operator except the LIKE patterns, and **Table Structure** lists the fields found in a sample of documents and the indexes.
+On MongoDB a collection opens as a table: its top-level fields are the columns, `_id` first, and a nested document or array reads as one line of JSON. Search matches text fields, and from MongoDB 4.2 a number, a date or an ObjectId by its text too. The filters offer every operator except the LIKE patterns, and **Table Structure** lists the fields found in a sample of documents and the indexes.
 
 On Redis the list holds the current database's keys. A key opens by type: a string's value, a hash's fields, a list's elements by index, a set's members, a sorted set's members and scores, a stream's entries. There is no search, sort, filter or **Table Structure** for a key.
 
@@ -204,7 +204,7 @@ Safe Mode reads only the text that runs, so a `SELECT` before an `UPDATE` runs w
 
 On SQL Server, lines with no semicolon between them are one statement up to the next line holding only `GO`, so **Run** sends that batch. In a selection or **Run All Statements**, each `GO` line ends a batch, each batch goes to the server whole, and `GO 5` runs its batch five times.
 
-On MongoDB the editor takes the shell JavaScript the Mac takes. A statement ends where the program's top level does, so a loop or a function body runs whole, and Safe Mode counts a statement as a read only when every call in it reads and its arguments are plain data: see [MongoDB](/databases/mongodb#writing-queries). `use analytics` moves the table list and the database menu along with it.
+On MongoDB the editor takes the shell JavaScript the Mac takes. A statement ends where the program's top level does, so a loop or a function body runs whole, and Safe Mode counts a statement as a read only when every call in it reads and its arguments are plain data: see [MongoDB](/databases/mongodb#writing-queries). `use analytics` moves the table list and the database menu along with it once the statement returns, a stopped one included. While another window has unsaved changes on the connection, the `use` is undone instead. Browsing and row edits always run in the database the menu names.
 
 On Redis a command ends at a semicolon or at a line break outside quotes, so each line is its own command and a quoted value may run across lines. A command with an unclosed quote fails without running. Quotes and escapes read as they do on the Mac: see [Redis CLI](/databases/redis#redis-cli).
 
