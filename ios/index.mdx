@@ -274,6 +274,10 @@ Hops synced from the Mac arrive with key paths that name files on the Mac, so ea
   <img className="hidden dark:block" src="/images/ios-jump-hosts-dark.png" alt="Edit Connection form with two jump hosts marked No key on this device, beside the editor for bastion1.example.com with Same Key as SSH Server switched off" />
 </Frame>
 
+### Route from Mac
+
+A tunnel whose SSH host is an alias in the Mac's `~/.ssh/config`, or that the Mac reaches through `ProxyJump`, opens here through the hosts the Mac dialed. They arrive once the Mac has connected, under **Route from Mac** in the connection's form: each jump host, then the SSH server, with the port and username the Mac used. Only hosts, ports and usernames cross; the config file, keys and key paths stay on the Mac. A hop only the Mac's config names reads **No key on this device** until you open it and pick or paste its key, as for any jump host. Changing the SSH server or jump hosts, here or on the Mac, sets the route aside until the Mac connects again, and a copy made here with **Duplicate** gets its own once the Mac connects to it.
+
 ### SSH profiles
 
 A connection that uses an [SSH profile](/connections/ssh-profiles) on the Mac arrives with the profile's server, sign-in method and jump hosts, read only in the form: change them in the profile on the Mac. It signs in with the profile's password once the Mac syncs passwords to iCloud Keychain; until then the password field works as it does for any tunnel. A key passphrase saved here wins over the profile's, since it goes with the key on this device. Turning **SSH Tunnel** off unlinks the profile from that connection on every device.

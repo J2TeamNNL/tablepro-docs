@@ -73,6 +73,8 @@ Pick an alias from the **Config Host** picker and `HostName`, `User`, `Port`, `I
 
 `IdentityFile` picks which agent key is offered, not only which key file is read, and a `.pub` is enough. That is how a 1Password or Secretive key gets pinned to a host. `IdentitiesOnly yes` then drops every agent key the config did not name, which is what keeps a thirty-key agent inside a server's `MaxAuthTries`.
 
+Once a connection opens, the hosts, ports and usernames it reached through the config sync to [iPhone and iPad](/ios#route-from-mac), so it opens there too. The config file, keys and key paths stay on the Mac.
+
 <Frame caption="Picking a host from ~/.ssh/config">
   <img className="block dark:hidden" src="/images/ssh-config-hosts.png" alt="Config Host picker" />
   <img className="hidden dark:block" src="/images/ssh-config-hosts-dark.png" alt="Config Host picker" />
