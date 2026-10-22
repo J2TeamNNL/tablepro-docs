@@ -181,6 +181,14 @@ The agent offered keys and the server accepted none of them. Check the public ke
 
 The server reached `MaxAuthTries`, 6 by default, before a key it accepts came up. Count that agent's keys with `SSH_AUTH_SOCK=<the socket in **Agent Socket**> ssh-add -L`: past six, the right one may never be offered. Name it with `IdentityFile` and `IdentitiesOnly yes` for the host in `~/.ssh/config`, or fill in **Identity File** on the connection.
 
+### "TablePro and the SSH server have no … in common."
+
+The server allows only key exchange methods, host key types, ciphers or MAC algorithms TablePro lacks. The message names the step that found nothing in common, the software in the server's banner, and every method TablePro has for that step. Ask the server's administrator to add one of those to `KexAlgorithms`, `HostKeyAlgorithms`, `Ciphers` or `MACs` in `sshd_config`.
+
+### "Jump host … failed: …"
+
+The step after the colon failed on that jump host, not on the SSH server. Check that hop's **Host**, **Port**, **Username** and **Key File** under **Jump Hosts**, or its `Host` block in `~/.ssh/config`. "Could not open a channel" there means the jump host's `sshd_config` sets `AllowTcpForwarding no`, or it cannot reach the next host.
+
 ### The tunnel connects and the database refuses the login
 
 The database credentials are separate from the SSH ones. Check you did not carry one set into the other.
