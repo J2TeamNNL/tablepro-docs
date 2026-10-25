@@ -93,8 +93,11 @@ Every row except the five find rows is built into the editor and cannot be rebou
 
 | Action | Shortcut |
 |--------|----------|
-| Move between cells | Arrow keys |
-| Next / previous cell | `Tab` / `Shift+Tab` |
+| Move the cursor one cell left or right | `Left` / `Right` |
+| Select the row above or below, keeping the cursor's column | `Up` / `Down` |
+| Move to the first or last column | `Cmd+Left` / `Cmd+Right` |
+| Next / previous cell, on to the next row at the end of one | `Tab` / `Shift+Tab` |
+| Jump to the row whose value in the cursor's column starts with what you type | Type its first letters |
 | Jump to column | `Cmd+Shift+J` |
 | Scroll to first / last row | `Home` / `End` |
 | Scroll page up / down | `Page Up` / `Page Down` |
@@ -102,16 +105,16 @@ Every row except the five find rows is built into the editor and cannot be rebou
 | Extend selection to grid edge | `Cmd+Shift+Arrow` |
 | Select every row the selection touches | `Shift+Space` |
 | Select all | `Cmd+A` |
-| Clear selection | `Escape` |
+| Shrink a range of cells to the cursor's row, then clear the selection | `Escape` |
 
 ### Editing
 
 | Action | Shortcut |
 |--------|----------|
-| Edit cell | `Enter` |
-| Edit the next / previous cell | `Tab` / `Shift+Tab` |
-| Edit the cell above / below | `Up` / `Down` |
-| Insert a line break while editing | `Option+Enter` |
+| Edit cell | `Return` or `Enter` |
+| Save and edit the next / previous cell | `Tab` / `Shift+Tab` |
+| Save and edit the cell above / below | `Up` / `Down` |
+| Open the multi-line editor while editing, or start a new line in it | `Option+Enter` |
 | Cancel edit | `Escape` |
 | Add row | `Cmd+Shift+N` |
 | Duplicate row | `Cmd+Shift+D` |
@@ -119,14 +122,15 @@ Every row except the five find rows is built into the editor and cannot be rebou
 | Set Value to Empty, NULL or Default | none by default, rebindable |
 | Set Cells to Value… | none by default, rebindable |
 | Generate UUID, Generate UUIDv7 | none by default, rebindable |
-| Delete selected rows | `Delete` or `Cmd+Delete` |
+| Delete selected rows | `Delete`, `Forward Delete` or `Cmd+Delete` |
 | Truncate table (tables selected in the sidebar) | `Option+Delete` |
 | Preview FK reference | `Space` |
+| Include or leave out the selected rows (Compare & Sync) | `Space` |
 | Commit changes | `Cmd+S` |
 | Undo change | `Cmd+Z` |
 | Redo change | `Cmd+Shift+Z` |
 
-`Tab`, `Shift+Tab`, `Up` and `Down` save the cell before they move. In a value that holds line breaks, `Up` and `Down` move the insertion point between its lines and leave the cell only from the first or last one.
+`Tab`, `Shift+Tab`, `Up` and `Down` save the cell before they move. In the multi-line editor, `Up` and `Down` move between its lines and leave it only from the first or last one, `Return` saves, and a click outside it saves too.
 
 Truncate table opens a dialog with **Cascade** and **Ignore foreign key checks**, then stages a pending truncate that `Cmd+S` runs.
 
@@ -159,8 +163,10 @@ Truncate table opens a dialog with **Cascade** and **Ignore foreign key checks**
 | Action | Shortcut |
 |--------|----------|
 | Find | `Cmd+F` |
+| Find and replace | `Cmd+Option+F` |
 | Next match | `Return` or `Cmd+G` |
-| Previous match | `Cmd+Shift+G` |
+| Previous match | `Shift+Enter` or `Cmd+Shift+G` |
+| Find the selected cell's value | `Cmd+E` |
 | Close the find bar | `Escape` |
 | Toggle filter bar (table tab) | `Cmd+Shift+F` |
 | Apply filters | `Cmd+Enter` |
@@ -308,8 +314,8 @@ In [Open Quickly](/features/open-quickly), `Ctrl+J`/`Ctrl+N` and `Ctrl+K`/`Ctrl+
 |--------|----------|
 | Find in the file | `Cmd+F` |
 | Find and replace in the file | `Cmd+Option+F` |
-| Next match | `Cmd+G` |
-| Previous match | `Cmd+Shift+G` |
+| Next match | `Return` or `Cmd+G` |
+| Previous match | `Shift+Enter` or `Cmd+Shift+G` |
 | Show or hide the filter bar | `Cmd+Shift+F` |
 | Show or hide Row Details | `Cmd+Option+I` |
 | Switch first row between header and data | `Cmd+Shift+H` |

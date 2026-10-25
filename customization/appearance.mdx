@@ -18,7 +18,7 @@ A theme colors content: the SQL editor and every other code view, the data grid,
 
 Its window background fills the area behind those panes on every macOS version. On macOS 26 and later it is also the window color of the main window, data file windows, Compare & Sync and value viewers, and the sidebar, inspector, toolbar and title bar take on its tone through the system glass. Before macOS 26 the sidebar and toolbar keep the system look. The bars along the top and bottom of a pane, such as the filter bar, drop their system material while the theme sets a window background, so the theme shows through them.
 
-Controls, Settings, the welcome window, the connection form, sheets and popovers keep the system look and your Accent color. A code field inside one of them, such as **Startup Commands**, **Pre-Connect Script**, a favorite's query or the **Startup SQL** of a connection link, takes the editor colors.
+Controls, Settings, the welcome window, the connection form, sheets and popovers keep the system look and your Accent color, and so do a data grid's header, its selection and the border on the selected cell. A code field inside one of them, such as **Startup Commands**, **Pre-Connect Script**, a favorite's query or the **Startup SQL** of a connection link, takes the editor colors.
 
 With Increase Contrast on, the window background goes back to the macOS color and the rest of the theme stays.
 
@@ -84,7 +84,7 @@ Each theme opens in a Theme Editor window of its own, titled with the theme's na
 
 The preview is the real SQL editor and data grid over sample content, drawn in the theme's own appearance, so a dark theme previews dark on a light Mac. It shows the current line and statement, a selection, invisibles, alternate rows, NULL, booleans, and a modified, an inserted and a deleted row.
 
-Under it, **General** holds the theme's name, its appearance (Light or Dark) and its author. The colors follow in **Window**, **Editor**, **Syntax**, **Data Grid**, **Selection** and **Changes**.
+Under it, **General** holds the theme's name, its appearance (Light or Dark) and its author. The colors follow in **Window**, **Editor**, **Syntax**, **Data Grid** and **Changes**.
 
 The line under each color's name says where the color comes from:
 
@@ -95,7 +95,7 @@ The line under each color's name says where the color comes from:
 | **Default Light color** or **Default Dark color** | An unset syntax color, drawn in the default theme's value |
 | **Based on** and another color's name | Unset, and taken from that color. See [Colors a theme leaves out](#colors-a-theme-leaves-out) |
 
-The arrow beside a color the theme sets clears it, under the name **Use System Color** or **Use Default Color**. The same action is in the color's right-click menu. Opacity is offered only for washes drawn over content: the editor selection, current line, current statement and invisibles, the alternate row, both grid selections, and the four row change colors.
+The arrow beside a color the theme sets clears it, under the name **Use System Color** or **Use Default Color**. The same action is in the color's right-click menu. Opacity is offered only for washes drawn over content: the editor selection, current line, current statement and invisibles, the alternate row, and the four row change colors.
 
 `Cmd+Z` and `Cmd+Shift+Z` undo and redo, one step per color you drag through the picker. **Revert Changes** at the bottom puts the theme back the way it was when the window opened, and undoes like any other step.
 
@@ -114,10 +114,10 @@ A VS Code color theme imports like any other theme file, from **Import…** or b
 | Window background | `editorPane.background`, else `editor.background` |
 | Editor | `editor.background`, `editor.foreground`, `editorCursor.foreground`, `editor.selectionBackground`, `editor.lineHighlightBackground` (else `editor.lineHighlightBorder`), `editor.rangeHighlightBackground` for the current statement, `editorLineNumber.foreground`, `editorWhitespace.foreground` |
 | Syntax | `tokenColors` rules, matched the way VS Code matches them against the scopes of its SQL grammar. A token no rule colors takes `editor.foreground`, and NULL, when no rule colors it, takes the keyword color |
-| Data grid | The editor background and text; `foreground` for header text; `list.activeSelectionBackground`, `list.activeSelectionForeground` and `list.inactiveSelectionBackground`; `list.focusOutline` or `focusBorder`; `input.placeholderForeground` for NULL; `editorLineNumber.foreground` for row numbers; `tree.tableColumnsBorder` for grid lines; `tree.tableOddRowsBackground` for alternate rows and the header; booleans from the token rules for SQL `TRUE` and `FALSE` |
+| Data grid | The editor background and text; `input.placeholderForeground`, else `foreground` at half opacity, for NULL; `editorLineNumber.foreground` for row numbers; `tree.tableColumnsBorder` for grid lines; `keybindingTable.rowsBackground`, else `tree.tableOddRowsBackground`, for alternate rows; booleans from the token rules for SQL `TRUE` and `FALSE` |
 | Row changes | `diffEditor.insertedLineBackground` and `diffEditor.removedLineBackground`, and the `gitDecoration` modified and deleted colors, made translucent, for modified rows and deleted text |
 
-A color the file does not set stays unset and draws as [Colors a theme leaves out](#colors-a-theme-leaves-out) describes. A translucent window, editor, grid or header background is flattened over the editor background.
+A color the file does not set stays unset and draws as [Colors a theme leaves out](#colors-a-theme-leaves-out) describes. A translucent window, editor or grid background is flattened over the editor background.
 
 ### What is left out
 
@@ -126,6 +126,7 @@ A color the file does not set stays unset and draws as [Colors a theme leaves ou
 - `semanticTokenColors` and `semanticHighlighting`.
 - Rules scoped to other languages, such as `source.json`. Syntax colors are read from SQL scopes only.
 - Colors TablePro has no place for: the inactive editor selection, selected text in the editor, the active line number, find matches and word highlights.
+- List selection, focus outline and table header colors. A grid's header and selection keep the system look in every theme.
 
 ### How the file is read
 
@@ -149,7 +150,7 @@ A custom theme is one JSON file in `~/Library/Application Support/TablePro/Theme
 | `appearance` | `light` or `dark`. Decides which popup lists the theme |
 | `window` | Window background, under `background` |
 | `editor` | Editor colors, with syntax colors nested under `syntax` |
-| `dataGrid` | Data grid colors, the Selection and Changes sections of the Theme Editor included |
+| `dataGrid` | Data grid colors, the Changes section of the Theme Editor included |
 
 ```json
 {
@@ -164,11 +165,11 @@ A custom theme is one JSON file in `~/Library/Application Support/TablePro/Theme
     "text": "#D8DEE9",
     "syntax": { "keyword": "#81A1C1", "string": "#A3BE8C" }
   },
-  "dataGrid": { "background": "#2E3440", "selection": "#434C5E" }
+  "dataGrid": { "background": "#2E3440", "alternateRow": "#3B4252" }
 }
 ```
 
-A color is sRGB hex, `#RRGGBB`, or `#RRGGBBAA` for a translucent wash such as a selection. The window, editor, data grid and header backgrounds are always opaque: an alpha value there is dropped. Every color is optional.
+A color is sRGB hex, `#RRGGBB`, or `#RRGGBBAA` for a translucent wash such as the editor selection. The window, editor and data grid backgrounds are always opaque: an alpha value there is dropped. Every color is optional.
 
 ### Colors a theme leaves out
 
@@ -176,13 +177,9 @@ A color is sRGB hex, `#RRGGBB`, or `#RRGGBBAA` for a translucent wash such as a 
 |----------|-------|
 | Keyword, string, number, comment, NULL, function, type | The Default Light or Default Dark value |
 | Operator | The theme's editor text, else the macOS color |
-| Header text, bool true, bool false | The theme's data grid text, else the macOS color |
+| Bool true, bool false | The theme's data grid text, else the macOS color |
 | Alternate row | The theme's data grid background moved 4% toward its grid text, or toward black in a light theme and white in a dark one. Without a grid background, the macOS stripe |
-| Header background | The theme's data grid background, else the macOS color |
-| Selected text | The theme's data grid text, while the theme sets the grid selection |
 | Anything else | The macOS color for that spot |
-
-Without a grid selection color, the grid draws the macOS selection and its own text, even when the file sets selected text.
 
 ### Files that do not load
 
@@ -191,7 +188,7 @@ A file in the themes folder that breaks one of these is listed under **Not Loade
 - It is not plain JSON. Comments are refused here; a VS Code theme goes through **Import…** instead.
 - It has no `schema`, or a `schema` other than `3`. A theme file from TablePro 0.80 or earlier needs to be made again.
 - It lacks `id`, `name` or `appearance`, or a field breaks the rules in the table.
-- It holds a key TablePro does not use, or a value that is not a `#RRGGBB` or `#RRGGBBAA` string.
+- It holds a key TablePro does not use, or a value that is not a `#RRGGBB` or `#RRGGBBAA` string. The six data grid keys earlier versions wrote for the header and the selection, `headerBackground`, `headerText`, `selection`, `selectionText`, `inactiveSelection` and `focusBorder`, are the exception: a file that has them loads, and those keys are dropped.
 - Its `id` is one another file in the folder already uses. The first file by name loads.
 
 ## Connection colors
