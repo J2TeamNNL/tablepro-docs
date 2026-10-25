@@ -114,7 +114,7 @@ A VS Code color theme imports like any other theme file, from **Import…** or b
 | Window background | `editorPane.background`, else `editor.background` |
 | Editor | `editor.background`, `editor.foreground`, `editorCursor.foreground`, `editor.selectionBackground`, `editor.lineHighlightBackground` (else `editor.lineHighlightBorder`), `editor.rangeHighlightBackground` for the current statement, `editorLineNumber.foreground`, `editorWhitespace.foreground` |
 | Syntax | `tokenColors` rules, matched the way VS Code matches them against the scopes of its SQL grammar. A token no rule colors takes `editor.foreground`, and NULL, when no rule colors it, takes the keyword color |
-| Data grid | The editor background and text; `foreground` for header text; `list.activeSelectionBackground`, `list.activeSelectionForeground` and `list.inactiveSelectionBackground`; `list.focusOutline` or `focusBorder`; `input.placeholderForeground` for NULL; `editorLineNumber.foreground` for row numbers; `tree.tableColumnsBorder` for grid lines; `tree.tableOddRowsBackground` for alternate rows and the header; booleans from the token rules for SQL `TRUE` and `FALSE` |
+| Data grid | The editor background and text; `foreground` for header text; `keybindingTable.headerBackground`, else `tree.tableOddRowsBackground`, for the header; `list.activeSelectionBackground`, `list.activeSelectionForeground` and `list.inactiveSelectionBackground`; `list.focusOutline` or `focusBorder`; `input.placeholderForeground`, else `foreground` at half opacity, for NULL; `editorLineNumber.foreground` for row numbers; `tree.tableColumnsBorder` for grid lines; `keybindingTable.rowsBackground`, else `tree.tableOddRowsBackground`, for alternate rows; booleans from the token rules for SQL `TRUE` and `FALSE` |
 | Row changes | `diffEditor.insertedLineBackground` and `diffEditor.removedLineBackground`, and the `gitDecoration` modified and deleted colors, made translucent, for modified rows and deleted text |
 
 A color the file does not set stays unset and draws as [Colors a theme leaves out](#colors-a-theme-leaves-out) describes. A translucent window, editor, grid or header background is flattened over the editor background.
@@ -176,13 +176,9 @@ A color is sRGB hex, `#RRGGBB`, or `#RRGGBBAA` for a translucent wash such as a 
 |----------|-------|
 | Keyword, string, number, comment, NULL, function, type | The Default Light or Default Dark value |
 | Operator | The theme's editor text, else the macOS color |
-| Header text, bool true, bool false | The theme's data grid text, else the macOS color |
+| Bool true, bool false | The theme's data grid text, else the macOS color |
 | Alternate row | The theme's data grid background moved 4% toward its grid text, or toward black in a light theme and white in a dark one. Without a grid background, the macOS stripe |
-| Header background | The theme's data grid background, else the macOS color |
-| Selected text | The theme's data grid text, while the theme sets the grid selection |
 | Anything else | The macOS color for that spot |
-
-Without a grid selection color, the grid draws the macOS selection and its own text, even when the file sets selected text.
 
 ### Files that do not load
 

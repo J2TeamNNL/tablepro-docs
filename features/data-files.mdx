@@ -47,15 +47,15 @@ A comparison is numeric whenever the cell and the value both read as numbers, so
 
 Right-click a cell and choose **Filter** to add a condition built from its value. The **Search All Columns** field in the toolbar keeps the rows where any column contains the text, ignoring case and accents, and works alongside the filter bar.
 
-Click a column header to sort by it, and `Shift`-click another header to add a tie-breaker. Numbers sort by value, text sorts naturally so `Item 2` comes before `Item 10`, and blank cells always sort last.
+Click a column header to sort by it and click it again to reverse it; `Option`-click another header to add a tie-breaker. Numbers sort by value, text sorts naturally so `Item 2` comes before `Item 10`, and blank cells always sort last.
 
 Changing a filter, the search or the sort goes back to page 1.
 
 ## Find and replace
 
-`Cmd+F` opens the find bar and `Cmd+Option+F` opens it with a replace field. It searches every row in the file, not the current page, and counts the matches as `3 of 1,204`. `Return` or `Cmd+G` moves to the next match and reveals it; `Cmd+Shift+G` goes back.
+`Cmd+F` opens the find bar and `Cmd+Option+F` opens it with a replace field. It searches every row in the file, not the current page, and counts the matches as `3 of 1,204`. `Return` or `Cmd+G` moves to the next match and selects it; `Shift+Enter` or `Cmd+Shift+G` goes back, and `Escape` closes the bar.
 
-The options menu beside the field turns on **Match Case**, **Whole Words** and **Regular Expression**. With a regular expression, `$1` in the replacement inserts the first capture group.
+The options menu beside the field turns on **Match Case**, **Whole Words** and **Regular Expression**, and **Search In** limits the search to one column. With a regular expression, `$1` in the replacement inserts the first capture group.
 
 **Replace All** changes every match in one step, so one `Cmd+Z` puts all of them back. To search one column, right-click its header and choose **Replace in Column…**. Hidden columns are not searched.
 

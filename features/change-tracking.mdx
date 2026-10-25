@@ -18,7 +18,7 @@ A queued change also marks the value itself, so it stays legible once the row is
 
 ## Editing a cell
 
-Double-click a cell, or press `Enter` on it. `Enter` commits the edit to the queue, `Escape` cancels. Setting a value back to what it was drops it from the queue again. Delete the text of a date, number, boolean, JSON, array or vector cell to store NULL. In a NOT NULL column of those types the cell keeps its value, and an emptied text cell stores an empty string. Some types open an editor of their own:
+Double-click a cell, or press `Return` on it, and type. `Return` queues the edit and `Escape` cancels it; `Tab`, `Shift+Tab`, `Up` and `Down` queue it and edit the neighboring cell. A value that holds a line break, or runs past 256 characters, opens in a multi-line editor anchored to the cell, where `Option+Enter` starts a new line. Setting a value back to what it was drops it from the queue again. Delete the text of a date, number, boolean, JSON, array or vector cell to store NULL. In a NOT NULL column of those types the cell keeps its value, and an emptied text cell stores an empty string. Some types open an editor of their own:
 
 | Column type | Editor |
 |---|---|
@@ -46,9 +46,9 @@ Right-click an editable cell and open **Set Value**. Each item appears only wher
 - **Generate UUID** (version 4) and **Generate UUIDv7** (ordered by creation time) on a `uuid` or `uniqueidentifier` column, and on a text or binary column whose display format is UUID. A foreign key column and a Cassandra `timeuuid` column get neither.
 - **Set Cells to Value…** on any cell you could type into. Type the value once and click **Set**. It is read the way a typed value is, so an empty value stores NULL in a date or number column, and a function such as `NOW()` in a date or time column runs on the server.
 
-Select several cells first to set all of them at once; Generate UUID gives each cell its own value. With whole rows selected, the clicked column changes on every selected row. Cells that cannot take the value keep what they hold: **Set Cells to Value…** skips a column the server owns, a binary column and a deleted row, and says how many cells it sets before you confirm. **Edit > Set Value** holds the same items for the focused cell or the selection, and [Settings > Keyboard](/features/keyboard-shortcuts#customizing-shortcuts) assigns them shortcuts.
+Select several cells first to set all of them at once; Generate UUID gives each cell its own value. Whatever the count, one `Cmd+Z` undoes the whole command. With whole rows selected, the clicked column changes on every selected row. Cells that cannot take the value keep what they hold: **Set Cells to Value…** skips a column the server owns, a binary column and a deleted row, and says how many cells it sets before you confirm. **Edit > Set Value** holds the same items for the focused cell or the selection, and [Settings > Keyboard](/features/keyboard-shortcuts#customizing-shortcuts) assigns them shortcuts.
 
-To copy one value into many cells, copy it, select the cells and press `Cmd+V`. A copied block of several cells pastes from the focused cell rightward and down instead.
+To copy one value into many cells, copy it, select the cells and press `Cmd+V`, or choose **Paste** on a cell's right-click menu. A copied block of several cells pastes from the focused cell rightward and down instead.
 
 On MongoDB, Firestore and the Firebase Realtime Database a document can lack a field altogether, and on Bigtable a row can lack a cell; the grid shows either as **No Field**. **Remove Field** on the same right-click menu deletes the field rather than storing NULL. Bigtable stores no NULL, so **NULL** and **Remove Field** both delete the cell. See [missing fields and null](/databases/mongodb#missing-fields-and-null).
 
@@ -56,8 +56,8 @@ On MongoDB, Firestore and the Firebase Realtime Database a document can lack a f
 
 - **Add Row** (`Cmd+Shift+N`), the **+** button, or **Edit > Add Row**. The row appears at the bottom with the cursor in its first writable cell. A UUID primary key the server does not fill gets a new UUID, and the cursor skips it. Later edits fold into the INSERT rather than queueing as updates.
 - **Duplicate Row** (`Cmd+Shift+D`) on the right-click menu copies a row and resets its primary key and its identity columns to `DEFAULT`, so the database assigns new ones. A UUID primary key the server does not fill gets a new UUID instead.
-- **Delete**: select rows by their row numbers (`Shift`-click for a range, `Cmd`-click for separate rows) and press `Delete`. They stay visible with a strikethrough, and saving asks "Delete 5 rows from customers?" before they go.
-- **Paste** on the right-click menu inserts copied rows as new rows, with a new UUID in a UUID primary key the server does not fill.
+- **Delete**: select rows by their row numbers (`Shift`-click for a range, `Cmd`-click for separate rows), or cells in them, and press `Delete` or `Forward Delete`. They stay visible with a strikethrough, and saving asks "Delete 5 rows from customers?" before they go.
+- **Paste** (`Cmd+V`, or **Paste** on the right-click menu) inserts copied rows as new rows, with a new UUID in a UUID primary key the server does not fill.
 - **Fill Column** on the header right-click menu writes one value, NULL, or a new UUID or UUIDv7 per row into every loaded row. It is absent on primary key columns and on columns the server owns.
 
 A new row starts at `DEFAULT` in every column the server fills in. That covers a column with a default expression, and an identity or `AUTO_INCREMENT` column, which carries no default of its own. The INSERT leaves those columns out, so the server assigns them.

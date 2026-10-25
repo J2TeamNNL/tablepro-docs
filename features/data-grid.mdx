@@ -14,13 +14,15 @@ A narrow window trims that bar rather than cutting it off. The Columns and Filte
 
 ## Sorting
 
-Click a header to cycle through the first direction, its opposite, and off. `Shift`-click a second header to sort by both. Sorting re-runs the query with a new `ORDER BY`, so it orders the whole table rather than the page in front of you. In a query tab that query is the one statement behind the result, never the rest of the script.
+Click a header to sort by that column, and click it again to reverse the order. `Option`-click another header to add it as a further sort key, or `Option`-click a key already in the sort to reverse that one alone. A plain click always starts over with the column you clicked. Sorting re-runs the query with a new `ORDER BY`, so it orders the whole table rather than the page in front of you. In a query tab that query is the one statement behind the result, never the rest of the script.
+
+The arrow marks the first sort key. With more than one key, point at a header to see where that column falls in the order. **Don't Sort** in the header menu returns to the server's order and stays there.
 
 A Cassandra, ScyllaDB or Bigtable table has no header sort, and a query result there sorts the rows it holds. See [Cassandra](/databases/cassandra#browsing-and-editing) and [Bigtable](/databases/bigtable#browsing-tables).
 
 **Sort direction** in [Settings > Data](/customization/data-settings) decides which way that first click goes. It is Ascending out of the box; set it to Descending to open on the newest rows and reach them in one click.
 
-To sort on open, set **Default row sort** to **Primary key** or **First column**; out of the box the order is the server's. That order is marked with a dimmed arrow rather than the solid one a click leaves, so a table you have not sorted does not look sorted. Clicking the same header reverses it, and **Don't Sort** in the header menu returns to the server's order and stays there.
+To sort on open, set **Default row sort** to **Primary key** or **First column**; out of the box the order is the server's. A sort the setting applies carries the same arrow as one you clicked, and clicking that header reverses it.
 
 <Warning>
 Sorting on a `BLOB`, `JSON`, or spatial column the server cannot order on fails the query. Sort on another column, or set **Default row sort** back to the engine's order.
@@ -32,7 +34,7 @@ The header menu carries two filters that answer different questions.
 
 | Header menu item | What it filters |
 |---|---|
-| **Filter Values…**, or the funnel icon on hover | The rows already loaded, without a re-query |
+| **Filter Values…** | The rows already loaded, without a re-query. A filtered column shows a funnel after its name |
 | **Filter with column** | The whole table. It adds a row to the [filter bar](/features/filtering) and opens it |
 
 The cell menu has a third: **Filter** turns the clicked cell's value into a condition such as `status = “paid”` and runs it against the whole table. [Filter by cell value](/features/filtering#filter-by-cell-value) lists what it offers.
@@ -67,15 +69,17 @@ Rules belong to the table, scoped to the connection, database, and schema, and f
 
 Drag a border to resize a column, or double-click it to fit the content; **Size to Fit** and **Size All Columns to Fit** on the header menu do the same. A fitted column stops at half the visible grid width.
 
+Point at a header for the column's type and, with **Show object comments** on in [General settings](/customization/general-settings), its comment.
+
 Hide columns from the columns button in the status bar or from the header menu. A hidden column is not fetched, so hiding a large one makes the table load faster; the primary key and the sorted column are fetched either way. On a schemaless store the popover lists every field the grid can draw, including ones that turn up only in later documents.
 
 Widths, order, hidden and frozen columns are remembered per table, scoped to the connection, database, and schema; **Reset Columns** in the popover puts them back. Right-click a header and choose **Display As** to read a column's stored values in a different form; [Cell and Row Viewers](/features/json-viewer) lists the formats.
 
 ### Freeze columns
 
-Right-click a column's header and choose **Freeze Up to This Column** to hold it and every column before it beside the row numbers. The rest scroll under them, and a line marks where the frozen columns end. Select, copy, edit, and jump to a frozen column as to any other. **Unfreeze Columns** on the header menu lets them scroll again.
+Right-click a column's header and choose **Freeze Up to This Column** to hold it and every column before it beside the row numbers. The rest scroll under them, and a line marks where the frozen columns end. Select, copy, edit, find and jump to a frozen column as to any other. **Unfreeze Columns** on the header menu lets them scroll again.
 
-Frozen columns cover at most two thirds of the grid's width. The menu item is dimmed for a column that would freeze more, and frozen columns that no longer fit after the window narrows scroll until it widens again. Click a frozen header to sort it, or drag its edge to resize it, at any scroll position. To move a frozen column, scroll back to the first column and drag its header. On a query result they stay frozen until the tab closes or the app quits.
+Frozen columns cover at most two thirds of the grid's width. The menu item is dimmed for a column that would freeze more, and frozen columns that no longer fit after the window narrows scroll until it widens again. Sort, resize and reorder frozen columns from their own headers at any scroll position. A drag keeps a column on its side of the line, so freeze or unfreeze to move one across. On a query result they stay frozen until the tab closes or the app quits.
 
 ### Large binary values
 
@@ -135,7 +139,9 @@ With no row selected and a table open, the inspector shows that table's size, ro
 
 ## Find in the loaded rows
 
-`Cmd+F` opens the find bar above the grid. `Return` and `Cmd+G` step forward, `Cmd+Shift+G` back, `Escape` clears the term and then closes the bar. Matching ignores case and accents and runs over the text as displayed; spatial columns are skipped, and so is a binary column still showing hex. The counter says which rows were searched:
+Press `Cmd+F` to open the find bar above the grid that has focus, or `Cmd+Option+F` to open it with a replace field. The first match after the cell cursor becomes the selected cell, so `Cmd+C`, `Return` and the arrow keys act on it. `Return` and `Cmd+G` step forward, `Shift+Enter` and `Cmd+Shift+G` step back, and `Escape` closes the bar and hands the keyboard back to the grid. `Cmd+E` searches for the value of the selected cell. Query results and the Structure lists have the same bar. In a query tab, click into the result first: with the editor focused, `Cmd+F` searches the SQL.
+
+Matching runs over the text as displayed and ignores case and accents. The options menu beside the field turns on **Match Case**, **Whole Words** and **Regular Expression**, each of which matches accents exactly, and **Search In** limits the search to one column. Spatial columns are skipped, and so is a binary column still showing hex. The counter says which rows were searched:
 
 | What you see | What it means |
 |---|---|
@@ -144,7 +150,9 @@ With no row selected and a table open, the inspector shows that table's size, ro
 | `No matches` | Every row is loaded and none match |
 | `Not on this page` | None of the loaded rows match, and more rows exist |
 
-**Search All Rows** turns the term into a filter that runs at the database, covering the whole table. It replaces the tab's filters, so it appears only when none are applied; with a filter set, add the term to the filter bar instead. Cassandra and ScyllaDB cannot match any one of several columns, so it never appears there.
+When none of the loaded rows match and more rows exist, **Search All Rows** in the bar turns the term into a filter that runs at the database, covering the whole table. It replaces the tab's filters, so it appears only when none are applied; with a filter set, add the term to the filter bar instead. Cassandra and ScyllaDB cannot match any one of several columns, so it never appears there.
+
+In an editable table, select **Replace** in the bar to show the replacement field. **Replace** changes the current match and moves to the next; **Replace All** changes every match in the loaded rows as one step, so one `Cmd+Z` puts all of them back, and the bar says how many cells changed. With a regular expression, `$1` in the replacement inserts the first capture group. Replace works on the stored value, so a match that exists only in a **Display As** form is left alone, and so is a cell you could not type into. Replacements wait in the queue like any edit until you save.
 
 ## Pages and row counts
 
@@ -168,16 +176,21 @@ Saving edits, importing rows, **Insert Document…**, a structure change and **R
 
 ## Copying
 
-Click a cell to select it, drag or `Shift`-click for a range, and `Cmd`-click to add or remove a cell. Click a row number for a whole row. For a whole column, `Cmd`-click its header or right-click the header and choose **Select Column**; a plain click on a header sorts. The row-number gutter stays at the left edge on a table wider than the window, so whole rows are still selectable when the columns have scrolled past it. `Shift+Space` widens whatever is selected to every row it touches. Copy acts on the whole selection.
+Click a cell to select its row and put the cell cursor on that cell. Drag or `Shift`-click for a range of cells, and `Cmd`-click to add or remove a cell. Click a row number to select a whole row; drag down the row numbers, or `Shift`-click or `Cmd`-click them, for several. `Cmd+A` selects every row and leaves no cell cursor. `Escape` shrinks a range of cells to the cursor's row, and a second `Escape` clears the selection.
+
+For a whole column, `Cmd`-click its header or right-click the header and choose **Select Column**; `Cmd`-`Shift`-click another header to take every column between the two. A plain click on a header sorts. The row numbers stay at the left edge on a table wider than the window, so whole rows are still selectable when the columns have scrolled past them. `Shift+Space` widens whatever is selected to every row it touches.
+
+The selection draws in your Accent color, or in the theme's selection color when it sets one, and the cell the cursor is on carries a focus border. A right-click never changes the selection: inside it, the menu acts on the whole selection; outside it, on the cell or row you clicked.
+
+After a plain click on a cell, `Cmd+C` copies the value of the cell under the cursor. Rows selected by their row numbers or with `Cmd+A` copy in the **Copy rows as** format from [Settings > Data](/customization/data-settings#copying). A range of cells copies as tab-separated cells.
 
 | Shortcut | Copies |
 |---|---|
-| `Cmd+C` | A cell range as cells, a clicked cell as its value, selected rows in the **Copy rows as** format |
 | `Cmd+Shift+C` | The selected rows as TSV |
 | `Cmd+Option+C` | The same, with a header row |
 | `Cmd+Option+J` | The selected rows as JSON |
 
-**Copy rows as** in [Settings > Data](/customization/data-settings#copying) sets what `Cmd+C` writes for whole rows, picked by their row numbers or with `Cmd+A`: TSV, TSV with Headers, JSON, CSV, CSV with Headers or Markdown. Whatever the format, `Cmd+V` in a table pastes the copied rows, not the text. To copy one value out of a selection, choose **Edit > Copy Special > Copy Cell Value** for the cell the cursor is on, or **Copy Cell Value** in the right-click menu for the cell under the pointer.
+**Copy rows as** offers TSV, TSV with Headers, JSON, CSV, CSV with Headers and Markdown. Whatever the format, `Cmd+V` in a table pastes the copied rows, not the text. To copy one value out of a selection, choose **Edit > Copy Special > Copy Cell Value** for the cell the cursor is on, or **Copy Cell Value** in the right-click menu for the cell under the pointer.
 
 Right-click and open **Copy as** for CSV, CSV with Headers, Markdown, and **IN Clause**, which writes `('a', 'b', 'c')` for a `WHERE col IN (…)`. **INSERT Statement(s)** and **UPDATE Statement(s)** appear when the result comes from a single table whose structure has loaded, and never on MongoDB or Redis. UPDATE is also missing on a table without a primary key that has a column no match can compare, such as a SQL Server `sql_variant`. **Copy Column Values** on the header menu copies one column, one value per line. Every format is also in **Edit > Copy Special**, where IN Clause takes the one column a cell selection covers, or the cursor's column. Those items have no shortcut until you record one in **Settings > Keyboard**.
 
@@ -231,7 +244,7 @@ SQL Server, Oracle, SpatiaLite, Teradata, Trino, Presto, Spanner, Cassandra and 
 
 ## Editing and display
 
-Double-click a cell to edit it. A long value stays on one line and scrolls sideways rather than wrapping into the column's width. Nothing reaches the database until you save, and [Change Tracking](/features/change-tracking) covers the type-specific editors, the row operations, and what a Save runs.
+Double-click a cell, or press `Return` on it, to edit it in place. A value that holds a line break, or runs past 256 characters, opens in a larger editor anchored to the cell instead: `Return` saves, `Option+Enter` starts a new line and `Escape` cancels. `Option+Enter` while editing in the cell moves the text into that editor. In a grid you cannot edit, the same gestures open the value in a viewer. Nothing reaches the database until you save, and [Change Tracking](/features/change-tracking) covers the type-specific editors, the row operations, and what a Save runs.
 
 With the grid focused, `Cmd+=` and `Cmd+-` make its text bigger or smaller. They change the Data Grid Font size in [data settings](/customization/data-settings), so every grid, the inspector and the cell popovers follow, and the size is kept between launches.
 

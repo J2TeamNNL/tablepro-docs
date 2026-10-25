@@ -14,7 +14,7 @@ This is a DDL editor with a grid in front of it. Rename a column, add an index, 
 
 Open a table and switch the result view to **Structure**, or right-click it in the sidebar and choose **Show Structure**.
 
-The tabs are **Columns**, **Indexes**, **Foreign Keys**, **Constraints**, **Triggers**, **DDL**, and **Parts** (ClickHouse only); the first five carry item counts. A tab the engine has no concept of is hidden: ClickHouse has no Foreign Keys, Redshift no Triggers, Redis no Constraints. Every grid has a filter field, and clicking a header sorts.
+The tabs are **Columns**, **Indexes**, **Foreign Keys**, **Constraints**, **Triggers**, **DDL**, and **Parts** (ClickHouse only); the first five carry item counts. A tab the engine has no concept of is hidden: ClickHouse has no Foreign Keys, Redshift no Triggers, Redis no Constraints. Every grid has a filter field, and clicking a header sorts by that one column.
 
 ## Table comment
 
@@ -93,7 +93,7 @@ Add a column with **+** at the right of the status bar or `Cmd+Shift+N`. Select 
 
 Flag **Primary Key** on one column, or several for a composite key in one `PRIMARY KEY (col1, col2)` clause. On an existing table that becomes a drop of the old constraint followed by an add.
 
-Drag a column row to reorder it, or right-click one and choose **Move Column Up** or **Move Column Down**. Both are dimmed with the reason spelled out under them while unsaved changes exist, while the list is filtered or sorted, on anything but a table, and on an engine that cannot change column order.
+Drag a column row by its row number to reorder it, or right-click one and choose **Move Column Up** or **Move Column Down**. Both are dimmed with the reason spelled out under them while unsaved changes exist, while the list is filtered or sorted, on anything but a table, and on an engine that cannot change column order.
 
 What the drag does depends on the engine:
 
