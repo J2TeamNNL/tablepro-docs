@@ -9,7 +9,7 @@ Choose **KingbaseES** when creating the connection. Enter the database and role 
 
 <RegistryPlugin name="KingbaseES" />
 
-The plugin is named **KingbaseES Driver**. The driver was tested against KingbaseES V9R1C10 in PostgreSQL and Oracle compatibility modes. A minimum supported server version has not been established.
+The plugin is named **KingbaseES Driver**. It supports KingbaseES V9 and was tested against V9R1C10 in PostgreSQL and Oracle compatibility modes.
 
 ## Quick setup
 
@@ -61,9 +61,13 @@ Each database opened from the connections strip keeps a separate connection. A t
 
 ## Compatibility modes
 
-The driver detects the session's compatibility mode after connecting. PostgreSQL (`pg`) and Oracle (`oracle`) modes are supported; other modes are refused with an error.
+The driver reads the server's `database_mode` setting when it connects. PostgreSQL (`pg`) and Oracle (`oracle`) modes are supported. A server in MySQL or SQL Server mode is refused with an error, and a server without the setting connects in PostgreSQL mode.
 
-On V9R1C10, both modes passed checks for catalog browsing, parameterized reads and writes, transactions, reconnecting, query cancellation, and DDL replay. Script execution recognizes dollar-quoted strings in PostgreSQL mode and native blocks and `q`-quoted strings in Oracle mode.
+In Oracle mode, anonymous blocks, procedure bodies, `q'[...]'` strings and `/` lines stay whole when you run a statement or a script, import a `.sql` file, or run startup commands. Dollar-quoted strings work in both modes.
+
+## Copying and comparing
+
+Copy tables between KingbaseES in PostgreSQL mode and PostgreSQL, or generate a Compare & Sync structure script between them. A server in Oracle mode spells its column types its own way, so it copies and syncs structure only with another Oracle-mode server. See [Copy objects](/features/copy-objects) and [Compare & Sync](/features/compare-sync).
 
 ## SSL/TLS
 
