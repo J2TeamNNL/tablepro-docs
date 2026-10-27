@@ -105,7 +105,7 @@ Counts work: `3w` moves three words, `5j` moves five lines down.
 
 `2d3w` deletes six words. `3yy` yanks three lines. `5>>` indents five lines.
 
-Yank, delete, and change all write to the system clipboard.
+Yank, delete, and change all write to the system clipboard, except through the black-hole register `"_`.
 
 ## Text objects
 
@@ -137,7 +137,7 @@ In visual mode, `p` and `P` replace the selection with the register.
 
 ## Registers
 
-Prefix with `"{a-z}` to pick a register.
+Prefix a command with `"` and the register's name to pick one.
 
 | Register | Holds |
 |----------|-------|
@@ -146,8 +146,9 @@ Prefix with `"{a-z}` to pick a register.
 | `"A` … `"Z` | Same, append |
 | `"0` | Last yank only |
 | `"1` … `"9` | Delete ring, rotates on each delete |
+| `"_` | Nothing. A yank or delete through it leaves every other register and the clipboard as they were |
 
-`"ayy` stores a line in `a`. `"ap` pastes it back later.
+`"ayy` stores a line in `a`. `"ap` pastes it back later. `"_dd` deletes a line and keeps what you yanked last ready for `p`.
 
 ## Marks
 
@@ -248,6 +249,21 @@ Indent and outdent work in normal mode only (`>>`, `<<`, `>{m}`, `<{m}`).
 
 `Esc` or `Ctrl+[` goes back to normal mode. Apart from the insert-mode [control keys](#control-keys), what you type goes to the editor as usual.
 
+## Switch tabs
+
+| Keys | Goes to |
+|------|---------|
+| `gt` | Next tab, wrapping from the last to the first |
+| `gT` | Previous tab, wrapping from the first to the last |
+| `{N}gt` | Tab N |
+| `{N}gT` | N tabs back |
+| `:tabn[ext]` | Next tab |
+| `:tabn[ext] {N}` | Tab N |
+| `:tabn[ext] +{N}` `:tabn[ext] -{N}` | N tabs forward, N tabs back |
+| `:tabp[revious] [N]` `:tabN[ext] [N]` | Previous tab, or N tabs back |
+
+The part in brackets is optional, so `:tabn`, `:tabne` and `:tabnext` are one command. Tabs are counted along the strip, the same tabs `Cmd+1` through `Cmd+9` count, and a number past the last one selects the last tab. `gt` and `gT` work in normal mode only.
+
 ## Command line
 
 | Command | Action |
@@ -255,6 +271,6 @@ Indent and outdent work in normal mode only (`>>`, `<<`, `>{m}`, `<{m}`).
 | `:w` | Run the current query |
 | `:q` | Close the tab |
 
-`/` and `?` are search. Every other `:` command is parsed and ignored, `:wq`, `:x` and `:set` among them. `:10` does not jump to line 10 either; use `10G` or `10gg`.
+`/` and `?` are search, and `:tabnext`, `:tabprevious` and `:tabNext` [switch tabs](#switch-tabs). Every other `:` command is parsed and ignored, `:wq`, `:x` and `:set` among them. `:10` does not jump to line 10 either; use `10G` or `10gg`.
 
 `Delete` and `Ctrl+H` erase the last character of the command. The arrow keys and the other `Ctrl` letters do nothing while you type one.
