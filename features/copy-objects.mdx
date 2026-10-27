@@ -28,6 +28,9 @@ written until you have read the script.
 
     The funnel beside a table narrows the rows it contributes. See
     [Copying part of a table](#copying-part-of-a-table).
+
+    **On error** chooses what a failure does: stop and roll back, stop and keep what ran, or skip
+    that object and continue.
   </Step>
   <Step title="Read the script, then copy">
     **Continue** reads both databases and shows the DDL that will run, the rows each table expects,
@@ -232,22 +235,53 @@ A copied foreign key is repointed at the copy. A key that referenced the source'
 references the target's afterwards, so the duplicate stands on its own; one that referenced a third
 schema is left as it was.
 
-Two tables that reference each other cannot be ordered. The second `CREATE TABLE` fails, its error
-appears in the result, and the rest of the copy is unaffected.
+Order alone cannot place two tables that reference each other, or a table that references itself
+with a child row ahead of its parent. Under **Stop and roll back**, when the copy creates every table
+it fills and every key those tables hold points at a table the copy fills with all of its rows, the
+rows are written with the target's foreign key checks off where the engine can turn them off for one
+session, as MySQL and MariaDB can, and the session gets back the setting it had.
+
+Turning the checks back on checks nothing already written, so before it commits the copy counts, for
+every key, the rows that point at nothing. A source row whose parent is already gone, or one read
+while the source was changing, fails the copy there, the result names the table and the key, and
+every row is put back.
+
+The checks stay on otherwise, and such a row fails with the result naming its table:
+
+- A key to a table outside the copy, or to one narrowed by a filter or a row limit.
+- **Data only**, or **Add rows to it** on a table the target already has. The target keeps its own
+  keys there, and the source cannot say where they point.
+- A target with no transactions, where a failure could not take the rows back.
+- A target account that cannot read the tables it writes, so the copy could not count what each key
+  refuses.
+- PostgreSQL, because its switch also stops the target's own triggers and needs a superuser.
+- **Stop and keep what ran** and **Skip and continue**, since what they keep after a failure can
+  leave a child's parent missing.
+
+Emptying a table for a Replace keeps the checks on, so a table that references it, selected or not,
+applies its own `ON DELETE` rule.
+
+Two tables that reference each other are created with checks off on MySQL and MariaDB when the copy
+holds both. On PostgreSQL the second `CREATE TABLE` fails, its error appears in the result, and the
+rest of the copy is unaffected.
 
 ## Stopping a copy
 
-**Stop** takes effect at the next batch boundary. Each table is its own transaction where the engine
-supports one, so the table being copied rolls back and the tables already finished stay. A driver
-blocked inside a network call finishes that batch first.
+**Stop** takes effect at the next batch boundary. A driver blocked inside a network call finishes that
+batch first.
 
-A Replace that removes the target's rows is the exception: every table is emptied before any of them
-is filled, so that a cascading foreign key cannot reach a table you did not select, and the whole
-data phase is then one transaction. Stopping it, or a failure under **Stop and roll back**, puts
-every row back. **Skip and continue** promises no rollback, so there the clearing stands.
+Under **Stop and roll back** the whole data phase is one transaction where the engine supports one,
+so stopping it or a failure puts every row back. A MySQL table on a storage engine without
+transactions, such as MyISAM, keeps its rows through that, and the result counts them. A Replace that removes the target's rows empties
+every table inside it before any of them is filled, so that a cascading foreign key cannot reach a
+table you did not select.
 
-A stopped copy reports only what was committed. The table it was in the middle of counts as neither
-copied nor failed.
+The other two settings commit each batch as it is written, so stopping or a failure keeps what was
+written. There the clearing stands, a table whose emptying failed gets no rows, and the structure is
+not one transaction either, so what was created before a failure stays.
+
+The result counts only the rows the target kept, including the batches a failed table wrote before
+its error.
 
 When the target connection already holds a transaction, the copy runs inside it and opens none of its own. Nothing it wrote is committed until you commit that transaction, and the result says so.
 
