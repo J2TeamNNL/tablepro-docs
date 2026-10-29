@@ -349,6 +349,7 @@
               "integrations/index",
               "integrations/mcp-clients",
               "integrations/raycast",
+              "integrations/alfred",
               "integrations/terminal",
               "integrations/ddev",
               "integrations/shortcuts"

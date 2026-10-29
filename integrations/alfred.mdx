@@ -1,0 +1,46 @@
+---
+title: Alfred
+description: Find saved connections by name, host or database and open them from Alfred
+---
+
+Alfred Powerpack is required to install and run workflows. Keep TablePro open while searching.
+
+## Install the workflow
+
+<Steps>
+  <Step title="Build the package">
+    From a checkout of [TablePro](https://github.com/TableProApp/TablePro), run:
+
+    ```bash
+    python3 apple/scripts/package-alfred-workflow.py ~/Downloads/TablePro-Connections.alfredworkflow
+    ```
+
+    The packaging command needs Python 3. The installed workflow uses the scripting tools included in macOS.
+  </Step>
+  <Step title="Import into Alfred">
+    Open `TablePro-Connections.alfredworkflow` and choose **Import** in Alfred.
+  </Step>
+  <Step title="Find a connection">
+    Open Alfred and type `tablepro`, followed by a connection name, driver, host or database.
+    Press `Return` on a result to open that connection in TablePro.
+  </Step>
+</Steps>
+
+Each result includes its connection ID to distinguish connections with the same name.
+
+## Access
+
+The workflow uses [AppleScript](/developers/applescript). It lists connections whose
+**External Clients** level is not **Blocked**. It reads connection metadata and opens the selected
+connection; it does not run queries. MCP configuration is not required.
+
+macOS asks for permission when Alfred first controls TablePro. Review that prompt before granting
+access. See [AppleScript permissions](/developers/applescript#what-a-script-may-do) for the access
+granted to the sending app.
+
+## Troubleshooting
+
+If Alfred shows **Open TablePro to search connections**, open TablePro and search again.
+
+For **Unable to read TablePro connections**, check **System Settings > Privacy & Security > Automation**.
+If no connections match, clear the search and check **External Clients** on the connection's **Options** tab.

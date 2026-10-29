@@ -32,10 +32,13 @@ Only the config file differs.
 ## Claude Code
 
 ```bash
-claude mcp add tablepro -- /Applications/TablePro.app/Contents/MacOS/tablepro-mcp
+claude mcp add tablepro -- '/Applications/TablePro.app/Contents/MacOS/tablepro-mcp'
 ```
 
 The double dash separates Claude Code's flags from the command it runs. stdio is the default transport. Verify with `claude mcp list`.
+
+Keep the path quoted when the app or a parent folder has spaces. Copy the command from
+**Connect a Client…** in **Settings > MCP** to use the path of the running app.
 
 ## VS code
 
